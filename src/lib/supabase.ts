@@ -6,7 +6,7 @@ export const getSupabaseConfig = () => {
     const saved = localStorage.getItem('accdata_supabase_config');
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (parsed.url && parsed.anonKey) {
+      if (parsed.url && parsed.anonKey && isValidSupabaseConfig(parsed.url, parsed.anonKey)) {
         return {
           url: parsed.url as string,
           anonKey: parsed.anonKey as string,
@@ -29,7 +29,12 @@ export const getSupabaseConfig = () => {
 };
 
 export const saveSupabaseConfig = (url: string, anonKey: string) => {
-  localStorage.setItem('accdata_supabase_config', JSON.stringify({ url, anonKey }));
+  const normalizedUrl = url.trim();
+  const normalizedKey = anonKey.trim();
+  if (!isValidSupabaseConfig(normalizedUrl, normalizedKey)) {
+    throw new Error('กรุณาใส่ Supabase Project URL และ Publishable/Anon Key จริงให้ครบ');
+  }
+  localStorage.setItem('accdata_supabase_config', JSON.stringify({ url: normalizedUrl, anonKey: normalizedKey }));
   // Re-instantiate client
   initSupabaseClient();
 };
@@ -42,14 +47,22 @@ export const clearSupabaseConfig = () => {
 let activeSupabaseClient: SupabaseClient | null = null;
 let activeConfigured = false;
 
+const isValidSupabaseConfig = (url: string, anonKey: string): boolean => {
+  try {
+    const parsedUrl = new URL(url);
+    return ['https:', 'http:'].includes(parsedUrl.protocol) &&
+      Boolean(parsedUrl.hostname) &&
+      !/your-project|example/i.test(url) &&
+      anonKey.length > 30 &&
+      !/your-anon-key|replace-me|placeholder/i.test(anonKey);
+  } catch {
+    return false;
+  }
+};
+
 export const initSupabaseClient = (): { client: SupabaseClient | null; configured: boolean } => {
   const config = getSupabaseConfig();
-  const isValid = Boolean(
-    config.url &&
-    config.anonKey &&
-    !config.url.includes('your-project') &&
-    config.url.startsWith('http')
-  );
+  const isValid = isValidSupabaseConfig(config.url, config.anonKey);
 
   activeConfigured = isValid;
   if (isValid) {

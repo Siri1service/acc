@@ -141,7 +141,7 @@ bun run build
 1. สร้าง Supabase Project แล้วคัดลอก **Project URL** กับ **Publishable key** (หรือ `anon` key รุ่นเก่า) จากหน้า Project API settings
 2. เปิดเว็บ AccData จะเห็นหน้าตั้งค่า Supabase ถ้ายังไม่มีค่าเชื่อมต่อ กรอก URL และ key ดังกล่าวได้เลย หรือใส่ใน `.env` เป็น `VITE_SUPABASE_URL` และ `VITE_SUPABASE_ANON_KEY` แล้ว restart dev server
 3. เปิด Supabase **SQL Editor** วางเนื้อหาทั้งไฟล์ `supabase/schema.sql` แล้วกด Run เพื่อสร้างตาราง, Google user profile, เลขเอกสาร และนโยบาย RLS สำหรับแยกข้อมูลองค์กร
-4. ตั้ง Google OAuth: ไปที่ **Authentication → Providers → Google** แล้วใส่ OAuth Client ID/Secret ที่สร้างจาก Google Cloud Console; ใช้ callback URL ที่ Supabase แสดงในหน้านั้น (รูปแบบ `https://<project-ref>.supabase.co/auth/v1/callback`)
+4. ตั้ง Google OAuth: ไปที่ **Authentication → Providers → Google** แล้วใส่ OAuth Client ID/Secret ที่สร้างจาก Google Cloud Console; ใช้ callback URL ที่ Supabase แสดงในหน้านั้น (รูปแบบ `https://<project-ref>.supabase.co/auth/v1/callback`) แล้วนำ callback นี้ไปเพิ่มใน Google OAuth Client → **Authorized redirect URIs** ในหน้าที่ส่งมาให้ตรวจ ให้ปิด **Allow users without an email** เพราะระบบต้องใช้ email สำหรับโปรไฟล์และสิทธิ์ผู้ใช้
 5. ใน **Authentication → URL Configuration** ใส่ URL เว็บ AccData ทั้งตอนพัฒนาและ URL production ที่ Redirect URLs เช่น `http://localhost:5173/**` และ `https://your-domain.example/**`
 6. เริ่มเว็บด้วย `bun run dev` เปิด URL ที่แสดง แล้วกด **เข้าสู่ระบบด้วย Google** การสมัครครั้งแรกจะสร้างโปรไฟล์ `user` อัตโนมัติ
 
@@ -168,3 +168,8 @@ WHERE o.tax_id = 'เลขประจำตัวผู้เสียภา�
 ```
 
 ค่า `.env` ใน checkout นี้ยังเป็น placeholder จึงต้องใส่ URL/key ของ Supabase Project จริงก่อน ระบบจะเชื่อมออนไลน์และบันทึกข้อมูลข้ามอุปกรณ์ได้
+
+### แก้ Google แจ้ง `403: org_internal`
+
+
+Project URL และ Publishable/Anon key ของ Supabase เป็นข้อมูลคนละชุดกับ Google OAuth Client ID/Secret ห้ามนำ Google Client ID หรือ Secret ไปใส่ใน `VITE_SUPABASE_ANON_KEY`
