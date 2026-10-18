@@ -80,8 +80,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
     {
       title: 'การจัดการระบบ',
       items: [
-        { id: 'users', label: 'ผู้ใช้ 3 รูปแบบ & Gmail การตลาด', icon: ShieldCheck, enabled: true },
-        { id: 'settings', label: 'ตั้งค่าระบบ & เชื่อมต่อ API', icon: Settings, enabled: true }
+        { id: 'users', label: 'ผู้ใช้และการจัดการระบบ', icon: ShieldCheck, enabled: currentUser.role === 'admin' },
+        { id: 'settings', label: 'ตั้งค่าระบบ & เชื่อมต่อ API', icon: Settings, enabled: currentUser.role === 'admin' }
       ]
     }
   ];

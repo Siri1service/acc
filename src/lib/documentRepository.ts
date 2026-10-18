@@ -58,7 +58,8 @@ export async function loadDocuments(org: Organization): Promise<Document[] | nul
     vatRate: Number(row.vat_rate || 0), vatAmount: Number(row.vat_amount || 0),
     withholdingTaxRate: Number(row.withholding_tax_rate || 0), withholdingTaxAmount: Number(row.withholding_tax_amount || 0),
     grandTotal: Number(row.grand_total || 0), notes: row.notes || '', termsConditions: row.terms_conditions || '',
-    createdBy: row.created_by || '', createdByName: '', items: (row.document_items || []).map((item: any): DocumentItem => ({
+    createdBy: row.created_by || '', createdByName: '', approvedBy: row.approved_by || undefined,
+    approvedByName: '', approvedAt: row.approved_at || undefined, items: (row.document_items || []).map((item: any): DocumentItem => ({
       id: item.id, productId: item.product_id || undefined, itemName: item.item_name,
       description: item.description || undefined, quantity: Number(item.quantity), unit: item.unit || '',
       unitPrice: Number(item.unit_price), discountAmount: Number(item.discount_amount || 0), totalAmount: Number(item.total_amount)
@@ -81,7 +82,9 @@ export async function saveDocument(org: Organization, doc: Document): Promise<Do
     payment_date: doc.paymentDate || null, subtotal: doc.subtotal, discount_amount: doc.discountAmount,
     vat_rate: doc.vatRate, vat_amount: doc.vatAmount, withholding_tax_rate: doc.withholdingTaxRate,
     withholding_tax_amount: doc.withholdingTaxAmount, grand_total: doc.grandTotal, notes: doc.notes,
-    terms_conditions: doc.termsConditions, created_by: isUuid(doc.createdBy) ? doc.createdBy : null, updated_at: new Date().toISOString()
+    terms_conditions: doc.termsConditions, created_by: isUuid(doc.createdBy) ? doc.createdBy : null,
+    approved_by: isUuid(doc.approvedBy) ? doc.approvedBy : null, approved_at: doc.approvedAt || null,
+    updated_at: new Date().toISOString()
   };
   const query = isUuid(doc.id)
     ? db.from('documents').update(row).eq('id', doc.id).select('id').single()

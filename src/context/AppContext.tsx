@@ -81,9 +81,9 @@ interface AppContextType {
   documents: Document[];
   addDocument: (doc: Partial<Document>) => Promise<Document>;
   updateDocument: (id: string, updates: Partial<Document>) => Promise<void>;
-  deleteDocument: (id: string) => void;
-  approveDocument: (id: string) => void;
-  convertDocument: (sourceDocId: string, targetType: DocumentType) => Document;
+  deleteDocument: (id: string) => Promise<void>;
+  approveDocument: (id: string) => Promise<void>;
+  convertDocument: (sourceDocId: string, targetType: DocumentType) => Promise<Document>;
   getNextDocNumber: (type: DocumentType) => string;
 
   // Banking
@@ -139,6 +139,15 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const normalizeDocPrefix = (value: string | undefined, fallback: string): string => {
+  const normalized = (value || fallback)
+    .trim()
+    .replace(/-\d{4}-?$/, '')
+    .replace(/-IND$/i, '')
+    .replace(/-+$/, '');
+  return normalized || fallback;
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Navigation
   const [activeView, setActiveView] = useState<string>('dashboard');
@@ -175,17 +184,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [shipments, setShipments] = useState<Shipment[]>(() => loadStored('shipments', initialShipments));
   const [slips, setSlips] = useState<SlipVerification[]>(() => loadStored('slips', initialSlips));
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => loadStored('logs', initialAuditLogs));
-  const [chartOfAccounts] = useState<ChartOfAccount[]>(() => loadStored('coa', initialChartOfAccounts));
+  const [chartOfAccounts, setChartOfAccounts] = useState<ChartOfAccount[]>(() => loadStored('coa', initialChartOfAccounts));
   const [campaigns, setCampaigns] = useState<MarketingCampaign[]>(() => loadStored('campaigns', initialCampaigns));
 
   const [lineSettings, setLineSettings] = useState<LineSettings>(() => loadStored('line', {
-    lineNotifyToken: 'LINE_NOTIFY_DEMO_TOKEN_ACCDATA_2026',
-    channelId: '2001928374',
-    channelSecret: 'demo_channel_secret_48937210',
+    lineNotifyToken: '',
+    channelId: '',
+    channelSecret: '',
     notifyOnCreate: true,
     notifyOnApprove: true,
     notifyOnPay: true,
-    isActive: true
+    isActive: false
   }));
 
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean>(() => loadStored('onboarded', true));
@@ -265,15 +274,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     bankFeedEnabled: rawOrg.settings?.bankFeedEnabled ?? true,
     activeTemplate: rawOrg.settings?.activeTemplate || 'modern_cyan',
     docPrefixes: {
-      QT: rawOrg.settings?.docPrefixes?.QT || 'QT-2026-',
-      BL: rawOrg.settings?.docPrefixes?.BL || 'BL-2026-',
-      TAX: rawOrg.settings?.docPrefixes?.TAX || 'TAX-2026-',
-      RE: rawOrg.settings?.docPrefixes?.RE || 'RE-2026-',
-      CASH: rawOrg.settings?.docPrefixes?.CASH || 'CS-2026-',
-      CN: rawOrg.settings?.docPrefixes?.CN || 'CN-2026-',
-      DN: rawOrg.settings?.docPrefixes?.DN || 'DN-2026-',
-      PO: rawOrg.settings?.docPrefixes?.PO || 'PO-2026-',
-      GR: rawOrg.settings?.docPrefixes?.GR || 'GR-2026-'
+      QT: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.QT, 'QT'),
+      BL: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.BL, 'BL'),
+      TAX: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.TAX, 'TAX'),
+      RE: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.RE, 'RE'),
+      CASH: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.CASH, 'CS'),
+      CN: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.CN, 'CN'),
+      DN: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.DN, 'DN'),
+      PO: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.PO, 'PO'),
+      GR: normalizeDocPrefix(rawOrg.settings?.docPrefixes?.GR, 'GR')
     },
     enabledModules: {
       sales: rawOrg.settings?.enabledModules?.sales ?? true,
@@ -495,9 +504,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Document Helpers
   const getNextDocNumber = (type: DocumentType): string => {
-    // Keep the document type code stable; legacy prefixes such as QT-2026- or
-    // QT-IND- must not leak year or tenant labels into the issued number.
-    const prefix = type === 'CASH' ? 'CS' : type;
+    const fallbackPrefix = type === 'CASH' ? 'CS' : type;
+    const prefix = normalizeDocPrefix(currentOrg.settings.docPrefixes[type], fallbackPrefix);
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -571,16 +579,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addAuditLog('UPDATE_DOCUMENT', 'Document', id, `แก้ไขเอกสาร ID: ${id}`);
   };
 
-  const deleteDocument = (id: string) => {
+  const deleteDocument = async (id: string) => {
+    if (authUser && currentUser.role !== 'admin') {
+      alert('เฉพาะผู้ดูแลระบบเท่านั้นที่ลบเอกสารได้');
+      return;
+    }
     const target = documents.find(d => d.id === id);
-    void deleteDocumentFromDatabase(id).catch(error => console.error('ลบเอกสารจาก Supabase ไม่สำเร็จ:', error));
+    try {
+      await deleteDocumentFromDatabase(id);
+    } catch (error) {
+      console.error('ลบเอกสารจาก Supabase ไม่สำเร็จ:', error);
+      alert(`ลบเอกสารไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
+      return;
+    }
     setDocuments(prev => prev.filter(d => d.id !== id));
     if (target) {
       addAuditLog('DELETE_DOCUMENT', target.docType, target.docNumber, `ลบเอกสาร ${target.docType} เลขที่ ${target.docNumber}`);
     }
   };
 
-  const approveDocument = (id: string) => {
+  const approveDocument = async (id: string) => {
+    if (authUser && currentUser.role !== 'admin') {
+      alert('เฉพาะผู้ดูแลระบบเท่านั้นที่อนุมัติเอกสารได้');
+      return;
+    }
     const target = documents.find(d => d.id === id);
     if (!target) return;
 
@@ -593,7 +615,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updatedAt: new Date().toISOString()
     };
 
-    setDocuments(prev => prev.map(d => d.id === id ? updated : d));
+    try {
+      const saved = await saveDocument(currentOrg, updated);
+      setDocuments(prev => prev.map(d => d.id === id ? saved : d));
+    } catch (error) {
+      console.error('อนุมัติเอกสารใน Supabase ไม่สำเร็จ:', error);
+      alert(`อนุมัติเอกสารไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
+      return;
+    }
     addAuditLog('APPROVE_DOCUMENT', target.docType, target.docNumber, `อนุมัติเอกสาร ${target.docType} เลขที่ ${target.docNumber} โดย ${currentUser.fullName}`);
 
     if (lineSettings.notifyOnApprove) {
@@ -603,11 +632,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // 1-Click Document Pipeline Stepper Conversion
   // e.g. QT -> BL, BL -> TAX, TAX -> RE, PO -> GR
-  const convertDocument = (sourceDocId: string, targetType: DocumentType): Document => {
+  const convertDocument = async (sourceDocId: string, targetType: DocumentType): Promise<Document> => {
     const source = documents.find(d => d.id === sourceDocId);
     if (!source) throw new Error('Source document not found');
 
-    const newDocNumber = getNextDocNumber(targetType);
+    const issueDate = new Date().toISOString().split('T')[0]!;
+    const newDocNumber = await nextNumber(currentOrg, targetType, issueDate) || getNextDocNumber(targetType);
     const convertedDoc: Document = {
       id: `doc-${Date.now()}`,
       orgId: source.orgId,
@@ -620,7 +650,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       contactTaxId: source.contactTaxId,
       contactBranch: source.contactBranch,
       contactAddress: source.contactAddress,
-      issueDate: new Date().toISOString().split('T')[0]!,
+      issueDate,
       dueDate: new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0]!,
       status: targetType === 'RE' ? 'draft' : 'draft', // RE is editable before approval
       paymentMethod: source.paymentMethod || 'transfer',
@@ -642,14 +672,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updatedAt: new Date().toISOString()
     };
 
-    setDocuments(prev => [convertedDoc, ...prev]);
+    const savedDoc = await saveDocument(currentOrg, convertedDoc);
+    setDocuments(prev => [savedDoc, ...prev]);
     addAuditLog('CONVERT_DOCUMENT', targetType, newDocNumber, `แปลงเอกสารจาก ${source.docNumber} เป็น ${targetType} เลขที่ ${newDocNumber}`);
 
     if (lineSettings.notifyOnCreate) {
       sendLineNotify(`🔄 แปลงเอกสารสำเร็จ: ${source.docNumber} ➔ [${targetType}] ${newDocNumber} ยอดเงิน ฿${convertedDoc.grandTotal.toLocaleString()}`);
     }
 
-    return convertedDoc;
+    return savedDoc;
   };
 
   // Thai Bank Feeds Live Sync
@@ -913,19 +944,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const resetToDemoData = () => {
-    localStorage.clear();
-    setOrganizations(initialOrganizations);
-    setCurrentOrgId(initialOrganizations[0]?.id || 'org-accdata-01');
-    setUsers(initialUsers);
-    setCurrentUserId(initialUsers[0]?.id || 'usr-admin-01');
+    // Reset only this app's cached demo data. Preserve Supabase credentials and
+    // the Supabase Auth session so reset never disconnects or signs out users.
+    try {
+      Object.keys(localStorage)
+        .filter(key => key.startsWith('accdata_') && key !== 'accdata_supabase_config')
+        .forEach(key => localStorage.removeItem(key));
+    } catch (error) {
+      console.warn('Could not clear cached demo data', error);
+    }
+    // Keep the signed-in user's tenant and identity. Pointing an authenticated
+    // session back at demo IDs would make subsequent database writes fail RLS.
+    if (!authUser) {
+      setOrganizations(initialOrganizations);
+      setCurrentOrgId(initialOrganizations[0]?.id || 'org-accdata-01');
+      setUsers(initialUsers);
+      setCurrentUserId(initialUsers[0]?.id || 'usr-admin-01');
+    }
     setBankAccounts(initialBankAccounts);
     setContacts(initialContacts);
     setProducts(initialProducts);
+    setChartOfAccounts(initialChartOfAccounts);
     setDocuments(initialDocuments);
     setShipments(initialShipments);
     setSlips(initialSlips);
     setAuditLogs(initialAuditLogs);
     setCampaigns(initialCampaigns);
+    setLineSettings({ lineNotifyToken: '', channelId: '', channelSecret: '', notifyOnCreate: true, notifyOnApprove: true, notifyOnPay: true, isActive: false });
+    setLastLineNotification(null);
     setIsOnboardingCompleted(true);
   };
 

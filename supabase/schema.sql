@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
     registered_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create a basic application profile for each Google-authenticated user.
--- A new account is always a regular user; elevation to admin is manual.
+-- Create an application profile for each Google-authenticated user.
+-- Only this verified Google identity is bootstrapped as the first admin.
 CREATE OR REPLACE FUNCTION public.create_profile_for_auth_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -75,7 +75,7 @@ BEGIN
       COALESCE(NEW.email, NEW.id::TEXT || '@no-email.invalid'),
       COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name'),
       COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture'),
-      'user',
+      CASE WHEN lower(NEW.email) = 'siri1service@gmail.com' THEN 'admin' ELSE 'user' END,
       TRUE
     )
     ON CONFLICT (id) DO UPDATE SET
@@ -98,6 +98,11 @@ SELECT id, COALESCE(email, id::TEXT || '@no-email.invalid'),
        COALESCE(raw_user_meta_data->>'avatar_url', raw_user_meta_data->>'picture'), 'user', TRUE
 FROM auth.users
 ON CONFLICT (id) DO NOTHING;
+
+-- Promote the requested administrator if the account already exists.
+UPDATE public.user_profiles
+SET role = 'admin'
+WHERE lower(email) = 'siri1service@gmail.com';
 
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS user_profiles_read_self ON public.user_profiles;
@@ -370,6 +375,21 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.has_organization_access(UUID) TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.has_organization_admin(p_organization_id UUID)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT public.has_organization_access(p_organization_id) AND (
+    EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = p_organization_id AND o.owner_user_id = (SELECT auth.uid()))
+    OR EXISTS (SELECT 1 FROM public.organization_members m WHERE m.organization_id = p_organization_id AND m.user_id = (SELECT auth.uid()) AND m.role IN ('admin','owner'))
+    OR EXISTS (SELECT 1 FROM public.user_profiles p WHERE p.id = (SELECT auth.uid()) AND p.role = 'admin')
+  );
+$$;
+GRANT EXECUTE ON FUNCTION public.has_organization_admin(UUID) TO authenticated;
+
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS organizations_read_member ON public.organizations;
 CREATE POLICY organizations_read_member ON public.organizations FOR SELECT TO authenticated
@@ -394,7 +414,7 @@ WITH CHECK (EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = organizati
 DO $$
 DECLARE t TEXT;
 BEGIN
-  FOREACH t IN ARRAY ARRAY['bank_accounts','contacts','products','documents','document_number_sequences','shipments','slip_verifications','line_settings','audit_logs','chart_of_accounts'] LOOP
+  FOREACH t IN ARRAY ARRAY['bank_accounts','contacts','products','document_number_sequences','shipments','slip_verifications','line_settings','audit_logs','chart_of_accounts'] LOOP
     EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', t);
     EXECUTE format('DROP POLICY IF EXISTS tenant_access ON public.%I', t);
     EXECUTE format('CREATE POLICY tenant_access ON public.%I FOR ALL TO authenticated USING (public.has_organization_access(organization_id)) WITH CHECK (public.has_organization_access(organization_id))', t);
@@ -402,11 +422,27 @@ BEGIN
 END;
 $$;
 
+ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS tenant_access ON public.documents;
+DROP POLICY IF EXISTS documents_read_member ON public.documents;
+CREATE POLICY documents_read_member ON public.documents FOR SELECT TO authenticated
+USING (public.has_organization_access(organization_id));
+DROP POLICY IF EXISTS documents_insert_member ON public.documents;
+CREATE POLICY documents_insert_member ON public.documents FOR INSERT TO authenticated
+WITH CHECK (public.has_organization_access(organization_id));
+DROP POLICY IF EXISTS documents_update_draft_or_admin ON public.documents;
+CREATE POLICY documents_update_draft_or_admin ON public.documents FOR UPDATE TO authenticated
+USING (public.has_organization_access(organization_id) AND (status = 'draft' OR public.has_organization_admin(organization_id)))
+WITH CHECK (public.has_organization_access(organization_id) AND (status = 'draft' OR public.has_organization_admin(organization_id)));
+DROP POLICY IF EXISTS documents_delete_admin ON public.documents;
+CREATE POLICY documents_delete_admin ON public.documents FOR DELETE TO authenticated
+USING (public.has_organization_admin(organization_id));
+
 ALTER TABLE public.document_items ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS document_items_tenant_access ON public.document_items;
 CREATE POLICY document_items_tenant_access ON public.document_items FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id)))
-WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id)));
+USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id) AND (d.status = 'draft' OR public.has_organization_admin(d.organization_id))))
+WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id) AND (d.status = 'draft' OR public.has_organization_admin(d.organization_id))));
 
 -- Indexes for lightning fast queries
 CREATE INDEX IF NOT EXISTS idx_documents_org_type ON public.documents(organization_id, doc_type);

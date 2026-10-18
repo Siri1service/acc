@@ -141,9 +141,9 @@ export const TenantSwitcherModal: React.FC = () => {
               </div>
 
               <div className="pt-2 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="text-[11px] text-outline">
-                  สิทธิ์ผู้ใช้ปัจจุบัน: <b className="text-on-surface">{currentUser.role}</b>
-                </span>
+                {currentUser.role === 'admin' && <span className="text-[11px] text-outline">
+                  สิทธิ์ผู้ใช้ปัจจุบัน: <b className="text-on-surface">ผู้ดูแลระบบ</b>
+                </span>}
                 <button
                   onClick={() => setIsCreatingNew(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary hover:bg-primary-container text-xs font-semibold rounded-lg shadow-xs transition-all"

@@ -134,7 +134,7 @@ bun run build
 
 ## สมัครและเข้าใช้งาน Online
 
-**ไม่มีรหัสผ่านแอดมินกลาง** สมัครและเข้าสู่ระบบด้วยบัญชี Google; บัญชีใหม่จะได้สิทธิ์ `user` ก่อน ผู้ดูแลคนแรกต้องถูกเลื่อนสิทธิ์ในฐานข้อมูลโดยเจ้าของ Supabase Project
+**ไม่มีรหัสผ่านแอดมินกลาง** สมัครและเข้าสู่ระบบด้วยบัญชี Google บัญชี `siri1service@gmail.com` ถูกกำหนดเป็นผู้ดูแลโดย trigger ใน schema ส่วนบัญชีอื่นเริ่มต้นเป็น `user`
 
 ### ตั้งค่า Supabase ครั้งแรก
 
@@ -147,12 +147,12 @@ bun run build
 
 ### กำหนดผู้ดูแลระบบ
 
-หลังจากผู้ดูแลเข้าสู่ระบบ Google อย่างน้อยหนึ่งครั้ง ให้เจ้าของ Supabase Project เปิด SQL Editor และรันคำสั่งนี้ โดยแทนอีเมลให้ตรงกับบัญชี Google ที่ใช้สมัคร:
+การรัน schema ที่อัปเดตจะเลื่อน `siri1service@gmail.com` เป็น admin ให้อัตโนมัติ หากสร้างโปรไฟล์ไปก่อนแล้ว ให้เจ้าของ Supabase Project เปิด SQL Editor และรัน:
 
 ```sql
 UPDATE public.user_profiles
 SET role = 'admin'
-WHERE lower(email) = lower('admin@yourcompany.com');
+WHERE lower(email) = lower('siri1service@gmail.com');
 ```
 
 ตรวจผลลัพธ์ว่ามี 1 แถวถูกแก้ไข แล้ว refresh หน้าเว็บ สิทธิ์ `admin` จะถูกอ่านจากโปรไฟล์ในฐานข้อมูล ไม่มีรหัสแอดมินให้กรอกหรือแชร์ ใช้ Google Workspace ของบริษัท เปิด MFA/passkey และเก็บ recovery methods ไว้กับผู้รับผิดชอบ

@@ -46,9 +46,9 @@ const MainAppContent: React.FC = () => {
       case 'reports':
         return <ReportsView />;
       case 'users':
-        return <UserManagementView />;
+        return currentUser.role === 'admin' ? <UserManagementView /> : <RestrictedAdminView />;
       case 'settings':
-        return <SettingsView />;
+        return currentUser.role === 'admin' ? <SettingsView /> : <RestrictedAdminView />;
       default:
         return <DashboardView onOpenNewDocModal={(type) => setQuickNewDocType(type)} />;
     }
@@ -116,4 +116,11 @@ export default function App() {
     </AppProvider>
   );
 }
+
+const RestrictedAdminView: React.FC = () => (
+  <section className="max-w-xl mx-auto mt-12 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-6 text-center">
+    <h1 className="text-lg font-bold text-on-surface">ไม่มีสิทธิ์เข้าถึงหน้านี้</h1>
+    <p className="mt-2 text-sm text-on-surface-variant">หน้านี้สงวนไว้สำหรับผู้ดูแลระบบ</p>
+  </section>
+);
 

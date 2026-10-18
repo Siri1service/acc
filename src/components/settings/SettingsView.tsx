@@ -105,7 +105,7 @@ export const SettingsView: React.FC = () => {
       notifyOnCreate,
       notifyOnApprove,
       notifyOnPay,
-      isActive: true
+      isActive: Boolean(lineToken.trim())
     });
 
     setSaveSuccess(true);
@@ -570,13 +570,13 @@ export const SettingsView: React.FC = () => {
           {/* Reset Demo Data Button */}
           <div className="p-4 rounded-xl border border-outline-variant/30 bg-surface-container-low/40 flex items-center justify-between">
             <div>
-              <div className="font-bold text-on-surface">รีเซ็ตข้อมูลระบบกลับสู่ค่าเริ่มต้น (Reset Demo Data)</div>
-              <div className="text-[11px] text-outline">ล้างข้อมูลในแคชเบราว์เซอร์และโหลดข้อมูลตัวอย่างจาก Design</div>
+              <div className="font-bold text-on-surface">รีเซ็ตข้อมูลตัวอย่างในเบราว์เซอร์</div>
+              <div className="text-[11px] text-outline">ไม่ลบเอกสารออนไลน์ ไม่ลบการตั้งค่า Supabase และไม่ออกจากระบบ</div>
             </div>
             <button
               type="button"
               onClick={() => {
-                if (confirm('คุณต้องการรีเซ็ตข้อมูลทั้งหมดกลับสู่ค่าเริ่มต้นใช่หรือไม่?')) {
+                if (confirm('รีเซ็ตเฉพาะข้อมูลตัวอย่างที่เก็บในเบราว์เซอร์หรือไม่? ข้อมูลใน Supabase จะไม่ถูกลบ')) {
                   resetToDemoData();
                   alert('รีเซ็ตข้อมูลสำเร็จเรียบร้อยแล้ว');
                 }

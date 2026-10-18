@@ -33,15 +33,7 @@ export const initialOrganizations: Organization[] = [
       lineNotifyEnabled: true,
       bankFeedEnabled: true,
       docPrefixes: {
-        QT: 'QT-2026-',
-        BL: 'BL-2026-',
-        TAX: 'TAX-2026-',
-        RE: 'RE-2026-',
-        CASH: 'CS-2026-',
-        CN: 'CN-2026-',
-        DN: 'DN-2026-',
-        PO: 'PO-2026-',
-        GR: 'GR-2026-'
+        QT: 'QT-', BL: 'BL-', TAX: 'TAX-', RE: 'RE-', CASH: 'CS-', CN: 'CN-', DN: 'DN-', PO: 'PO-', GR: 'GR-'
       },
       activeTemplate: 'modern_cyan',
       enabledModules: {
@@ -77,15 +69,7 @@ export const initialOrganizations: Organization[] = [
       lineNotifyEnabled: true,
       bankFeedEnabled: true,
       docPrefixes: {
-        QT: 'QT-IND-',
-        BL: 'BL-IND-',
-        TAX: 'TAX-IND-',
-        RE: 'RE-IND-',
-        CASH: 'CS-IND-',
-        CN: 'CN-IND-',
-        DN: 'DN-IND-',
-        PO: 'PO-IND-',
-        GR: 'GR-IND-'
+        QT: 'QT-', BL: 'BL-', TAX: 'TAX-', RE: 'RE-', CASH: 'CS-', CN: 'CN-', DN: 'DN-', PO: 'PO-', GR: 'GR-'
       },
       activeTemplate: 'minimal_gray',
       enabledModules: {

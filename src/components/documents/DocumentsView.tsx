@@ -47,6 +47,15 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ initialType }) => 
   const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
   const [selectedNewType, setSelectedNewType] = useState<DocumentType>('QT');
 
+  const handleConvert = async (docId: string, targetType: DocumentType) => {
+    try {
+      await convertDocument(docId, targetType);
+    } catch (error) {
+      console.error('แปลงเอกสารไม่สำเร็จ:', error);
+      alert(`แปลงเอกสารไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
+    }
+  };
+
   // Filtered documents
   const filteredDocs = useMemo(() => {
     return documents.filter(doc => {
@@ -300,7 +309,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ initialType }) => 
                       <td className="py-3 px-4">
                         {doc.docType === 'QT' && (
                           <button
-                            onClick={() => convertDocument(doc.id, 'BL')}
+                            onClick={() => void handleConvert(doc.id, 'BL')}
                             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-bold text-[11px] transition-all"
                             title="แปลงใบเสนอราคานี้เป็น ใบวางบิล (BL) ทันที"
                           >
@@ -311,7 +320,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ initialType }) => 
 
                         {doc.docType === 'BL' && (
                           <button
-                            onClick={() => convertDocument(doc.id, 'TAX')}
+                            onClick={() => void handleConvert(doc.id, 'TAX')}
                             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-secondary font-bold text-[11px] transition-all"
                             title="แปลงใบวางบิลนี้เป็น ใบกำกับภาษี (TAX)"
                           >
@@ -322,7 +331,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ initialType }) => 
 
                         {doc.docType === 'TAX' && (
                           <button
-                            onClick={() => convertDocument(doc.id, 'RE')}
+                            onClick={() => void handleConvert(doc.id, 'RE')}
                             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] transition-all"
                             title="ออกใบเสร็จรับเงิน (RE) จากใบกำกับภาษีนี้"
                           >
@@ -333,7 +342,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ initialType }) => 
 
                         {doc.docType === 'PO' && (
                           <button
-                            onClick={() => convertDocument(doc.id, 'GR')}
+                            onClick={() => void handleConvert(doc.id, 'GR')}
                             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-outline font-bold text-[11px] transition-all"
                             title="แปลงใบสั่งซื้อเป็น ใบรับสินค้า (GR)"
                           >

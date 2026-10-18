@@ -22,6 +22,7 @@ export const UserManagementView: React.FC = () => {
   const { 
     users, 
     currentUser, 
+    authUser,
     switchUserById, 
     updateUserProfile, 
     toggleUserStatus, 
@@ -67,6 +68,26 @@ export const UserManagementView: React.FC = () => {
   const handleUpdateRole = (userId: string, newRole: UserRole) => {
     updateUserProfile(userId, { role: newRole });
   };
+
+  if (!isAdmin) {
+    return (
+      <section className="max-w-xl mx-auto mt-12 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-6 text-center">
+        <h1 className="text-lg font-bold text-on-surface">ไม่มีสิทธิ์เข้าถึงหน้านี้</h1>
+        <p className="mt-2 text-sm text-on-surface-variant">หน้านี้สงวนไว้สำหรับผู้ดูแลระบบ</p>
+      </section>
+    );
+  }
+
+  if (authUser) {
+    return (
+      <section className="max-w-2xl mx-auto mt-12 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-6 space-y-3">
+        <h1 className="text-lg font-bold text-on-surface">บัญชีผู้ดูแลระบบ</h1>
+        <p className="text-sm text-on-surface-variant">เข้าสู่ระบบแล้ว: {currentUser.email}</p>
+        <p className="text-sm text-on-surface-variant">สิทธิ์อ่านจาก `user_profiles` ใน Supabase และไม่สามารถเปลี่ยนจากหน้าเว็บได้</p>
+        <p className="text-xs text-outline">การเพิ่มหรือเปลี่ยนสิทธิ์ผู้ดูแลทำผ่าน Supabase SQL Editor โดยเจ้าของโปรเจกต์เท่านั้น</p>
+      </section>
+    );
+  }
 
   return (
     <div className="space-y-6">
