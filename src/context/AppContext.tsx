@@ -112,7 +112,7 @@ interface AppContextType {
 
   // Contacts
   contacts: Contact[];
-  addContact: (c: Partial<Contact>) => Promise<void>;
+  addContact: (c: Partial<Contact>) => Promise<Contact>;
   updateContact: (id: string, updates: Partial<Contact>) => Promise<void>;
   deleteContact: (id: string) => Promise<void>;
   verifyDbdTaxId: (taxId: string) => Promise<{ valid: boolean; companyName?: string; registeredCapital?: string }>;
@@ -977,7 +977,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Contacts
-  const addContact = async (c: Partial<Contact>) => {
+  const addContact = async (c: Partial<Contact>): Promise<Contact> => {
     const newContact: Contact = {
       id: `c-${Date.now()}`,
       orgId: currentOrg.id,
@@ -1000,6 +1000,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = await saveContact(currentOrg, newContact);
     setContacts(prev => [saved, ...prev]);
     addAuditLog('ADD_CONTACT', newContact.contactType, newContact.name, `เพิ่มผู้ติดต่อใหม่: ${newContact.name}`);
+    return saved;
   };
 
   const updateContact = async (id: string, updates: Partial<Contact>) => {

@@ -30,13 +30,16 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     products, 
     bankAccounts, 
     documents,
+    addContact,
     addDocument, 
     updateDocument, 
     getNextDocNumber,
-    currentUser
+    currentUser,
+    authUser
   } = useApp();
 
   const isEditing = Boolean(editingDocument);
+  const canCreateContact = !authUser || currentUser.role === 'admin' || currentUser.organizationPermissions?.manage_contacts === true;
   const docType = editingDocument ? editingDocument.docType : initialType;
 
   // Form State
@@ -54,6 +57,10 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   
   // Items state
   const [items, setItems] = useState<DocumentItem[]>([]);
+  const [isAddingContact, setIsAddingContact] = useState(false);
+  const [contactSaving, setContactSaving] = useState(false);
+  const [contactError, setContactError] = useState('');
+  const [newContact, setNewContact] = useState({ name: '', taxId: '', branch: 'สำนักงานใหญ่ (00000)', address: '', phone: '', email: '' });
 
   // Initialize form
   useEffect(() => {
@@ -72,7 +79,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       setItems(editingDocument.items);
     } else {
       setDocNumber(getNextDocNumber(docType));
-      const defaultContact = contacts[0];
+      const defaultContact = contacts.find(contact => contact.contactType !== 'vendor');
       setContactId(defaultContact ? defaultContact.id : '');
       const today = new Date().toISOString().split('T')[0]!;
       setIssueDate(today);
@@ -120,6 +127,11 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       const updated = [...prev];
       const row = { ...updated[index]!, [field]: value };
 
+      if (field === 'itemName' && row.productId) {
+        const selectedProduct = products.find(product => product.id === row.productId);
+        if (selectedProduct?.name !== value) row.productId = undefined;
+      }
+
       if (field === 'quantity' || field === 'unitPrice' || field === 'discountAmount') {
         const qty = Number(field === 'quantity' ? value : row.quantity) || 0;
         const price = Number(field === 'unitPrice' ? value : row.unitPrice) || 0;
@@ -147,6 +159,38 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       updated[index] = row;
       return updated;
     });
+  };
+
+  const applyLatestMatchingProduct = (index: number, itemName: string) => {
+    const normalizedName = itemName.trim().toLocaleLowerCase('th-TH');
+    if (!normalizedName) return;
+    // Products are loaded newest first, so the first exact name match carries
+    // the latest catalog price and unit when duplicate names exist.
+    const latestMatch = products.find(product => product.name.trim().toLocaleLowerCase('th-TH') === normalizedName);
+    if (latestMatch) handleSelectProduct(index, latestMatch.id);
+  };
+
+  const saveNewContact = async () => {
+    if (!newContact.name.trim()) {
+      setContactError('กรุณากรอกชื่อลูกค้า');
+      return;
+    }
+    setContactSaving(true);
+    setContactError('');
+    try {
+      const created = await addContact({
+        contactType: 'customer', entityType: 'juristic', name: newContact.name.trim(),
+        taxId: newContact.taxId.trim(), branch: newContact.branch.trim(), address: newContact.address.trim(),
+        shippingAddress: newContact.address.trim(), phone: newContact.phone.trim(), email: newContact.email.trim()
+      });
+      setContactId(created.id);
+      setNewContact({ name: '', taxId: '', branch: 'สำนักงานใหญ่ (00000)', address: '', phone: '', email: '' });
+      setIsAddingContact(false);
+    } catch (error) {
+      setContactError(error instanceof Error ? error.message : 'เพิ่มลูกค้าไม่สำเร็จ กรุณาลองอีกครั้ง');
+    } finally {
+      setContactSaving(false);
+    }
   };
 
   const handleAddItem = () => {
@@ -395,17 +439,21 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                 <label className="block text-xs font-semibold text-on-surface mb-1">
                   เลือกลูกค้าจากสมุดรายชื่อ
                 </label>
-                <select
-                  value={contactId}
-                  onChange={(e) => setContactId(e.target.value)}
-                  className="w-full px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface focus:outline-none focus:border-primary"
-                >
-                  {contacts.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name} ({c.taxId || 'ไม่ระบุเลขภาษี'})
-                    </option>
-                  ))}
-                </select>
+                <div className="flex gap-2">
+                  <select
+                    value={contactId}
+                    onChange={(e) => setContactId(e.target.value)}
+                    className="min-w-0 flex-1 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface focus:outline-none focus:border-primary"
+                  >
+                    <option value="">-- เลือกลูกค้า --</option>
+                    {contacts.filter(c => c.contactType !== 'vendor').map((c) => (
+                      <option key={c.id} value={c.id}>{c.name} ({c.taxId || 'ไม่ระบุเลขภาษี'})</option>
+                    ))}
+                  </select>
+                  {canCreateContact && <button type="button" onClick={() => { setIsAddingContact(value => !value); setContactError(''); }} className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-primary/10 px-2.5 text-primary font-semibold hover:bg-primary/15">
+                    <Plus className="h-3.5 w-3.5" /> เพิ่มลูกค้า
+                  </button>}
+                </div>
               </div>
 
               <div>
@@ -432,6 +480,24 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                 />
               </div>
             </div>
+
+            {isAddingContact && (
+              <div className="rounded-lg border border-primary/20 bg-surface-container-lowest p-3 space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <input value={newContact.name} onChange={e => setNewContact(prev => ({ ...prev, name: e.target.value }))} placeholder="ชื่อลูกค้า / บริษัท *" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                  <input value={newContact.taxId} onChange={e => setNewContact(prev => ({ ...prev, taxId: e.target.value }))} placeholder="เลขประจำตัวผู้เสียภาษี" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                  <input value={newContact.branch} onChange={e => setNewContact(prev => ({ ...prev, branch: e.target.value }))} placeholder="สาขา" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                  <input value={newContact.phone} onChange={e => setNewContact(prev => ({ ...prev, phone: e.target.value }))} placeholder="เบอร์โทร" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                  <input value={newContact.email} onChange={e => setNewContact(prev => ({ ...prev, email: e.target.value }))} placeholder="อีเมล" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                  <input value={newContact.address} onChange={e => setNewContact(prev => ({ ...prev, address: e.target.value }))} placeholder="ที่อยู่สำหรับออกเอกสาร" className="rounded-lg border border-outline-variant/40 px-3 py-2" />
+                </div>
+                {contactError && <p role="alert" className="text-error">{contactError}</p>}
+                <div className="flex justify-end gap-2">
+                  <button type="button" onClick={() => setIsAddingContact(false)} className="rounded-lg px-3 py-1.5 text-on-surface-variant hover:bg-surface-container">ยกเลิก</button>
+                  <button type="button" disabled={contactSaving} onClick={() => void saveNewContact()} className="rounded-lg bg-primary px-3 py-1.5 font-semibold text-white disabled:opacity-50">{contactSaving ? 'กำลังบันทึก…' : 'บันทึกลูกค้า'}</button>
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-semibold text-on-surface mb-1">
@@ -485,6 +551,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                             required
                             value={item.itemName}
                             onChange={(e) => handleItemChange(idx, 'itemName', e.target.value)}
+                            onBlur={(e) => applyLatestMatchingProduct(idx, e.target.value)}
                             placeholder="พิมพ์ชื่อสินค้าหรือบริการ"
                             className="w-full px-2 py-1 bg-surface-container-low border border-outline-variant/30 rounded text-on-surface font-medium focus:outline-none focus:border-primary"
                           />
@@ -493,7 +560,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                             onChange={(e) => handleSelectProduct(idx, e.target.value)}
                             className="w-full text-[10px] text-outline bg-transparent border-0 focus:ring-0 p-0 cursor-pointer"
                           >
-                            <option value="">-- หรือเลือกสินค้าจากคลัง --</option>
+                            <option value="">-- ค้นหาในคลัง หรือพิมพ์สินค้าใหม่ด้านบน --</option>
                             {products.map(p => (
                               <option key={p.id} value={p.id}>{p.name} (คงเหลือ: {p.stockQuantity})</option>
                             ))}
