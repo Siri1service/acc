@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+
+<html lang="th"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary-fixed-dim": "#6bd8cb",
+          "on-primary-fixed-variant": "#173bab",
+          "on-surface": "#131b2e",
+          "inverse-surface": "#283044",
+          "tertiary-container": "#6b4200",
+          "secondary": "#006a61",
+          "surface": "#faf8ff",
+          "error": "#ba1a1a",
+          "on-error": "#ffffff",
+          "on-tertiary-fixed": "#2a1700",
+          "primary-fixed": "#dde1ff",
+          "inverse-primary": "#b8c4ff",
+          "surface-container": "#eaedff",
+          "tertiary": "#4c2e00",
+          "secondary-container": "#86f2e4",
+          "secondary-fixed": "#89f5e7",
+          "surface-dim": "#d2d9f4",
+          "on-secondary": "#ffffff",
+          "background": "#faf8ff",
+          "on-tertiary": "#ffffff",
+          "tertiary-fixed": "#ffddb8",
+          "on-surface-variant": "#444653",
+          "on-tertiary-fixed-variant": "#653e00",
+          "outline": "#757684",
+          "primary-container": "#1e40af",
+          "on-secondary-fixed-variant": "#005049",
+          "outline-variant": "#c4c5d5",
+          "on-secondary-container": "#006f66",
+          "surface-bright": "#faf8ff",
+          "surface-container-high": "#e2e7ff",
+          "primary": "#00288e",
+          "on-primary-container": "#a8b8ff",
+          "error-container": "#ffdad6",
+          "surface-tint": "#3755c3",
+          "on-tertiary-container": "#ffa929",
+          "on-primary": "#ffffff",
+          "surface-variant": "#dae2fd",
+          "primary-fixed-dim": "#b8c4ff",
+          "surface-container-highest": "#dae2fd",
+          "surface-container-low": "#f2f3ff",
+          "on-secondary-fixed": "#00201d",
+          "on-error-container": "#93000a",
+          "tertiary-fixed-dim": "#ffb95f",
+          "inverse-on-surface": "#eef0ff",
+          "on-primary-fixed": "#001453",
+          "surface-container-lowest": "#ffffff",
+          "on-background": "#131b2e"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "margin": "1rem",
+          "space-lg": "1.25rem",
+          "margin-md": "1.5rem",
+          "gutter-lg": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin-lg": "2rem",
+          "space-sm": "0.5rem",
+          "space-xl": "2rem",
+          "gutter": "1rem"
+        },
+        "fontFamily": {
+          "display": [
+            "Inter"
+          ],
+          "label-text": [
+            "Inter"
+          ],
+          "headline-lg-mobile": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Inter"
+          ],
+          "mono-num-md": [
+            "JetBrains Mono"
+          ],
+          "mono-num-sm": [
+            "JetBrains Mono"
+          ],
+          "title-sm": [
+            "Inter"
+          ],
+          "body-regular": [
+            "Inter"
+          ],
+          "mono-num-lg": [
+            "JetBrains Mono"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-compact": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "display": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-text": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "mono-num-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "mono-num-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "title-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-regular": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "mono-num-lg": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-compact": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-regular text-body-regular text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="FlowLedger Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UW2182kbEUN2-IVCJKIgShUNSJxahA1J8co-bonyrFJwCju1y5dFHgHS90HxNl4aI3GzWN717VyiWOhmK1WRFdcfAUl1JNtto-mVs50OBhBuyW70Ahb65_GeVoRoylJ7Cp6HS2bSbfF_WPM_psNBV1m_crQlvPYTx5R-iLRFMMa0SJGENWWRy5mVV30n2HYmgzUJCnVFA1fc5xfTsWQYAD7tnNijyK8I6Dzx7N986g-30UxR6QHHh9MHtk"/><div class="flex flex-col"><span class="font-title-sm text-title-sm text-primary leading-tight font-bold">FlowLedger</span><span class="font-label-text text-label-text text-on-surface-variant">โฟลว์เลดเจอร์ ERP</span></div></div><div class="px-space-md pt-space-sm pb-space-xs"><div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"><div class="flex items-center gap-space-xs overflow-hidden"><span class="material-symbols-outlined text-primary text-lg">corporate_fare</span><div class="truncate"><p class="font-label-text text-label-text text-on-surface font-medium truncate">บจก. สยาม โกลบอล เทรดดิ้ง</p><p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">สาขาใหญ่ (00000)</p></div></div><span class="material-symbols-outlined text-on-surface-variant text-base">unfold_more</span></div></div><nav class="flex flex-col px-space-sm pt-space-sm gap-space-xs" data-active-classes="bg-primary text-on-primary font-bold"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-compact text-body-compact">แดชบอร์ดภาพรวม</span></div><span class="w-2 h-2 rounded-full bg-secondary"></span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ฝ่ายขายและลูกหนี้</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-quotations" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">request_quote</span><span class="font-body-compact text-body-compact">ใบเสนอราคา (QT)</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-invoices" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">receipt_long</span><span class="font-body-compact text-body-compact">ใบแจ้งหนี้ / วางบิล (IV)</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-invoices" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">verified_user</span><span class="font-body-compact text-body-compact">ใบกำกับภาษี (TAX)</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="official-receipts" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">payments</span><span class="font-body-compact text-body-compact">ใบเสร็จรับเงิน (RE)</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="credit-debit-notes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">swap_horiz</span><span class="font-body-compact text-body-compact">ใบลดหนี้ / เพิ่มหนี้</span></div></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ค่าใช้จ่ายและภาษี</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="purchases-and-expenses" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">shopping_cart</span><span class="font-body-compact text-body-compact">เอกสารซื้อและค่าใช้จ่าย</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-accounting-reports" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">account_balance</span><span class="font-body-compact text-body-compact">ภาษี &amp; บัญชี (ภ.พ.30 / ภ.ง.ด.)</span></div></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ระบบงานและจัดส่ง</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="inventory-stock" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">inventory_2</span><span class="font-body-compact text-body-compact">สินค้าและสต็อก</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="contacts-directory" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">contacts</span><span class="font-body-compact text-body-compact">สมุดรายชื่อผู้ติดต่อ</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="logistics-and-shipping" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">local_shipping</span><span class="font-body-compact text-body-compact">การจัดส่ง &amp; ใบปะหน้า</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="financial-reports" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-compact text-body-compact">รายงานสรุปผู้บริหาร</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="system-settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-compact text-body-compact">ตั้งค่าระบบ &amp; เชื่อมต่อ API</span></div></a></nav></div><div class="p-space-md bg-surface-container-low mx-space-sm mb-space-md rounded-xl"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-text text-label-text text-on-surface font-semibold">Live Bank Feed</span><span class="flex items-center gap-1 font-label-text text-label-text text-secondary font-medium"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Syncing</span></div><div class="flex items-center gap-space-xs text-on-surface-variant font-mono-num-sm text-mono-num-sm"><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">KBANK</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">SCB</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">BBL</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span><input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary" placeholder="ค้นหาเอกสาร (QT, IV, TAX), ลูกค้า, เลขผู้เสียภาษี..." type="text"/></div></div><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-text text-label-text text-on-surface">ธนาคารเชื่อมต่อแล้ว 3 บัญชี</span></div><button class="flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-title-sm text-label-text px-space-md py-2 rounded-lg transition-colors"><span class="material-symbols-outlined text-base">add</span><span>สร้างเอกสาร</span></button><div class="h-6 w-px bg-outline-variant"></div><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">chat</span><span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span></button><div class="flex items-center gap-space-sm pl-space-xs cursor-pointer"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsfJrYp-v0Uh-hH0XzSPJfniv_vTzX1KLPUhuD6K0Qv3EAmp8bywl6zMvsig9S3XtWhdW4j6BKOB7iuMhu1bV4ndOz4hkbUg0RFI3mkgbQzycmzLiNWn55d8uPfM7uznnWAqd29enJ6tZFR99LTIz2NNhS02RBFSncS9Qd1_f7QHz96_QiTC88duk-7eUVD-Yw0lw2Tzc43xYIhd74Qhwns2oHb8eKftfcgLm6lWddQ9ll9do3MnHwdg"/><div class="hidden sm:flex flex-col text-left"><span class="font-body-compact text-body-compact text-on-surface font-semibold leading-tight">กานต์สิรี เลิศวิทย์สกุล</span><span class="font-label-text text-label-text text-on-surface-variant">ผู้จัดการฝ่ายบัญชีและการเงิน</span></div><span class="material-symbols-outlined text-on-surface-variant text-base">keyboard_arrow_down</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Document Workflow & Action Header -->
+<div class="sticky top-16 z-30 bg-surface-container-lowest/95 backdrop-blur-md px-space-lg py-space-sm shadow-sm flex flex-col gap-space-sm">
+<!-- Row 1: Breadcrumbs, Status Badge & Action Group -->
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<a class="font-label-text text-label-text text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm">inventory</span>
+<span>เอกสารขาย</span>
+</a>
+<span class="material-symbols-outlined text-outline-variant text-sm">chevron_right</span>
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate">สร้างเอกสารขายใหม่</span>
+<span class="font-mono-num-sm text-mono-num-sm px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-medium" id="doc-code-pill">QT-202410-0098</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-text text-label-text">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+            แบบร่าง (Draft)
+          </span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-text text-label-text transition-colors" type="button">
+<span class="material-symbols-outlined text-base">save</span>
+<span>บันทึกร่าง</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-text text-label-text transition-colors" type="button">
+<span class="material-symbols-outlined text-base">print</span>
+<span>พิมพ์ / ดาวน์โหลด</span>
+</button>
+<button class="hidden sm:flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-secondary-fixed/50 hover:bg-secondary-fixed text-on-secondary-fixed font-label-text text-label-text transition-colors" type="button">
+<span class="material-symbols-outlined text-base">send</span>
+<span>ส่ง LINE Notify</span>
+</button>
+<div class="h-6 w-px bg-surface-variant mx-1"></div>
+<button class="flex items-center gap-1.5 px-space-lg py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-label-text shadow-sm transition-all transform active:scale-95" type="button">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>อนุมัติและออกเอกสาร</span>
+</button>
+</div>
+</div>
+<!-- Row 2: Document Pipeline Transformation Switcher -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary text-on-primary font-label-text text-label-text shadow-sm transition-all" id="tab-qt" onclick="setDocType('QT')" type="button">
+<span class="material-symbols-outlined text-sm">request_quote</span>
+<span>ใบเสนอราคา (QT)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-text text-label-text transition-all" id="tab-iv" onclick="setDocType('IV')" type="button">
+<span class="material-symbols-outlined text-sm">receipt_long</span>
+<span>ใบแจ้งหนี้/วางบิล (IV)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-text text-label-text transition-all" id="tab-tax" onclick="setDocType('TAX')" type="button">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>ใบกำกับภาษี (TAX)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-text text-label-text transition-all" id="tab-re" onclick="setDocType('RE')" type="button">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span>ใบเสร็จรับเงิน (RE)</span>
+</button>
+</div>
+<!-- Thai Tax Compliance Tag & Conversion Prompt -->
+<div class="flex items-center gap-2 text-on-surface-variant font-label-text text-label-text">
+<span class="inline-flex items-center gap-1 text-secondary font-medium">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+          สอดคล้องระเบียบกรมสรรพากร (RD Net 2567)
+        </span>
+<span class="text-outline-variant">•</span>
+<button class="text-primary hover:underline flex items-center gap-0.5" type="button">
+<span>แปลงร่างเอกสารไปขั้นต่อไป</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Split Layout (Form 60% : Live Document Preview 40%) -->
+<div class="p-space-lg grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT PANEL: Invoicing Engine & Form Data (60% on XL = 7 cols) -->
+<div class="xl:col-span-7 flex flex-col gap-space-lg">
+<!-- Section 1: Customer Contact Dossier -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="p-1.5 rounded-lg bg-primary-fixed text-on-primary-fixed material-symbols-outlined text-lg">person_pin</span>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface font-semibold">ข้อมูลลูกค้าและคู่ค้า (Customer Details)</h2>
+<p class="font-label-text text-label-text text-on-surface-variant">ระบุผู้ซื้อเพื่อออกเอกสารและคำนวณฐานภาษีมูลค่าเพิ่ม</p>
+</div>
+</div>
+<button class="flex items-center gap-1 text-primary hover:text-primary-container font-label-text text-label-text font-medium" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+<span>+ สร้างผู้ติดต่อใหม่</span>
+</button>
+</div>
+<!-- Customer Select Search Box -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+<div class="md:col-span-8 flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">ค้นหาลูกค้าในสมุดรายชื่อ</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full pl-9 pr-24 py-2 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary shadow-inner" id="input-cust-name" placeholder="พิมพ์ชื่อบริษัท, ชื่อผู้ติดต่อ, หรือ Tax ID..." type="text" value="บจก. อัลฟ่า โลจิสติกส์ โซลูชั่นส์"/>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono-num-sm text-mono-num-sm">CUS-0914</span>
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">ประเภทผู้เสียภาษี</label>
+<div class="flex items-center bg-surface-container-low p-1 rounded-lg">
+<button class="flex-1 py-1 px-2 rounded font-label-text text-label-text bg-surface-container-lowest text-primary font-semibold shadow-xs text-center" id="type-corp" onclick="setTaxType('corp')" type="button">นิติบุคคล</button>
+<button class="flex-1 py-1 px-2 rounded font-label-text text-label-text text-on-surface-variant hover:text-on-surface text-center" id="type-indv" onclick="setTaxType('indv')" type="button">บุคคลธรรมดา</button>
+</div>
+</div>
+</div>
+<!-- Customer Detailed Metadata (2 columns) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono-num-md text-mono-num-md text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary" id="input-cust-taxid" maxlength="13" placeholder="0-0000-00000-00-0" type="text" value="0105556094821"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">สาขา</label>
+<div class="flex items-center gap-2">
+<select class="w-1/2 px-2.5 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-cust-branch-type">
+<option selected="" value="hq">สำนักงานใหญ่</option>
+<option value="sub">สาขาย่อย</option>
+</select>
+<input class="w-1/2 px-2.5 py-1.5 bg-surface-container-low rounded-lg font-mono-num-md text-mono-num-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary text-center" id="input-cust-branch-no" placeholder="00000" type="text" value="00000"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">เบอร์โทรศัพท์ / LINE OA</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-cust-phone" placeholder="02-xxx-xxxx" type="text" value="02-882-9910, 081-445-6622"/>
+</div>
+</div>
+<!-- Address and Email -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">ที่อยู่ตามใบกำกับภาษี (Billing Address)</label>
+<span class="text-xs text-secondary cursor-pointer hover:underline">คัดลอกจากกรมพัฒนาธุรกิจฯ</span>
+</div>
+<textarea class="w-full p-2.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary resize-none" id="input-cust-address" rows="2">เลขที่ 88/19 อาคารเอ็กเซคคิวทีฟ ชั้น 14 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพฯ 10120</textarea>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">อีเมลส่ง e-Tax Invoice &amp; วางบิล</label>
+<input class="w-full px-3 py-2 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-cust-email" placeholder="account@company.com" type="email" value="billing@alphalogistics.co.th"/>
+<div class="flex items-center gap-2 mt-1">
+<input checked="" class="rounded text-primary focus:ring-primary" id="send-etax" type="checkbox"/>
+<label class="font-label-text text-label-text text-on-surface-variant" for="send-etax">ส่งสำเนา e-Tax Invoice พร้อมแนบ XML ให้ลูกค้ารับรอง</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Document Context, Timestamps & Terms -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="p-1.5 rounded-lg bg-surface-container text-primary material-symbols-outlined text-lg">calendar_today</span>
+<h2 class="font-title-sm text-title-sm text-on-surface font-semibold">เงื่อนไขเอกสารและการอ้างอิง (Document Metadata)</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md">
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">เลขที่เอกสาร (Document No.)</label>
+<div class="relative">
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono-num-md text-mono-num-md text-primary font-semibold focus:outline-none focus:ring-1 focus:ring-primary" id="input-doc-number" type="text" value="QT-202410-0098"/>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-base cursor-pointer">settings</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">วันที่ออกเอกสาร</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-issue-date" type="date" value="2024-10-24"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">เครดิตเทอม (Credit Term)</label>
+<select class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-credit-term" onchange="updateDueDate()">
+<option value="0">เงินสด (Cash on Delivery)</option>
+<option value="7">7 วัน</option>
+<option value="15">15 วัน</option>
+<option selected="" value="30">30 วัน (มาตรฐานนิติบุคคล)</option>
+<option value="60">60 วัน</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">วันครบกำหนด (Due Date)</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-due-date" type="date" value="2024-11-23"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">เลขอ้างอิงใบสั่งซื้อลูกค้า (PO No.)</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono-num-md text-mono-num-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="input-po-ref" placeholder="เช่น PO-2024-001" type="text" value="PO-ALPHA-88219"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">พนักงานขายผู้ดูแล (Sales Rep)</label>
+<select class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary">
+<option selected="">กานต์สิรี เลิศวิทย์สกุล (ทีม Sales B2B)</option>
+<option>สมศักดิ์ มหาชัย (Enterprise Key Account)</option>
+<option>พัทธนันท์ โรจนวานิช (SME Direct)</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">แผนก/โครงการ (Project Code)</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono-num-sm text-mono-num-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" type="text" value="PRJ-LOGIS-LOGISTICS-2024"/>
+</div>
+</div>
+</div>
+<!-- Section 3: Line Items Data Grid (Dense Accounting Engine) -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="p-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed material-symbols-outlined text-lg">format_list_bulleted</span>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface font-semibold">รายการสินค้าและบริการ (Itemized Table)</h2>
+<p class="font-label-text text-label-text text-on-surface-variant">ดึงข้อมูลสต็อก ตัดสินค้าคงเหลือ หรือคิดค่าบริการตามสัญญา</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-text text-label-text flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm">qr_code_scanner</span>
+<span>สแกนบาร์โค้ด</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-text text-label-text flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm">playlist_add</span>
+<span>นำเข้าจาก Excel</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="items-table">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-text text-label-text uppercase">
+<th class="py-2 px-2 w-8 text-center">#</th>
+<th class="py-2 px-3 min-w-[220px]">รหัส / รายละเอียดสินค้า</th>
+<th class="py-2 px-2 w-20 text-right">จำนวน</th>
+<th class="py-2 px-2 w-20 text-center">หน่วย</th>
+<th class="py-2 px-3 w-32 text-right">ราคา/หน่วย</th>
+<th class="py-2 px-2 w-24 text-right">ส่วนลด</th>
+<th class="py-2 px-2 w-24 text-center">ภาษี</th>
+<th class="py-2 px-3 w-32 text-right">มูลค่ารวม</th>
+<th class="py-2 px-2 w-10 text-center"></th>
+</tr>
+</thead>
+<tbody class="font-body-compact text-body-compact" id="line-items-body">
+<!-- Item Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group" data-row-id="1">
+<td class="py-2 px-2 text-center text-outline-variant font-mono-num-sm">1</td>
+<td class="py-2 px-3">
+<div class="flex flex-col gap-1">
+<input class="font-mono-num-sm text-mono-num-sm text-primary font-semibold bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none" type="text" value="FLOW-SRV-ENT01"/>
+<input class="text-on-surface font-medium bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none line-desc" type="text" value="บริการพัฒนาระบบคลังสินค้าอัจฉริยะ FlowLedger WMS API Integration (Quarterly)"/>
+</div>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-qty focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="1" type="number" value="1"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-center bg-surface-container-low px-1 py-1 rounded font-body-compact text-body-compact focus:outline-none" type="text" value="งวด"/>
+</td>
+<td class="py-2 px-3">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-price focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="0.01" type="number" value="180000.00"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-discount focus:outline-none" oninput="calculateTotals()" type="text" value="0.00"/>
+</td>
+<td class="py-2 px-2 text-center">
+<select class="w-full bg-surface-container-low py-1 px-1 rounded font-label-text text-label-text text-on-surface line-vat focus:outline-none" onchange="calculateTotals()">
+<option selected="" value="7">VAT 7%</option>
+<option value="0">ยกเว้นภาษี</option>
+</select>
+</td>
+<td class="py-2 px-3 text-right font-mono-num-md text-mono-num-md font-semibold text-on-surface line-total">
+                  180,000.00
+                </td>
+<td class="py-2 px-2 text-center">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:bg-error-container/30 p-1 rounded transition-all" onclick="removeRow(this)" type="button">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+<!-- Item Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group" data-row-id="2">
+<td class="py-2 px-2 text-center text-outline-variant font-mono-num-sm">2</td>
+<td class="py-2 px-3">
+<div class="flex flex-col gap-1">
+<input class="font-mono-num-sm text-mono-num-sm text-primary font-semibold bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none" type="text" value="FLOW-LIC-USR-50"/>
+<input class="text-on-surface font-medium bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none line-desc" type="text" value="ไลเซนส์ระบบปฏิบัติการคลาวด์ 50 ผู้ใช้งาน (Enterprise Cloud Seat License 1 ปี)"/>
+</div>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-qty focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="1" type="number" value="1"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-center bg-surface-container-low px-1 py-1 rounded font-body-compact text-body-compact focus:outline-none" type="text" value="แพ็กเกจ"/>
+</td>
+<td class="py-2 px-3">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-price focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="0.01" type="number" value="45000.00"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-discount focus:outline-none" oninput="calculateTotals()" type="text" value="0.00"/>
+</td>
+<td class="py-2 px-2 text-center">
+<select class="w-full bg-surface-container-low py-1 px-1 rounded font-label-text text-label-text text-on-surface line-vat focus:outline-none" onchange="calculateTotals()">
+<option selected="" value="7">VAT 7%</option>
+<option value="0">ยกเว้นภาษี</option>
+</select>
+</td>
+<td class="py-2 px-3 text-right font-mono-num-md text-mono-num-md font-semibold text-on-surface line-total">
+                  45,000.00
+                </td>
+<td class="py-2 px-2 text-center">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:bg-error-container/30 p-1 rounded transition-all" onclick="removeRow(this)" type="button">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+<!-- Item Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group" data-row-id="3">
+<td class="py-2 px-2 text-center text-outline-variant font-mono-num-sm">3</td>
+<td class="py-2 px-3">
+<div class="flex flex-col gap-1">
+<input class="font-mono-num-sm text-mono-num-sm text-primary font-semibold bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none" type="text" value="HARD-SCAN-2D"/>
+<input class="text-on-surface font-medium bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none line-desc" type="text" value="เครื่องอ่านบาร์โค้ดไร้สายอุตสาหกรรม Rugged 2D Barcode Scanner WiFi"/>
+</div>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-qty focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="1" type="number" value="2"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-center bg-surface-container-low px-1 py-1 rounded font-body-compact text-body-compact focus:outline-none" type="text" value="เครื่อง"/>
+</td>
+<td class="py-2 px-3">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-price focus:outline-none focus:ring-1 focus:ring-primary" oninput="calculateTotals()" step="0.01" type="number" value="8500.00"/>
+</td>
+<td class="py-2 px-2">
+<input class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-discount focus:outline-none" oninput="calculateTotals()" type="text" value="1000.00"/>
+</td>
+<td class="py-2 px-2 text-center">
+<select class="w-full bg-surface-container-low py-1 px-1 rounded font-label-text text-label-text text-on-surface line-vat focus:outline-none" onchange="calculateTotals()">
+<option selected="" value="7">VAT 7%</option>
+<option value="0">ยกเว้นภาษี</option>
+</select>
+</td>
+<td class="py-2 px-3 text-right font-mono-num-md text-mono-num-md font-semibold text-on-surface line-total">
+                  16,000.00
+                </td>
+<td class="py-2 px-2 text-center">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:bg-error-container/30 p-1 rounded transition-all" onclick="removeRow(this)" type="button">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Add Items Action Toolbar -->
+<div class="flex flex-wrap items-center gap-space-sm pt-space-xs">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-text text-label-text font-semibold transition-colors" onclick="addNewItemRow()" type="button">
+<span class="material-symbols-outlined text-base">add_circle</span>
+<span>เพิ่มรายการสินค้า</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-text text-label-text transition-colors" type="button">
+<span class="material-symbols-outlined text-base">title</span>
+<span>เพิ่มหัวข้อคั่น</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-text text-label-text transition-colors" type="button">
+<span class="material-symbols-outlined text-base">local_offer</span>
+<span>เพิ่มส่วนลดโปรโมชั่น</span>
+</button>
+</div>
+</div>
+<!-- Section 4: Thai Tax, WHT & Grand Total Calculations -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg">
+<!-- Left: Payment Conditions & Bank Transfer Info -->
+<div class="md:col-span-6 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="p-1.5 rounded-lg bg-surface-container text-secondary material-symbols-outlined text-lg">account_balance_wallet</span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-semibold">ช่องทางการชำระเงินที่ระบุบนบิล</h3>
+</div>
+<!-- Bank Selector Radios -->
+<div class="flex flex-col gap-2 pt-1">
+<label class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-2">
+<input checked="" class="text-primary focus:ring-primary" name="bank-select" type="radio"/>
+<div>
+<p class="font-label-text text-label-text text-on-surface font-semibold">ธนาคารกสิกรไทย (KBank)</p>
+<p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">055-2-94819-2 • บจก. สยาม โกลบอล เทรดดิ้ง</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-mono-num-sm text-mono-num-sm">กระแสรายวัน</span>
+</label>
+<label class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-2">
+<input class="text-primary focus:ring-primary" name="bank-select" type="radio"/>
+<div>
+<p class="font-label-text text-label-text text-on-surface font-semibold">ธนาคารไทยพาณิชย์ (SCB)</p>
+<p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">119-3-04982-1 • บจก. สยาม โกลบอล เทรดดิ้ง</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-mono-num-sm text-mono-num-sm">ออมทรัพย์</span>
+</label>
+<label class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-2">
+<input checked="" class="rounded text-primary focus:ring-primary" id="attach-qr" type="checkbox"/>
+<div>
+<p class="font-label-text text-label-text text-on-surface font-semibold">แนบ QR PromptPay Payment รับเงินไว</p>
+<p class="font-label-text text-label-text text-on-surface-variant">สร้าง Dynamic QR พร้อมยอดเงินตรงใบเสร็จ</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">qr_code_2</span>
+</label>
+</div>
+</div>
+<!-- Notes for Customer -->
+<div class="flex flex-col gap-1 pt-space-xs">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">หมายเหตุท้ายเอกสารสำหรับลูกค้า (Payment Note)</label>
+<textarea class="w-full p-2 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary resize-none" id="input-customer-notes" rows="2">กรณีโอนเงิน กรุณาส่งสลิปมาที่ LINE: @siamglobal หรืออีเมล finance@siamglobal.co.th พร้อมระบุเลขที่เอกสาร</textarea>
+</div>
+</div>
+<!-- Right: Monetary Breakdown Card -->
+<div class="md:col-span-6 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<!-- Subtotal -->
+<div class="flex items-center justify-between py-1">
+<span class="font-body-compact text-body-compact text-on-surface-variant">รวมมูลค่าสินค้า/บริการ (Subtotal)</span>
+<span class="font-mono-num-md text-mono-num-md font-semibold text-on-surface" id="calc-subtotal">241,000.00 THB</span>
+</div>
+<!-- Discount -->
+<div class="flex items-center justify-between py-1">
+<span class="font-body-compact text-body-compact text-on-surface-variant">ส่วนลดพิเศษท้ายบิล (Extra Discount)</span>
+<div class="flex items-center gap-1">
+<input class="w-24 text-right bg-surface-container-low px-2 py-0.5 rounded font-mono-num-sm text-mono-num-sm text-error focus:outline-none" id="input-extra-discount" oninput="calculateTotals()" step="0.01" type="number" value="0.00"/>
+<span class="font-mono-num-sm text-mono-num-sm text-error">THB</span>
+</div>
+</div>
+<!-- Net before VAT -->
+<div class="flex items-center justify-between py-1">
+<span class="font-body-compact text-body-compact text-on-surface-variant">มูลค่าหลังหักส่วนลด (Net Amount)</span>
+<span class="font-mono-num-md text-mono-num-md text-on-surface" id="calc-net">241,000.00 THB</span>
+</div>
+<!-- VAT 7% -->
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-1.5">
+<span class="font-body-compact text-body-compact text-on-surface-variant">ภาษีมูลค่าเพิ่ม (VAT 7%)</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container font-mono-num-sm text-mono-num-sm text-primary">7.00%</span>
+</div>
+<span class="font-mono-num-md text-mono-num-md font-medium text-on-surface" id="calc-vat">16,870.00 THB</span>
+</div>
+<!-- Total Amount with VAT -->
+<div class="flex items-center justify-between py-1">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">จำนวนเงินรวมทั้งสิ้น (Total)</span>
+<span class="font-mono-num-md text-mono-num-md font-bold text-on-surface" id="calc-total-with-vat">257,870.00 THB</span>
+</div>
+<!-- Withholding Tax (WHT) Section -->
+<div class="pt-space-xs mt- space-xs bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="rounded text-primary focus:ring-primary" id="check-wht" onchange="calculateTotals()" type="checkbox"/>
+<label class="font-label-text text-label-text text-on-surface font-semibold" for="check-wht">หักภาษี ณ ที่จ่าย (Withholding Tax)</label>
+</div>
+<select class="bg-surface-container-lowest text-on-surface py-0.5 px-2 rounded font-label-text text-label-text focus:outline-none" id="select-wht-rate" onchange="calculateTotals()">
+<option value="1">1% (ค่าขนส่ง)</option>
+<option selected="" value="3">3% (ค่าบริการ / วิชาชีพอิสระ)</option>
+<option value="5">5% (ค่าเช่า)</option>
+</select>
+</div>
+<div class="flex items-center justify-between text-error">
+<span class="font-label-text text-label-text">ยอดหักภาษี ณ ที่จ่าย</span>
+<span class="font-mono-num-sm text-mono-num-sm font-semibold" id="calc-wht-amount">- 5,400.00 THB</span>
+</div>
+</div>
+</div>
+<!-- Highlighted Grand Net Payable Box -->
+<div class="bg-primary/5 p-space-md rounded-xl flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-primary font-bold">ยอดที่ต้องชำระจริง (Net Payable)</span>
+<span class="font-mono-num-lg text-mono-num-lg font-bold text-primary" id="calc-grand-total">252,470.00 THB</span>
+</div>
+<!-- Thai Text Amount Representation -->
+<p class="font-body-compact text-body-compact text-on-surface-variant italic text-right" id="calc-thai-text">
+              (สองแสนห้าหมื่นสองพันสี่ร้อยเจ็ดสิบบาทถ้วน)
+            </p>
+</div>
+</div>
+</div>
+<!-- Section 5: Internal Team Notes & Authorized e-Signature -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="p-1.5 rounded-lg bg-surface-container text-primary material-symbols-outlined text-lg">draw</span>
+<h2 class="font-title-sm text-title-sm text-on-surface font-semibold">ลายมือชื่ออิเล็กทรอนิกส์ &amp; บันทึกภายใน (Authorization &amp; Signatures)</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Internal Memo -->
+<div class="flex flex-col gap-1">
+<label class="font-label-text text-label-text text-on-surface-variant font-medium">บันทึกช่วยจำภายใน (Internal Audit Memo - ลูกค้าไม่เห็น)</label>
+<textarea class="w-full p-2.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none focus:ring-1 focus:ring-primary resize-none" placeholder="เช่น ลูกค้าขอวางบิลแยก 2 ใบ, ผ่านการอนุมัติวงเงินเครดิตจาก CFO เมื่อ 22 ต.ค." rows="3"></textarea>
+</div>
+<!-- Digital Signature Stamp Toggle -->
+<div class="flex flex-col justify-between bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-text text-label-text text-on-surface font-semibold">ประทับตราดิจิทัล FlowLedger e-Signature</p>
+<p class="font-label-text text-label-text text-on-surface-variant">แนบลายมือชื่อผู้อนุมัติที่มีสิทธิลงนามอัตโนมัติบน PDF</p>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none">
+<input checked="" class="checked:bg-primary w-5 h-5 accent-primary cursor-pointer" id="toggle-stamp" type="checkbox"/>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<div class="w-20 h-10 bg-surface-container-lowest rounded flex items-center justify-center shadow-xs">
+<span class="font-display text-sm text-primary font-bold italic tracking-tighter">Kantsiree</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-on-surface font-medium">กานต์สิรี เลิศวิทย์สกุล</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">ผู้อนุมัติ (CFO Verified ID: #9041)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL: Live Interactive PDF Document Preview (40% on XL = 5 cols) -->
+<div class="xl:col-span-5 sticky top-36 flex flex-col gap-space-md">
+<!-- Template Selector Toolbar -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-base">style</span>
+<span class="font-label-text text-label-text text-on-surface font-semibold">เทมเพลตเอกสาร (5 สไตล์)</span>
+</div>
+<!-- Document Palette Quick Swatches -->
+<div class="flex items-center gap-1.5">
+<span class="font-label-text text-label-text text-on-surface-variant text-xs">ธีมสี:</span>
+<button class="w-3.5 h-3.5 rounded-full bg-primary hover:scale-110 transition-transform" onclick="setDocTheme('blue')" title="Modern Blue" type="button"></button>
+<button class="w-3.5 h-3.5 rounded-full bg-secondary hover:scale-110 transition-transform" onclick="setDocTheme('emerald')" title="Forest Emerald" type="button"></button>
+<button class="w-3.5 h-3.5 rounded-full bg-on-surface-variant hover:scale-110 transition-transform" onclick="setDocTheme('slate')" title="Slate Corporate" type="button"></button>
+<button class="w-3.5 h-3.5 rounded-full bg-tertiary-container hover:scale-110 transition-transform" onclick="setDocTheme('tertiary')" title="Warm Amber" type="button"></button>
+</div>
+</div>
+<!-- 5 Template Pills -->
+<div class="grid grid-cols-5 gap-1 pt-1">
+<button class="flex flex-col items-center gap-0.5 p-1 rounded-lg bg-surface-container text-primary font-label-text text-label-text text-center transition-all" id="btn-tpl-t1" onclick="selectTemplate('t1')" type="button">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+<span class="text-[11px] truncate w-full font-medium">มาตรฐาน A4</span>
+</button>
+<button class="flex flex-col items-center gap-0.5 p-1 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-text text-label-text text-center transition-all" id="btn-tpl-t2" onclick="selectTemplate('t2')" type="button">
+<span class="material-symbols-outlined text-base">corporate_fare</span>
+<span class="text-[11px] truncate w-full font-medium">Corporate</span>
+</button>
+<button class="flex flex-col items-center gap-0.5 p-1 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-text text-label-text text-center transition-all" id="btn-tpl-t3" onclick="selectTemplate('t3')" type="button">
+<span class="material-symbols-outlined text-base">receipt</span>
+<span class="text-[11px] truncate w-full font-medium">POS 80mm</span>
+</button>
+<button class="flex flex-col items-center gap-0.5 p-1 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-text text-label-text text-center transition-all" id="btn-tpl-t4" onclick="selectTemplate('t4')" type="button">
+<span class="material-symbols-outlined text-base">local_shipping</span>
+<span class="text-[11px] truncate w-full font-medium">ส่งของ/เสร็จ</span>
+</button>
+<button class="flex flex-col items-center gap-0.5 p-1 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-text text-label-text text-center transition-all" id="btn-tpl-t5" onclick="selectTemplate('t5')" type="button">
+<span class="material-symbols-outlined text-base">translate</span>
+<span class="text-[11px] truncate w-full font-medium">Dual Lang</span>
+</button>
+</div>
+</div>
+<!-- Virtual Live Document Canvas (Simulating A4 Proportion) -->
+<div class="relative bg-surface-container-high/40 p-4 rounded-2xl flex flex-col items-center shadow-inner overflow-hidden">
+<!-- Live Preview Header Toolbar -->
+<div class="w-full flex items-center justify-between pb-3 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-text text-label-text text-xs font-medium">Live Render (100% DPI)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded hover:bg-surface-container-lowest text-on-surface-variant" title="ซูมออก" type="button"><span class="material-symbols-outlined text-base">zoom_out</span></button>
+<span class="font-mono-num-sm text-mono-num-sm text-xs">85%</span>
+<button class="p-1 rounded hover:bg-surface-container-lowest text-on-surface-variant" title="ซูมเข้า" type="button"><span class="material-symbols-outlined text-base">zoom_in</span></button>
+<button class="p-1 rounded hover:bg-surface-container-lowest text-on-surface-variant" title="ขยายเต็มหน้าจอ" type="button"><span class="material-symbols-outlined text-base">fullscreen</span></button>
+</div>
+</div>
+<!-- Virtual Paper Sheet -->
+<div class="w-full bg-surface-container-lowest rounded-lg shadow-md p-6 flex flex-col justify-between text-on-surface transition-all duration-200 min-h-[760px] relative text-xs" id="live-doc-paper">
+<!-- Watermark Draft Stamp -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-5">
+<span class="font-display text-8xl font-black rotate-[-25deg] tracking-widest text-primary">DRAFT</span>
+</div>
+<!-- Document Header -->
+<div class="flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<!-- Company Issuer Dossier -->
+<div class="flex flex-col gap-1 max-w-[60%]">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded bg-primary flex items-center justify-center text-on-primary font-bold text-xs">FL</div>
+<span class="font-title-sm text-title-sm font-bold text-primary tracking-tight">FlowLedger</span>
+</div>
+<p class="font-bold text-on-surface text-xs leading-tight">บริษัท สยาม โกลบอล เทรดดิ้ง จำกัด (สำนักงานใหญ่)</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">
+                  เลขที่ 99/420 อาคารอินฟินิททาวเวอร์ ชั้น 21 ถนนสุขุมวิท แขวงคลองเตยเหนือ เขตวัฒนา กทม. 10110<br/>
+                  เลขประจำตัวผู้เสียภาษี: <span class="font-mono-num-sm">0105561084931</span> (สาขา 00000)
+                </p>
+</div>
+<!-- Doc Title & Meta Header -->
+<div class="flex flex-col items-end text-right">
+<span class="font-title-sm text-base font-bold text-primary" id="preview-doc-title-th">ใบเสนอราคา</span>
+<span class="font-label-text text-[10px] uppercase text-outline tracking-wider font-semibold" id="preview-doc-title-en">QUOTATION</span>
+<div class="mt-2 text-[11px] flex flex-col gap-0.5">
+<div><span class="text-on-surface-variant">เลขที่:</span> <span class="font-mono-num-sm font-semibold text-primary" id="preview-doc-no">QT-202410-0098</span></div>
+<div><span class="text-on-surface-variant">วันที่:</span> <span class="font-mono-num-sm" id="preview-date">24/10/2024</span></div>
+<div><span class="text-on-surface-variant">ครบกำหนด:</span> <span class="font-mono-num-sm" id="preview-due">23/11/2024</span></div>
+<div><span class="text-on-surface-variant">เครดิต:</span> <span id="preview-term">30 วัน</span></div>
+</div>
+</div>
+</div>
+<!-- Client Info Box in Document -->
+<div class="bg-surface-container-low p-2.5 rounded flex justify-between items-start text-[11px]">
+<div class="flex flex-col gap-0.5 max-w-[65%]">
+<span class="font-bold text-on-surface">ลูกค้า (Customer):</span>
+<span class="font-semibold text-primary" id="preview-cust-name">บจก. อัลฟ่า โลจิสติกส์ โซลูชั่นส์</span>
+<p class="text-on-surface-variant text-[10px] leading-tight" id="preview-cust-address">เลขที่ 88/19 อาคารเอ็กเซคคิวทีฟ ชั้น 14 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพฯ 10120</p>
+<div class="text-[10px] text-on-surface-variant">
+<span>Tax ID: </span><span class="font-mono-num-sm font-medium" id="preview-cust-taxid">0105556094821</span>
+<span class="mx-1">•</span>
+<span id="preview-cust-branch">สำนักงานใหญ่</span>
+</div>
+</div>
+<div class="flex flex-col items-end text-right text-[10px] text-on-surface-variant">
+<span>เลขอ้างอิง PO: <strong class="font-mono-num-sm text-on-surface" id="preview-cust-po">PO-ALPHA-88219</strong></span>
+<span>ผู้ดูแล: <span class="text-on-surface font-medium">กานต์สิรี เลิศวิทย์สกุล</span></span>
+</div>
+</div>
+<!-- Virtual Line Item Table -->
+<div class="w-full">
+<table class="w-full text-left text-[11px]">
+<thead>
+<tr class="bg-surface-container text-on-surface font-semibold text-[10px]">
+<th class="py-1.5 px-1.5 w-6 text-center">#</th>
+<th class="py-1.5 px-2">รายละเอียด (Description)</th>
+<th class="py-1.5 px-1.5 w-12 text-right">จำนวน</th>
+<th class="py-1.5 px-2 w-16 text-right">ราคา</th>
+<th class="py-1.5 px-2 w-16 text-right">รวมเงิน</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40" id="preview-items-body">
+<tr>
+<td class="py-1 px-1.5 text-center text-outline-variant font-mono-num-sm">1</td>
+<td class="py-1 px-2">
+<span class="font-medium text-on-surface">บริการพัฒนาระบบคลังสินค้าอัจฉริยะ FlowLedger WMS API</span>
+</td>
+<td class="py-1 px-1.5 text-right font-mono-num-sm">1 งวด</td>
+<td class="py-1 px-2 text-right font-mono-num-sm">180,000.00</td>
+<td class="py-1 px-2 text-right font-mono-num-sm font-semibold">180,000.00</td>
+</tr>
+<tr>
+<td class="py-1 px-1.5 text-center text-outline-variant font-mono-num-sm">2</td>
+<td class="py-1 px-2">
+<span class="font-medium text-on-surface">ไลเซนส์ระบบปฏิบัติการคลาวด์ 50 ผู้ใช้งาน (Enterprise)</span>
+</td>
+<td class="py-1 px-1.5 text-right font-mono-num-sm">1 แพ็ก</td>
+<td class="py-1 px-2 text-right font-mono-num-sm">45,000.00</td>
+<td class="py-1 px-2 text-right font-mono-num-sm font-semibold">45,000.00</td>
+</tr>
+<tr>
+<td class="py-1 px-1.5 text-center text-outline-variant font-mono-num-sm">3</td>
+<td class="py-1 px-2">
+<span class="font-medium text-on-surface">เครื่องอ่านบาร์โค้ดไร้สาย Rugged 2D Scanner WiFi</span>
+</td>
+<td class="py-1 px-1.5 text-right font-mono-num-sm">2 เครื่อง</td>
+<td class="py-1 px-2 text-right font-mono-num-sm">8,500.00</td>
+<td class="py-1 px-2 text-right font-mono-num-sm font-semibold">16,000.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Virtual Document Calculations & Totals -->
+<div class="flex justify-between items-start pt-2">
+<div class="max-w-[48%] flex flex-col gap-2">
+<div class="text-[10px] text-on-surface-variant">
+<p class="font-semibold text-on-surface">เงื่อนไขและการชำระเงิน:</p>
+<p id="preview-payment-note">โอนชำระเงินเข้า ธ.กสิกรไทย สาขาสยามสแควร์ เลขที่บัญชี 055-2-94819-2 ชื่อบัญชี บจก. สยาม โกลบอล เทรดดิ้ง</p>
+</div>
+<!-- PromptPay Payment Stamp -->
+<div class="flex items-center gap-2 p-1.5 bg-surface-container-low rounded max-w-[200px]">
+<!-- Mini Inline QR Blueprint -->
+<div class="w-12 h-12 bg-surface-container-lowest rounded flex items-center justify-center p-0.5 shadow-xs">
+<svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 24 24">
+<path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v2h-4v-2zm-4 0h2v4h-2v-4zm4 4h4v2h-4v-2zm-2 2h2v2h-2v-2zm-2-4h2v2h-2v-2zm0 4h2v2h-2v-2zM6 6h0v0zm12 0h0v0zM6 18h0v0z"></path>
+</svg>
+</div>
+<div class="flex flex-col text-[9px] leading-tight text-on-surface">
+<span class="font-bold text-secondary">Thai QR Payment</span>
+<span>สแกนจ่ายยอดสุทธิ</span>
+<span class="font-mono-num-sm font-bold text-primary" id="preview-qr-total">฿ 252,470.00</span>
+</div>
+</div>
+</div>
+<!-- Calculation Sum List -->
+<div class="w-[48%] flex flex-col gap-0.5 text-[11px]">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">รวมเงิน (Subtotal):</span>
+<span class="font-mono-num-sm font-medium" id="preview-subtotal">241,000.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">ภาษีมูลค่าเพิ่ม (VAT 7%):</span>
+<span class="font-mono-num-sm font-medium" id="preview-vat">16,870.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">หักภาษี ณ ที่จ่าย (WHT 3%):</span>
+<span class="font-mono-num-sm font-medium text-error" id="preview-wht">- 5,400.00</span>
+</div>
+<div class="flex justify-between font-bold text-primary pt-1 text-xs">
+<span>ยอดสุทธิ (Net Total):</span>
+<span class="font-mono-num-sm" id="preview-grand">฿ 252,470.00</span>
+</div>
+<div class="text-[9px] text-right text-on-surface-variant italic" id="preview-thai-words">
+                  (สองแสนห้าหมื่นสองพันสี่ร้อยเจ็ดสิบบาทถ้วน)
+                </div>
+</div>
+</div>
+</div>
+<!-- Bottom Signature Block -->
+<div class="grid grid-cols-2 gap-4 pt-6 mt-4">
+<div class="flex flex-col items-center text-center">
+<div class="w-full h-8 flex items-end justify-center">
+<span class="text-outline-variant font-label-text text-[10px]">.............................................................</span>
+</div>
+<p class="font-semibold text-[10px] text-on-surface mt-1">ผู้สั่งซื้อ / ผู้รับบริการ</p>
+<p class="text-[9px] text-on-surface-variant">วันที่ ...... / ...... / .........</p>
+</div>
+<div class="flex flex-col items-center text-center relative">
+<div class="w-full h-8 flex items-center justify-center">
+<!-- Signature Simulation Graphic -->
+<span class="font-display text-sm font-bold italic text-primary select-none -rotate-2">Kantsiree L.</span>
+</div>
+<p class="font-semibold text-[10px] text-on-surface mt-1">กานต์สิรี เลิศวิทย์สกุล (ผู้มีอำนาจลงนาม)</p>
+<p class="text-[9px] text-on-surface-variant">บจก. สยาม โกลบอล เทรดดิ้ง</p>
+</div>
+</div>
+</div>
+<!-- Sticky Quick Share / Export Actions on Preview -->
+<div class="w-full flex items-center justify-between pt-3 gap-2">
+<div class="flex items-center gap-1.5 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm text-secondary">cloud_done</span>
+<span>บันทึกอัตโนมัติบน Cloud</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 bg-surface-container-lowest hover:bg-surface-container rounded font-label-text text-label-text text-on-surface flex items-center gap-1 shadow-xs" type="button">
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+<span>เปิดแท็บใหม่</span>
+</button>
+<button class="px-2.5 py-1 bg-primary text-on-primary hover:bg-primary-container rounded font-label-text text-label-text flex items-center gap-1 shadow-xs" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>ดาวน์โหลด PDF</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  let currentDocType = 'QT';
+  
+  const docMeta = {
+    QT: { code: 'QT-202410-0098', titleTH: 'ใบเสนอราคา', titleEN: 'QUOTATION' },
+    IV: { code: 'IV-202410-0112', titleTH: 'ใบแจ้งหนี้ / ใบวางบิล', titleEN: 'INVOICE / BILL' },
+    TAX: { code: 'TAX-202410-0089', titleTH: 'ใบกำกับภาษี', titleEN: 'TAX INVOICE' },
+    RE: { code: 'RE-202410-0089', titleTH: 'ใบเสร็จรับเงิน', titleEN: 'OFFICIAL RECEIPT' }
+  };
+
+  function setDocType(type) {
+    currentDocType = type;
+    const tabs = ['qt', 'iv', 'tax', 're'];
+    tabs.forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (t === type.toLowerCase()) {
+        el.className = 'flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary text-on-primary font-label-text text-label-text shadow-sm transition-all';
+      } else {
+        el.className = 'flex items-center gap-1.5 px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-text text-label-text transition-all';
+      }
+    });
+
+    const meta = docMeta[type];
+    document.getElementById('doc-code-pill').textContent = meta.code;
+    document.getElementById('input-doc-number').value = meta.code;
+    document.getElementById('preview-doc-no').textContent = meta.code;
+    document.getElementById('preview-doc-title-th').textContent = meta.titleTH;
+    document.getElementById('preview-doc-title-en').textContent = meta.titleEN;
+  }
+
+  function setTaxType(type) {
+    const corp = document.getElementById('type-corp');
+    const indv = document.getElementById('type-indv');
+    if (type === 'corp') {
+      corp.className = 'flex-1 py-1 px-2 rounded font-label-text text-label-text bg-surface-container-lowest text-primary font-semibold shadow-xs text-center';
+      indv.className = 'flex-1 py-1 px-2 rounded font-label-text text-label-text text-on-surface-variant hover:text-on-surface text-center';
+      document.getElementById('preview-cust-branch').textContent = 'สำนักงานใหญ่';
+    } else {
+      indv.className = 'flex-1 py-1 px-2 rounded font-label-text text-label-text bg-surface-container-lowest text-primary font-semibold shadow-xs text-center';
+      corp.className = 'flex-1 py-1 px-2 rounded font-label-text text-label-text text-on-surface-variant hover:text-on-surface text-center';
+      document.getElementById('preview-cust-branch').textContent = 'บุคคลธรรมดา';
+    }
+  }
+
+  function updateDueDate() {
+    const term = parseInt(document.getElementById('input-credit-term').value) || 0;
+    const issueVal = document.getElementById('input-issue-date').value;
+    if (!issueVal) return;
+    const d = new Date(issueVal);
+    d.setDate(d.getDate() + term);
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    document.getElementById('input-due-date').value = `${yr}-${mo}-${day}`;
+    document.getElementById('preview-due').textContent = `${day}/${mo}/${yr}`;
+    document.getElementById('preview-term').textContent = term === 0 ? 'เงินสด' : `${term} วัน`;
+  }
+
+  function formatMoney(num) {
+    return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculateTotals() {
+    const rows = document.querySelectorAll('#line-items-body tr');
+    let subtotal = 0;
+    let vatableBase = 0;
+
+    const previewList = [];
+
+    rows.forEach((r, idx) => {
+      const descInput = r.querySelector('.line-desc');
+      const qtyInput = r.querySelector('.line-qty');
+      const priceInput = r.querySelector('.line-price');
+      const discInput = r.querySelector('.line-discount');
+      const vatSelect = r.querySelector('.line-vat');
+      const totalCell = r.querySelector('.line-total');
+
+      const qty = parseFloat(qtyInput?.value) || 0;
+      const price = parseFloat(priceInput?.value) || 0;
+      const disc = parseFloat(discInput?.value) || 0;
+      const vatRate = parseFloat(vatSelect?.value) || 0;
+
+      const lineTotal = Math.max(0, (qty * price) - disc);
+      if (totalCell) totalCell.textContent = formatMoney(lineTotal);
+
+      subtotal += lineTotal;
+      if (vatRate > 0) {
+        vatableBase += lineTotal;
+      }
+
+      previewList.push({
+        num: idx + 1,
+        desc: descInput ? descInput.value : 'สินค้า/บริการ',
+        qty: qty,
+        price: price,
+        total: lineTotal
+      });
+    });
+
+    const extraDisc = parseFloat(document.getElementById('input-extra-discount').value) || 0;
+    const netBase = Math.max(0, subtotal - extraDisc);
+    const vatAmount = (vatableBase * 0.07);
+    const totalWithVat = netBase + vatAmount;
+
+    let whtAmount = 0;
+    const whtChecked = document.getElementById('check-wht').checked;
+    if (whtChecked) {
+      const whtRate = parseFloat(document.getElementById('select-wht-rate').value) || 0;
+      whtAmount = (netBase * (whtRate / 100));
+    }
+
+    const grandTotal = totalWithVat - whtAmount;
+
+    // Update Form labels
+    document.getElementById('calc-subtotal').textContent = `${formatMoney(subtotal)} THB`;
+    document.getElementById('calc-net').textContent = `${formatMoney(netBase)} THB`;
+    document.getElementById('calc-vat').textContent = `${formatMoney(vatAmount)} THB`;
+    document.getElementById('calc-total-with-vat').textContent = `${formatMoney(totalWithVat)} THB`;
+    document.getElementById('calc-wht-amount').textContent = `- ${formatMoney(whtAmount)} THB`;
+    document.getElementById('calc-grand-total').textContent = `${formatMoney(grandTotal)} THB`;
+
+    // Update Virtual Preview Document
+    document.getElementById('preview-subtotal').textContent = formatMoney(subtotal);
+    document.getElementById('preview-vat').textContent = formatMoney(vatAmount);
+    document.getElementById('preview-wht').textContent = `- ${formatMoney(whtAmount)}`;
+    document.getElementById('preview-grand').textContent = `฿ ${formatMoney(grandTotal)}`;
+    document.getElementById('preview-qr-total').textContent = `฿ ${formatMoney(grandTotal)}`;
+
+    // Sync Item rows in virtual preview
+    const previewTbody = document.getElementById('preview-items-body');
+    previewTbody.innerHTML = '';
+    previewList.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="py-1 px-1.5 text-center text-outline-variant font-mono-num-sm">${item.num}</td>
+        <td class="py-1 px-2"><span class="font-medium text-on-surface">${item.desc}</span></td>
+        <td class="py-1 px-1.5 text-right font-mono-num-sm">${item.qty}</td>
+        <td class="py-1 px-2 text-right font-mono-num-sm">${formatMoney(item.price)}</td>
+        <td class="py-1 px-2 text-right font-mono-num-sm font-semibold">${formatMoney(item.total)}</td>
+      `;
+      previewTbody.appendChild(tr);
+    });
+  }
+
+  function addNewItemRow() {
+    const tbody = document.getElementById('line-items-body');
+    const rowCount = tbody.querySelectorAll('tr').length + 1;
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-surface-container-low/50 transition-colors group';
+    tr.dataset.rowId = rowCount;
+    tr.innerHTML = `
+      <td class="py-2 px-2 text-center text-outline-variant font-mono-num-sm">${rowCount}</td>
+      <td class="py-2 px-3">
+        <div class="flex flex-col gap-1">
+          <input type="text" value="PROD-NEW-${rowCount}" class="font-mono-num-sm text-mono-num-sm text-primary font-semibold bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none"/>
+          <input type="text" value="ระบุรายการสินค้าหรือบริการใหม่" class="text-on-surface font-medium bg-transparent focus:bg-surface-container-low px-1 rounded focus:outline-none line-desc"/>
+        </div>
+      </td>
+      <td class="py-2 px-2">
+        <input type="number" step="1" value="1" oninput="calculateTotals()" class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-qty focus:outline-none focus:ring-1 focus:ring-primary"/>
+      </td>
+      <td class="py-2 px-2">
+        <input type="text" value="หน่วย" class="w-full text-center bg-surface-container-low px-1 py-1 rounded font-body-compact text-body-compact focus:outline-none"/>
+      </td>
+      <td class="py-2 px-3">
+        <input type="number" step="0.01" value="0.00" oninput="calculateTotals()" class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-price focus:outline-none focus:ring-1 focus:ring-primary"/>
+      </td>
+      <td class="py-2 px-2">
+        <input type="text" value="0.00" oninput="calculateTotals()" class="w-full text-right bg-surface-container-low px-2 py-1 rounded font-mono-num-md text-mono-num-md line-discount focus:outline-none"/>
+      </td>
+      <td class="py-2 px-2 text-center">
+        <select onchange="calculateTotals()" class="w-full bg-surface-container-low py-1 px-1 rounded font-label-text text-label-text text-on-surface line-vat focus:outline-none">
+          <option value="7" selected>VAT 7%</option>
+          <option value="0">ยกเว้นภาษี</option>
+        </select>
+      </td>
+      <td class="py-2 px-3 text-right font-mono-num-md text-mono-num-md font-semibold text-on-surface line-total">
+        0.00
+      </td>
+      <td class="py-2 px-2 text-center">
+        <button type="button" onclick="removeRow(this)" class="opacity-0 group-hover:opacity-100 text-error hover:bg-error-container/30 p-1 rounded transition-all">
+          <span class="material-symbols-outlined text-base">delete</span>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    calculateTotals();
+  }
+
+  function removeRow(btn) {
+    const row = btn.closest('tr');
+    if (document.querySelectorAll('#line-items-body tr').length > 1) {
+      row.remove();
+      // renumber
+      document.querySelectorAll('#line-items-body tr').forEach((r, idx) => {
+        r.querySelector('td').textContent = idx + 1;
+      });
+      calculateTotals();
+    }
+  }
+
+  function selectTemplate(tplId) {
+    const tpls = ['t1', 't2', 't3', 't4', 't5'];
+    tpls.forEach(t => {
+      const btn = document.getElementById('btn-tpl-' + t);
+      if (t === tplId) {
+        btn.className = 'flex flex-col items-center gap-0.5 p-1 rounded-lg bg-surface-container text-primary font-label-text text-label-text text-center transition-all';
+      } else {
+        btn.className = 'flex flex-col items-center gap-0.5 p-1 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-text text-label-text text-center transition-all';
+      }
+    });
+
+    const paper = document.getElementById('live-doc-paper');
+    if (tplId === 't3') {
+      paper.style.maxWidth = '340px';
+    } else {
+      paper.style.maxWidth = '100%';
+    }
+  }
+
+  function setDocTheme(theme) {
+    const paper = document.getElementById('live-doc-paper');
+    const titles = paper.querySelectorAll('.text-primary');
+    if (theme === 'emerald') {
+      titles.forEach(el => el.classList.replace('text-primary', 'text-secondary'));
+    } else {
+      titles.forEach(el => el.classList.replace('text-secondary', 'text-primary'));
+    }
+  }
+
+  // Sync Input Events to Preview in real time
+  document.getElementById('input-cust-name')?.addEventListener('input', (e) => {
+    document.getElementById('preview-cust-name').textContent = e.target.value || '-';
+  });
+  document.getElementById('input-cust-address')?.addEventListener('input', (e) => {
+    document.getElementById('preview-cust-address').textContent = e.target.value || '-';
+  });
+  document.getElementById('input-cust-taxid')?.addEventListener('input', (e) => {
+    document.getElementById('preview-cust-taxid').textContent = e.target.value || '-';
+  });
+  document.getElementById('input-po-ref')?.addEventListener('input', (e) => {
+    document.getElementById('preview-cust-po').textContent = e.target.value || '-';
+  });
+  document.getElementById('input-customer-notes')?.addEventListener('input', (e) => {
+    document.getElementById('preview-payment-note').textContent = e.target.value || '-';
+  });
+
+  // Init calculations on mount
+  calculateTotals();
+</script></main><footer class="w-full bg-surface-container-low py-space-md px-space-lg flex flex-col md:flex-row items-center justify-between text-on-surface-variant font-label-text text-label-text gap-space-sm"><div class="flex items-center gap-space-md"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>API สถานะปกติ: กรมสรรพากร (RD Net) • KBank Business Click • SCB Business Anywhere</span></div><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">คู่มือการใช้งาน</a><a class="hover:text-on-surface transition-colors" href="#">ติดต่อเจ้าหน้าที่สนับสนุน (LINE OA)</a><span>© 2025 FlowLedger ERP &amp; Cloud Accounting.</span></div></footer></div></body></html>

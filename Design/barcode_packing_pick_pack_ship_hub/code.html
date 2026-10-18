@@ -1,0 +1,992 @@
+<!DOCTYPE html><html lang="th" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-container": "#6b4200",
+          "primary-container": "#1e40af",
+          "on-secondary-fixed": "#00201d",
+          "on-secondary-fixed-variant": "#005049",
+          "on-tertiary-container": "#ffa929",
+          "secondary": "#006a61",
+          "inverse-surface": "#283044",
+          "surface-container-low": "#f2f3ff",
+          "error": "#ba1a1a",
+          "on-tertiary-fixed-variant": "#653e00",
+          "surface": "#faf8ff",
+          "error-container": "#ffdad6",
+          "secondary-fixed-dim": "#6bd8cb",
+          "surface-tint": "#3755c3",
+          "surface-variant": "#dae2fd",
+          "surface-container": "#eaedff",
+          "on-primary-fixed": "#001453",
+          "secondary-container": "#86f2e4",
+          "background": "#faf8ff",
+          "primary": "#00288e",
+          "tertiary-fixed-dim": "#ffb95f",
+          "on-secondary-container": "#006f66",
+          "on-tertiary": "#ffffff",
+          "on-error": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "surface-dim": "#d2d9f4",
+          "tertiary": "#4c2e00",
+          "tertiary-fixed": "#ffddb8",
+          "on-primary": "#ffffff",
+          "on-surface-variant": "#444653",
+          "primary-fixed-dim": "#b8c4ff",
+          "on-surface": "#131b2e",
+          "on-primary-fixed-variant": "#173bab",
+          "surface-container-lowest": "#ffffff",
+          "on-primary-container": "#a8b8ff",
+          "outline": "#757684",
+          "surface-bright": "#faf8ff",
+          "inverse-on-surface": "#eef0ff",
+          "on-error-container": "#93000a",
+          "primary-fixed": "#dde1ff",
+          "on-background": "#131b2e",
+          "secondary-fixed": "#89f5e7",
+          "outline-variant": "#c4c5d5",
+          "on-secondary": "#ffffff",
+          "on-tertiary-fixed": "#2a1700",
+          "surface-container-high": "#e2e7ff",
+          "inverse-primary": "#b8c4ff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "gutter-lg": "1.5rem",
+          "space-lg": "1.25rem",
+          "space-xs": "0.25rem",
+          "margin-lg": "2rem",
+          "margin": "1rem",
+          "space-sm": "0.5rem",
+          "space-md": "0.75rem",
+          "margin-md": "1.5rem",
+          "gutter": "1rem",
+          "space-xl": "2rem"
+        },
+        "fontFamily": {
+          "headline-md": [
+            "Inter"
+          ],
+          "display": [
+            "Inter"
+          ],
+          "mono-num-lg": [
+            "JetBrains Mono"
+          ],
+          "mono-num-sm": [
+            "JetBrains Mono"
+          ],
+          "body-regular": [
+            "Inter"
+          ],
+          "body-compact": [
+            "Inter"
+          ],
+          "headline-lg-mobile": [
+            "Inter"
+          ],
+          "title-sm": [
+            "Inter"
+          ],
+          "mono-num-md": [
+            "JetBrains Mono"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "label-text": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "display": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "mono-num-lg": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "mono-num-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-regular": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-compact": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "title-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "mono-num-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-text": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-regular text-body-regular text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="FlowLedger Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UW2182kbEUN2-IVCJKIgShUNSJxahA1J8co-bonyrFJwCju1y5dFHgHS90HxNl4aI3GzWN717VyiWOhmK1WRFdcfAUl1JNtto-mVs50OBhBuyW70Ahb65_GeVoRoylJ7Cp6HS2bSbfF_WPM_psNBV1m_crQlvPYTx5R-iLRFMMa0SJGENWWRy5mVV30n2HYmgzUJCnVFA1fc5xfTsWQYAD7tnNijyK8I6Dzx7N986g-30UxR6QHHh9MHtk"><div class="flex flex-col"><span class="font-title-sm text-title-sm text-primary leading-tight font-bold">FlowLedger</span><span class="font-label-text text-label-text text-on-surface-variant">โฟลว์เลดเจอร์ ERP</span></div></div><div class="px-space-md pt-space-sm pb-space-xs"><div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"><div class="flex items-center gap-space-xs overflow-hidden"><span class="material-symbols-outlined text-primary text-lg">corporate_fare</span><div class="truncate"><p class="font-label-text text-label-text text-on-surface font-medium truncate">บจก. สยาม โกลบอล เทรดดิ้ง</p><p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">สาขาใหญ่ (00000)</p></div></div><span class="material-symbols-outlined text-on-surface-variant text-base">unfold_more</span></div></div><nav class="flex flex-col px-space-sm pt-space-sm gap-space-xs" data-active-classes="bg-primary text-on-primary font-bold"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="#"><span class="font-body-compact text-body-compact">แดชบอร์ดภาพรวม</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ฝ่ายขายและลูกหนี้</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-quotations" href="#"><span class="font-body-compact text-body-compact">ใบเสนอราคา (QT)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-invoices" href="#"><span class="font-body-compact text-body-compact">ใบแจ้งหนี้ / วางบิล (IV)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-invoices" href="#"><span class="font-body-compact text-body-compact">ใบกำกับภาษี (TAX)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="official-receipts" href="#"><span class="font-body-compact text-body-compact">ใบเสร็จรับเงิน (RE)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="credit-debit-notes" href="#"><span class="font-body-compact text-body-compact">ใบลดหนี้ / เพิ่มหนี้</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ค่าใช้จ่ายและภาษี</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="purchases-and-expenses" href="#"><span class="font-body-compact text-body-compact">เอกสารซื้อและค่าใช้จ่าย</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-accounting-reports" href="#"><span class="font-body-compact text-body-compact">ภาษี &amp; บัญชี (ภ.พ.30 / ภ.ง.ด.)</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ระบบงานและจัดส่ง</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="inventory-stock" href="#"><span class="font-body-compact text-body-compact">สินค้าและสต็อก</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="contacts-directory" href="#"><span class="font-body-compact text-body-compact">สมุดรายชื่อผู้ติดต่อ</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="logistics-and-shipping" href="#"><span class="font-body-compact text-body-compact">การจัดส่ง &amp; ใบปะหน้า</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="barcode-packing-and-hub" href="#"><span class="font-body-compact text-body-compact">สแกนบาร์โค้ดแพ็กของ (Pick-Pack-Ship)</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">รายงาน &amp; ตรวจสอบ</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="financial-reports" href="#"><span class="font-body-compact text-body-compact">รายงานสรุปผู้บริหาร</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="audit-logs-and-security-trail" href="#"><span class="font-body-compact text-body-compact">ประวัติกิจกรรมความปลอดภัย (Audit Logs)</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">การจัดการระบบ</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="system-settings-roles" href="#"><span class="font-body-compact text-body-compact">ตั้งค่าระบบ &amp; สิทธิ์ผู้ใช้งาน</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="system-settings" href="#"><span class="font-body-compact text-body-compact">ตั้งค่าระบบ &amp; เชื่อมต่อ API</span></a></nav></div><div class="p-space-md bg-surface-container-low mx-space-sm mb-space-md rounded-xl"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-text text-label-text text-on-surface font-semibold">Live Bank Feed</span><span class="flex items-center gap-1 font-label-text text-label-text text-secondary font-medium"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Syncing</span></div><div class="flex items-center gap-space-xs text-on-surface-variant font-mono-num-sm text-mono-num-sm"><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">KBANK</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">SCB</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">BBL</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span><input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary" placeholder="ค้นหาเอกสาร (QT, IV, TAX), ลูกค้า, ใบปะหน้า..." type="text"></div></div><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-text text-label-text text-on-surface">ธนาคารเชื่อมต่อแล้ว 3 บัญชี</span></div><button class="flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-title-sm text-label-text px-space-md py-2 rounded-lg transition-colors"><span class="material-symbols-outlined text-base">add</span><span class="">สร้างเอกสาร</span></button><div class="h-6 w-px bg-outline-variant"></div><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">chat</span><span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span></button><div class="flex items-center gap-space-sm pl-space-xs cursor-pointer"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsfJrYp-v0Uh-hH0XzSPJfniv_vTzX1KLPUhuD6K0Qv3EAmp8bywl6zMvsig9S3XtWhdW4j6BKOB7iuMhu1bV4ndOz4hkbUg0RFI3mkgbQzycmzLiNWn55d8uPfM7uznnWAqd29enJ6tZFR99LTIz2NNhS02RBFSncS9Qd1_f7QHz96_QiTC88duk-7eUVD-Yw0lw2Tzc43xYIhd74Qhwns2oHb8eKftfcgLm6lWddQ9ll9do3MnHwdg"><div class="hidden sm:flex flex-col text-left"><span class="font-body-compact text-body-compact text-on-surface font-semibold leading-tight">กานต์สิริ เลิศวิทยสกุล</span><span class="font-label-text text-label-text text-on-surface-variant">CFO &amp; Director</span></div><span class="material-symbols-outlined text-on-surface-variant text-base">keyboard_arrow_down</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Operational Banner & Hotkey Helpers -->
+<div class="bg-surface-container-low px-space-lg py-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs font-label-text text-label-text text-on-surface-variant flex-wrap">
+<span class="hover:text-primary cursor-pointer transition-colors">หน้าหลัก</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="hover:text-primary cursor-pointer transition-colors">ระบบขนส่งและจัดส่ง</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-semibold">สแกนบาร์โค้ดแพ็กของ (Barcode Pick-Pack-Ship Hub)</span>
+</div>
+<!-- Peripheral Hardware Telemetry -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-secondary-container/60 text-on-secondary-container font-mono-num-sm text-mono-num-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="">Datalogic Gryphon 2D (USB HID Ready)</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface font-mono-num-sm text-mono-num-sm">
+<span class="material-symbols-outlined text-sm text-secondary">scale</span>
+<span class="">Bluetooth Scale: <strong class="text-primary">0.00 kg</strong></span>
+</div>
+<button class="flex items-center gap-1 px-space-sm py-1 rounded-lg bg-surface-container hover:bg-surface-container-highest transition-colors font-label-text text-label-text text-on-surface" id="soundToggleBtn" onclick="toggleBeep()">
+<span class="material-symbols-outlined text-sm text-tertiary-container" id="soundIcon">volume_up</span>
+<span id="soundText" class="">เสียง Beep: เปิด</span>
+</button>
+<button class="flex items-center gap-1 px-space-sm py-1 rounded-lg bg-surface-container hover:bg-surface-container-highest transition-colors font-label-text text-label-text text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">keyboard</span>
+<span class="">คำสั่งลัด F1-F12</span>
+</button>
+<button class="flex items-center gap-1 px-space-sm py-1 rounded-lg bg-error-container/50 hover:bg-error-container text-on-error-container font-label-text text-label-text transition-colors">
+<span class="material-symbols-outlined text-sm">power_settings_new</span>
+<span class="">ออกโหมดสแกน</span>
+</button>
+</div>
+</div>
+<!-- Page Title & Station Identification Bar -->
+<div class="px-space-lg pt-space-md pb-space-sm flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-sm">
+<span class="p-2 rounded-xl bg-primary text-on-primary material-symbols-outlined text-2xl">barcode_scanner</span>
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface leading-tight">
+            สถานีสแกนบาร์โค้ดแพ็กของ &amp; บรรจุพัสดุ
+          </h1>
+<p class="font-body-compact text-body-compact text-on-surface-variant">
+            ระบบตรวจสอบสินค้าในออเดอร์ด้วยบาร์โค้ด 2D ตัดสต็อกอัตโนมัติ ตรวจสอบน้ำหนัก และพิมพ์ใบปะหน้าอัตโนมัติทันที
+          </p>
+</div>
+</div>
+</div>
+<!-- Active Station ID Card -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-space-sm rounded-xl shadow-sm self-start lg:self-auto">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center font-display text-headline-md text-primary font-bold">
+          B4
+        </div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-label-text text-label-text text-outline uppercase font-semibold">โต๊ะแพ็กเกจ</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface font-mono-num-sm text-mono-num-sm font-bold">STATION #B-04</span>
+</div>
+<p class="font-body-compact text-body-compact text-on-surface font-semibold">พรชัย มีทรัพย์ (Packer Senior)</p>
+</div>
+</div>
+<div class="w-px h-8 bg-surface-container"></div>
+<div class="flex flex-col text-right">
+<span class="font-label-text text-label-text text-outline">รอบรถขนส่งถัดไป</span>
+<span class="font-mono-num-md text-mono-num-md text-error font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> 15:00 น. (38 นาที)
+        </span>
+</div>
+</div>
+</div>
+<!-- KPI Overview Strip -->
+<div class="px-space-lg py-space-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-text text-label-text text-on-surface-variant font-medium">แพ็กเสร็จวันนี้</span>
+<span class="material-symbols-outlined text-secondary text-xl">inventory_2</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<div class="flex items-baseline gap-1">
+<span class="font-display text-display text-on-surface font-bold">148</span>
+<span class="font-body-compact text-body-compact text-on-surface-variant">/ 185 ออเดอร์</span>
+</div>
+<span class="font-mono-num-sm text-mono-num-sm font-bold text-secondary">80.0%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-secondary h-full rounded-full" style="width: 80%"></div>
+</div>
+<div class="mt-space-xs flex justify-between font-label-text text-label-text text-on-surface-variant">
+<span class="">ความเร็วเฉลี่ย</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface font-semibold">42 วินาที / กล่อง</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-text text-label-text text-on-surface-variant font-medium">ความแม่นยำการสแกน (Accuracy)</span>
+<span class="material-symbols-outlined text-primary text-xl">verified</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<span class="font-display text-display text-primary font-bold">99.8%</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-low font-label-text text-label-text text-on-surface font-medium">ยิงผิด 1 รายการ</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full rounded-full" style="width: 99.8%"></div>
+</div>
+<div class="mt-space-xs flex justify-between font-label-text text-label-text text-secondary">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>ระบบล็อกกล่องอัตโนมัติ</span>
+<span class="">Zero Error</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-text text-label-text text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm animate-bounce">priority_high</span> ออเดอร์เร่งด่วนค้างแพ็ก
+        </span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-mono-num-sm text-mono-num-sm font-bold">ด่วนพิเศษ</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<div class="flex items-baseline gap-1">
+<span class="font-display text-display text-error font-bold">4</span>
+<span class="font-body-compact text-body-compact text-on-surface-variant">ออเดอร์ในคิว</span>
+</div>
+<span class="font-mono-num-sm text-mono-num-sm text-error font-semibold">Flash Express</span>
+</div>
+<div class="w-full bg-error-container h-2 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-error h-full rounded-full" style="width: 65%"></div>
+</div>
+<div class="mt-space-xs flex justify-between font-label-text text-label-text text-on-surface-variant">
+<span class="">ตัดรอบเวลา</span>
+<span class="font-mono-num-sm text-mono-num-sm text-error font-bold">15:00 น. (เหลือ 38 นาที)</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-text text-label-text text-on-surface-variant font-medium">เครื่องพิมพ์ฉลาก (Label Thermal)</span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+</div>
+<div class="mt-space-xs">
+<div class="font-title-sm text-title-sm text-on-surface font-bold truncate">Flash Direct Thermal 100x150</div>
+<div class="font-mono-num-sm text-mono-num-sm text-outline">Port: USB001 • กระดาษคงเหลือ: 420 แผ่น</div>
+</div>
+<div class="mt-space-sm flex items-center justify-between font-label-text text-label-text pt-space-xs bg-surface-container-low px-2 py-1 rounded">
+<span class="text-secondary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">print</span> Auto-Print On
+        </span>
+<span class="text-outline">กดพิมพ์ซ้ำ (F4)</span>
+</div>
+</div>
+</div>
+<!-- Main Split Packing Workspace (Ergonomic Warehouse Density) -->
+<div class="px-space-lg py-space-sm grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- LEFT COLUMN: 60% Width (7/12 cols) - SCAN & MATCH VERIFICATION -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Primary Scanner Input Bar (High-Contrast Eye Magnet) -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md">
+<div class="flex items-center justify-between mb-space-xs">
+<label class="font-title-sm text-title-sm text-primary font-bold flex items-center gap-space-xs" for="scannerInput">
+<span class="material-symbols-outlined text-xl text-primary animate-pulse">qr_code_scanner</span>
+            ขั้นตอนที่ 1: สแกนบาร์โค้ดคำสั่งขาย / บาร์โค้ดสินค้า
+          </label>
+<span class="font-mono-num-sm text-mono-num-sm text-outline">Autofocus Active • ยิงสแกนได้ทันที</span>
+</div>
+<div class="relative flex items-center">
+<div class="absolute left-3.5 flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-2xl">barcode</span>
+<span class="w-px h-6 bg-surface-container-high"></span>
+</div>
+<input autofocus="" class="w-full pl-16 pr-32 py-3.5 bg-surface-container-low text-on-surface font-mono-num-lg text-mono-num-md rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary shadow-inner placeholder:text-outline/70 transition-all" id="scannerInput" onkeydown="if(event.key === 'Enter') handleScanInput(this)" placeholder="ยิงบาร์โค้ดสินค้า (SKU / EAN-13) หรือบาร์โค้ดใบสั่งขาย (QT, IV, SO)..." type="text">
+<button class="absolute right-2 px-space-md py-2 bg-primary hover:bg-primary-container text-on-primary font-title-sm text-label-text font-bold rounded-lg transition-colors flex items-center gap-1 shadow-sm" onclick="handleScanInput(document.getElementById('scannerInput'))">
+<span class="">รับค่า</span>
+<span class="material-symbols-outlined text-sm">keyboard_return</span>
+</button>
+</div>
+<!-- Feedback & Simulation Quick Triggers Bar -->
+<div class="mt-space-sm flex flex-wrap items-center justify-between gap-space-xs pt-space-xs">
+<span class="font-label-text text-label-text text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">tune</span>
+            ปุ่มทดสอบพฤติกรรมสแกนเนอร์:
+          </span>
+<div class="flex items-center gap-space-xs flex-wrap">
+<button class="px-space-sm py-1 rounded bg-secondary/10 hover:bg-secondary/20 text-secondary font-label-text text-label-text font-semibold flex items-center gap-1 transition-colors" onclick="simulateScan('success')">
+<span class="material-symbols-outlined text-sm">check_circle</span> ยิงสแกนถูกต้อง (Beep)
+            </button>
+<button class="px-space-sm py-1 rounded bg-error-container hover:bg-error-container/80 text-on-error-container font-label-text text-label-text font-semibold flex items-center gap-1 transition-colors" onclick="openWrongItemModal('8859999999999', 'เครื่องพิมพ์ใบเสร็จพกพา Mobile POS (POS-MOB-58MM)')">
+<span class="material-symbols-outlined text-sm">cancel</span> ยิงผิดชิ้น (Alert)
+            </button>
+<button class="px-space-sm py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-text text-label-text font-semibold flex items-center gap-1 transition-colors" onclick="simulateScan('over')">
+<span class="material-symbols-outlined text-sm">warning</span> ยิงเกินจำนวน
+            </button>
+</div>
+</div>
+<!-- Alert Notification Box (Dynamic) -->
+<div class="hidden mt-space-sm p-space-sm rounded-lg items-center gap-space-sm animate-pulse" id="alertBox"></div>
+</div>
+<!-- Active Order Details Header Card -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">package_2</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-mono-num-lg text-headline-md text-on-surface font-bold">IV-202410-0284</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-text text-label-text font-bold">
+                  ● ด่วนพิเศษ (Express Priority)
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono-num-sm text-mono-num-sm">
+                  TAX-202410-0419
+                </span>
+</div>
+<p class="font-body-compact text-body-compact text-on-surface-variant mt-0.5">
+                ปลายทาง: <strong class="text-on-surface">บมจ. อมตะ ดิจิทัล โซลูชั่นส์</strong> (คุณสมศักดิ์ แผนกจัดซื้อ 081-492-xxxx)
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col text-right">
+<span class="font-label-text text-label-text text-outline">ผู้ให้บริการจัดส่ง</span>
+<span class="font-title-sm text-title-sm font-bold text-tertiary-container flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-base">local_shipping</span> Flash Express
+              </span>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-surface-container-high text-center">
+<div class="font-label-text text-label-text text-outline">กล่องแนะนำ</div>
+<div class="font-mono-num-md text-mono-num-md font-bold text-primary">กล่อง C</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs pt-space-xs font-label-text text-label-text text-on-surface-variant bg-surface-container-low p-space-sm rounded-lg">
+<div>
+<span class="text-outline">รหัสใบหยิบ (Pick List):</span>
+<span class="font-mono-num-sm text-mono-num-sm font-semibold text-on-surface"> PK-241028-091</span>
+</div>
+<div>
+<span class="text-outline">โซนหยิบ:</span>
+<span class="font-semibold text-on-surface"> Zone A, B, C (รวม 3 เชลฟ์)</span>
+</div>
+<div class="text-right">
+<span class="text-outline">สถานะการแพ็ก:</span>
+<span class="font-semibold text-primary" id="orderPackProgressText">5 / 7 ชิ้น (71%)</span>
+</div>
+</div>
+</div>
+<!-- Real-Time Item Packing Checklist Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-lg">checklist</span>
+<span class="font-title-sm text-title-sm text-on-surface font-bold">รายการสินค้าที่ต้องบรรจุลงกล่อง (Packing Checklist)</span>
+</div>
+<span class="font-label-text text-label-text text-on-surface-variant">3 รายการย่อย • รวม 7 หน่วยสินค้า</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface font-label-text text-label-text text-on-surface-variant uppercase">
+<th class="py-space-sm px-space-md font-semibold">สถานะ</th>
+<th class="py-space-sm px-space-md font-semibold">สินค้า / รายละเอียด</th>
+<th class="py-space-sm px-space-md font-semibold">ตำแหน่งเชลฟ์</th>
+<th class="py-space-sm px-space-md font-semibold text-right">จำนวนที่ต้องแพ็ก</th>
+<th class="py-space-sm px-space-md font-semibold text-right">สแกนแล้ว</th>
+<th class="py-space-sm px-space-md font-semibold text-center">Serial / บาร์โค้ด</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-compact text-body-compact">
+<!-- Item 1: Complete (Green Tone) -->
+<tr class="bg-secondary-container/20 hover:bg-secondary-container/30 transition-colors">
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-text text-label-text font-bold">
+<span class="material-symbols-outlined text-sm">check</span> ครบถ้วน
+                  </span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-title-sm text-body-regular font-bold text-on-surface">เครื่องสแกนเนอร์ไร้สาย Rugged 2D</div>
+<div class="font-mono-num-sm text-mono-num-sm text-outline flex items-center gap-2">
+<span class="">SKU: HARD-SCAN-2D</span>
+<span class="">•</span>
+<span class="text-on-surface font-mono">8859182301149</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-2 py-1 rounded bg-surface-container-high font-mono-num-sm text-mono-num-sm font-bold text-primary">
+                    B-12-04
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-on-surface">
+                  2 ชิ้น
+                </td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-secondary">
+                  2 / 2
+                </td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex flex-col gap-0.5 text-xs font-mono-num-sm text-on-surface-variant">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest shadow-sm">SN-24098112</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest shadow-sm">SN-24098113</span>
+</div>
+</td>
+</tr>
+<!-- Item 2: Pending Item (Flashing Alert Row) -->
+<tr class="bg-tertiary-fixed/20 hover:bg-tertiary-fixed/30 transition-colors" id="itemRow2">
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary font-label-text text-label-text font-bold animate-pulse">
+<span class="material-symbols-outlined text-sm">pending</span> รอสแกน 1 ชิ้น
+                  </span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-title-sm text-body-regular font-bold text-on-surface">ม้วนกระดาษความร้อนสติกเกอร์ 100x150 มม.</div>
+<div class="font-mono-num-sm text-mono-num-sm text-outline flex items-center gap-2">
+<span class="">SKU: ROLL-TH-100150</span>
+<span class="">•</span>
+<span class="text-on-surface font-mono">8852938401928</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-2 py-1 rounded bg-surface-container-high font-mono-num-sm text-mono-num-sm font-bold text-primary">
+                    C-01-08
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-on-surface">
+                  4 ม้วน
+                </td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-tertiary-container" id="item2ScanCount">
+                  3 / 4
+                </td>
+<td class="py-space-md px-space-md text-center">
+<span class="font-mono-num-sm text-mono-num-sm text-outline">LOT-202410-B</span>
+</td>
+</tr>
+<!-- Item 3: Not Scanned Yet (Waiting) -->
+<tr class="hover:bg-surface-container-low transition-colors" id="itemRow3">
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-text text-label-text font-medium">
+<span class="material-symbols-outlined text-sm">schedule</span> ยังไม่สแกน
+                  </span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="font-title-sm text-body-regular font-bold text-on-surface">สายเชื่อมต่อ USB-C to Serial Interface Cable</div>
+<div class="font-mono-num-sm text-mono-num-sm text-outline flex items-center gap-2">
+<span class="">SKU: ACC-CAB-USB2SER</span>
+<span class="">•</span>
+<span class="text-on-surface font-mono">8850931200192</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-2 py-1 rounded bg-surface-container-high font-mono-num-sm text-mono-num-sm font-bold text-primary">
+                    A-04-02
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-on-surface">
+                  1 เส้น
+                </td>
+<td class="py-space-md px-space-md text-right font-mono-num-md text-mono-num-md font-bold text-outline" id="item3ScanCount">
+                  0 / 1
+                </td>
+<td class="py-space-md px-space-md text-center">
+<span class="font-mono-num-sm text-mono-num-sm text-outline">-</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Packing Progress Footer Bar -->
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-text text-label-text text-on-surface font-semibold">ความคืบหน้ารายการในออเดอร์:</span>
+<div class="w-48 bg-surface-container-high h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-300" id="packingProgressBar" style="width: 71%"></div>
+</div>
+<span class="font-mono-num-sm text-mono-num-sm font-bold text-primary" id="progressPercentage">71.4%</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-text text-label-text text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-secondary">verified_user</span>
+<span class="">ตรวจสอบซ้ำด้วยบาร์โค้ด 100% ก่อนปิดผนึก</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: 40% Width (5/12 cols) - WEIGHT, PROOF CAM & AUTO-DISPATCH -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Smart Scale Digital Weight Console -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">scale</span>
+<h2 class="font-title-sm text-title-sm text-on-surface font-bold">ขั้นตอนที่ 2: น้ำหนักพัสดุและขนาดกล่อง</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-mono-num-sm text-mono-num-sm font-semibold">
+            Live Bluetooth
+          </span>
+</div>
+<!-- Digital LED Indicator Display -->
+<div class="mt-space-xs p-space-md rounded-xl bg-inverse-surface text-inverse-on-surface flex items-center justify-between relative overflow-hidden shadow-inner">
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-inverse-primary tracking-wider uppercase">น้ำหนักชั่งจริง (Net Weight)</span>
+<div class="flex items-baseline gap-2">
+<span class="font-mono text-display font-black text-secondary-fixed tracking-tight" id="scaleDisplay">2.80</span>
+<span class="font-mono-num-lg text-headline-md text-surface-variant">KG</span>
+</div>
+<span class="font-label-text text-label-text text-inverse-on-surface/80 flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-xs text-secondary-fixed">check_circle</span>
+              อยู่ในเกณฑ์พิกัด Flash กล่อง C (ไม่เกิน 3.00 kg)
+            </span>
+</div>
+<div class="flex flex-col items-end gap-space-xs">
+<button class="px-space-sm py-1 rounded bg-inverse-surface text-inverse-on-surface hover:bg-surface-container-low/20 transition-colors font-mono-num-sm text-mono-num-sm font-bold flex items-center gap-1 shadow-sm" onclick="tareScale()">
+<span class="material-symbols-outlined text-xs">restart_alt</span> เซ็ตศูนย์ (Tare)
+            </button>
+<span class="font-mono-num-sm text-mono-num-sm text-inverse-primary/60">พิกัดชั่ง: ± 0.01 kg</span>
+</div>
+</div>
+<!-- Box Selection Grid -->
+<div class="mt-space-md">
+<label class="font-label-text text-label-text text-outline uppercase font-semibold block mb-space-xs">
+            ขนาดบรรจุภัณฑ์ที่ใช้งาน
+          </label>
+<div class="grid grid-cols-4 gap-space-xs">
+<button class="p-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-center">
+<div class="font-title-sm text-body-compact font-bold text-on-surface">กล่อง A</div>
+<div class="font-mono-num-sm text-xs text-outline">14x20x6</div>
+</button>
+<button class="p-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-center">
+<div class="font-title-sm text-body-compact font-bold text-on-surface">กล่อง B</div>
+<div class="font-mono-num-sm text-xs text-outline">17x25x9</div>
+</button>
+<button class="p-space-xs rounded-lg bg-primary text-on-primary shadow-sm text-center">
+<div class="font-title-sm text-body-compact font-bold">กล่อง C ⭐</div>
+<div class="font-mono-num-sm text-xs opacity-90">20x30x11</div>
+</button>
+<button class="p-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-center">
+<div class="font-title-sm text-body-compact font-bold text-on-surface">กล่อง D</div>
+<div class="font-mono-num-sm text-xs text-outline">22x35x14</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Packing Proof Camera Snapshot -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">photo_camera</span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold">กล้องบันทึกหลักฐานก่อนปิดผนึก (Proof Cam)</h3>
+</div>
+<span class="font-mono-num-sm text-mono-num-sm text-outline">Overhead Cam #01</span>
+</div>
+<div class="relative w-full h-44 rounded-lg bg-surface-container overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="Top down overhead warehouse packing station camera view looking inside an open cardboard parcel box filled with neatly organized barcode scanner equipment and bubble wrap protection, warehouse packing table background, high resolution crisp lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAujjqaXDSSyM_zdqztnBM1zPJ9-rorYBgml-s4Xe5pj4IUuhJmMuDpopG8eaO-rFV3SsmdUqMk_4hfWzxfx4eyUL-Qxxs7QauWv1vBaNHhiPiB_ujuENpW7N7iPK_VCu89ffbRHAsmTBg_qWuq9Z254yeBAXhkQfzXk7LfSKlFiim-KKujS6uSYgxeZU4bXAJIdziLvLrdABDBmYGvNxOOl9IGzL-lO0182S7B7pJ3mQ_D2nPBWaDsw">
+<!-- Camera HUD Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-inverse-surface/30 p-space-sm flex flex-col justify-between pointer-events-none">
+<div class="flex items-center justify-between text-on-primary font-mono-num-sm text-mono-num-sm">
+<span class="flex items-center gap-1.5 bg-error/80 px-2 py-0.5 rounded font-bold">
+<span class="w-2 h-2 rounded-full bg-on-error animate-ping"></span> REC
+              </span>
+<span class="bg-inverse-surface/60 px-2 py-0.5 rounded backdrop-blur">28 ต.ค. 14:38:12</span>
+</div>
+<div class="flex items-center justify-between text-on-primary font-mono-num-sm text-mono-num-sm">
+<span class="bg-inverse-surface/70 px-2 py-0.5 rounded backdrop-blur font-bold">IV-202410-0284</span>
+<span class="text-xs bg-secondary/80 px-2 py-0.5 rounded">Order Match Verified</span>
+</div>
+</div>
+<button class="absolute bottom-3 right-3 px-space-sm py-1.5 bg-surface-container-lowest hover:bg-surface-bright text-on-surface font-label-text text-label-text font-bold rounded-lg shadow-md transition-all flex items-center gap-1" onclick="triggerCaptureProof()">
+<span class="material-symbols-outlined text-base text-primary">camera</span>
+<span class="">ถ่ายภาพหลักฐาน (Spacebar)</span>
+</button>
+</div>
+<p class="font-label-text text-label-text text-outline mt-space-xs">
+          * ระบบจะแนบภาพนี้อัตโนมัติลงในใบนำส่งพัสดุและระบบติดตาม สำหรับป้องกันข้อพิพาทสินค้าสูญหาย/ไม่ครบ
+        </p>
+</div>
+<!-- Action Confirmation & Dispatch Buttons -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" id="autoPrintCheckbox" type="checkbox">
+<span class="font-body-compact text-body-compact text-on-surface font-semibold">พิมพ์ใบปะหน้าอัตโนมัติทันทีที่สแกนครบ 100%</span>
+</label>
+<span class="font-mono-num-sm text-mono-num-sm text-outline">Thermal Ready</span>
+</div>
+<!-- Big Primary Finish Button -->
+<button class="w-full py-4 px-space-md bg-primary hover:bg-primary-container text-on-primary rounded-xl font-title-sm text-title-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-space-sm" id="finishPackBtn" onclick="document.getElementById('packCompleteModal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-2xl">print</span>
+<span class="">บันทึกแพ็กสำเร็จ &amp; พิมพ์ใบปะหน้าพัสดุ (กด F8 หรือ Enter)</span>
+</button>
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<button class="py-2.5 px-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-label-text font-semibold rounded-lg transition-colors flex items-center justify-center gap-1" onclick="holdOrder()">
+<span class="material-symbols-outlined text-sm text-tertiary-container">pause_circle</span>
+<span class="">พักออเดอร์นี้ / สินค้าชำรุด</span>
+</button>
+<button class="py-2.5 px-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-label-text font-semibold rounded-lg transition-colors flex items-center justify-center gap-1" onclick="reprintLabel()">
+<span class="material-symbols-outlined text-sm text-outline">restart_alt</span>
+<span class="">พิมพ์ฉลากซ้ำ (F4)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Orders in Current Dispatch Batch (Batch Queue) -->
+<div class="px-space-lg py-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">queue</span>
+<h4 class="font-title-sm text-title-sm text-on-surface font-bold">คิวออเดอร์ถัดไปในรอบรถ Flash Express 15:00 น.</h4>
+<span class="px-2 py-0.5 rounded-full bg-surface-container font-mono-num-sm text-mono-num-sm font-semibold text-on-surface">3 คิวถัดไป</span>
+</div>
+<div class="flex items-center gap-space-md font-label-text text-label-text text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> แพ็กแล้วพร้อมส่ง: <strong>14 กล่อง</strong></span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span> กำลังแพ็ก: <strong>1 กล่อง</strong></span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<!-- Queue Card 1 -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-mono-num-md text-mono-num-md text-primary font-bold">#1: IV-202410-0283</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-mono-num-sm text-mono-num-sm font-semibold">KEX Express</span>
+</div>
+<div class="font-body-compact text-body-compact text-on-surface font-semibold mt-1">บจก. อัลฟ่า โลจิสติกส์ โซลูชั่นส์</div>
+<p class="font-label-text text-label-text text-outline">กล่อง E (3 ชิ้น) • น้ำหนักประมาณ 4.2 kg</p>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-text text-label-text">
+<span class="text-secondary font-medium">หยิบสินค้าเสร็จแล้ว</span>
+<button class="text-primary hover:underline font-semibold flex items-center gap-0.5" onclick="switchActiveOrder('IV-202410-0283')">
+<span class="">ดึงมาแพ็ก</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Queue Card 2 -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-mono-num-md text-mono-num-md text-primary font-bold">#2: IV-202410-0279</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-mono-num-sm text-mono-num-sm font-semibold">ไปรษณีย์ไทย EMS</span>
+</div>
+<div class="font-body-compact text-body-compact text-on-surface font-semibold mt-1">ร้านไทยไอทีการค้า (คุณธนาคาร)</div>
+<p class="font-label-text text-label-text text-tertiary-container font-semibold">กล่อง B (1 ชิ้น) • COD เรียกเก็บเงินปลายทาง ฿3,850</p>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-text text-label-text">
+<span class="text-secondary font-medium">หยิบสินค้าเสร็จแล้ว</span>
+<button class="text-primary hover:underline font-semibold flex items-center gap-0.5" onclick="switchActiveOrder('IV-202410-0279')">
+<span class="">ดึงมาแพ็ก</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Queue Card 3 -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-mono-num-md text-mono-num-md text-primary font-bold">#3: IV-202410-0275</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-mono-num-sm text-mono-num-sm font-semibold">รถขนส่งบริษัท Fleet</span>
+</div>
+<div class="font-body-compact text-body-compact text-on-surface font-semibold mt-1">บริษัท บางกอก รีเทล คอมเมิร์ซ</div>
+<p class="font-label-text text-label-text text-outline">รวม 5 ลังใหญ่ • พาเลท P-04</p>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-text text-label-text">
+<span class="text-on-surface-variant font-medium">รอรถยกนำสินค้ามาส่ง</span>
+<button class="text-outline cursor-not-allowed font-semibold flex items-center gap-0.5">
+<span class="">รอนำจ่าย</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- High-Speed Fulfillment Micro-Interactions Script -->
+<script>
+  let beepSoundEnabled = true;
+
+  function playWarehouseAudio(type) {
+    if (!beepSoundEnabled) return;
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'success') {
+        osc.frequency.setValueAtTime(1760, audioCtx.currentTime); // High pitch crisp beep
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime); // Low buzz error
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.28);
+      }
+    } catch(e) {
+      // Audio fallback
+    }
+  }
+
+  function toggleBeep() {
+    beepSoundEnabled = !beepSoundEnabled;
+    const soundText = document.getElementById('soundText');
+    const soundIcon = document.getElementById('soundIcon');
+    if (beepSoundEnabled) {
+      soundText.textContent = "เสียง Beep: เปิด";
+      soundIcon.textContent = "volume_up";
+      playWarehouseAudio('success');
+    } else {
+      soundText.textContent = "เสียง Beep: ปิด";
+      soundIcon.textContent = "volume_off";
+    }
+  }
+
+  function showAlert(msg, isSuccess, isOverpack) {
+    const box = document.getElementById('alertBox');
+    box.classList.remove('hidden', 'bg-secondary-container', 'bg-error-container', 'bg-tertiary-fixed', 'text-on-secondary-container', 'text-on-error-container', 'text-on-tertiary-fixed');
+    
+    if (isSuccess) {
+      box.classList.add('flex', 'bg-secondary-container', 'text-on-secondary-container');
+      box.innerHTML = `<span class="material-symbols-outlined text-lg">check_circle</span> <span class="font-body-compact font-bold">${msg}</span>`;
+      playWarehouseAudio('success');
+    } else if (isOverpack) {
+      box.classList.add('flex', 'bg-tertiary-fixed', 'text-on-tertiary-fixed');
+      box.innerHTML = `<span class="material-symbols-outlined text-lg">warning</span> <span class="font-body-compact font-bold">${msg}</span>`;
+      playWarehouseAudio('error');
+    } else {
+      box.classList.add('flex', 'bg-error-container', 'text-on-error-container');
+      box.innerHTML = `<span class="material-symbols-outlined text-lg">cancel</span> <span class="font-body-compact font-bold">${msg}</span>`;
+      playWarehouseAudio('error');
+    }
+
+    setTimeout(() => {
+      box.classList.add('hidden');
+      box.classList.remove('flex');
+    }, 4000);
+  }
+
+  function simulateScan(mode) {
+    const input = document.getElementById('scannerInput');
+    if (mode === 'success') {
+      input.value = "8852938401928";
+      handleScanInput(input);
+    } else if (mode === 'wrong') {
+      input.value = "8859999999999";
+      handleScanInput(input);
+    } else if (mode === 'over') {
+      input.value = "8859182301149"; // Item 1 which is already 2/2
+      handleScanInput(input);
+    }
+  }
+
+  function handleScanInput(inputEl) {
+    const val = inputEl.value.trim();
+    if (!val) return;
+
+    if (val === '8852938401928' || val === 'ROLL-TH-100150') {
+      // Complete Item 2
+      document.getElementById('item2ScanCount').textContent = "4 / 4";
+      document.getElementById('item2ScanCount').classList.remove('text-tertiary-container');
+      document.getElementById('item2ScanCount').classList.add('text-secondary');
+      
+      const row = document.getElementById('itemRow2');
+      row.className = "bg-secondary-container/20 hover:bg-secondary-container/30 transition-colors";
+      row.children[0].innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-text text-label-text font-bold"><span class="material-symbols-outlined text-sm">check</span> ครบถ้วน</span>`;
+      
+      // Update Progress
+      document.getElementById('orderPackProgressText').textContent = "6 / 7 ชิ้น (86%)";
+      document.getElementById('packingProgressBar').style.width = "86%";
+      document.getElementById('progressPercentage').textContent = "85.7%";
+      
+      showAlert("สแกนกระดาษความร้อนสำเร็จ! บันทึก 4/4 ครบตามจำนวน", true, false);
+    } else if (val === '8850931200192' || val === 'ACC-CAB-USB2SER') {
+      // Complete Item 3
+      document.getElementById('item3ScanCount').textContent = "1 / 1";
+      document.getElementById('item3ScanCount').classList.remove('text-outline');
+      document.getElementById('item3ScanCount').classList.add('text-secondary');
+
+      const row = document.getElementById('itemRow3');
+      row.className = "bg-secondary-container/20 hover:bg-secondary-container/30 transition-colors";
+      row.children[0].innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-text text-label-text font-bold"><span class="material-symbols-outlined text-sm">check</span> ครบถ้วน</span>`;
+
+      // Update Progress to 100%
+      document.getElementById('orderPackProgressText').textContent = "7 / 7 ชิ้น (100% ครบ)";
+      document.getElementById('packingProgressBar').style.width = "100%";
+      document.getElementById('progressPercentage').textContent = "100%";
+
+      showAlert("สแกนครบ 100% แล้ว! ระบบพร้อมพิมพ์ใบปะหน้าพัสดุ", true, false);
+      highlightReadyToPrint();
+    } else if (val === '8859182301149') {
+      showAlert("แจ้งเตือน: รายการนี้สแกนบรรจุครบ 2/2 ชิ้นแล้ว (ห้ามยิงเกินจำนวน)", false, true);
+    } else {
+      showAlert(`บาร์โค้ด [${val}] ไม่มีในรายการคำสั่งซื้อ IV-202410-0284 นี้! โปรดตรวจสอบ`, false, false);
+    }
+
+    inputEl.value = "";
+    inputEl.focus();
+  }
+
+  function highlightReadyToPrint() {
+    const btn = document.getElementById('finishPackBtn');
+    btn.classList.add('animate-pulse', 'bg-secondary');
+    btn.classList.remove('bg-primary');
+    btn.innerHTML = `<span class="material-symbols-outlined text-2xl">verified</span><span>ออเดอร์ครบถ้วน! กดปิดกล่อง & พิมพ์ใบปะหน้าพัสดุ (Enter)</span>`;
+  }
+
+  function completeOrderPacking() {
+    playWarehouseAudio('success');
+    showAlert("กำลังสั่งพิมพ์ใบปะหน้า Flash Express 100x150 mm... ตัดสต็อกและส่ง Tracking ให้ลูกค้าแล้ว", true, false);
+  }
+
+  function triggerCaptureProof() {
+    playWarehouseAudio('success');
+    showAlert("ถ่ายภาพหลักฐานการแพ็ก Overhead Cam #01 เรียบร้อย บันทึกลงระบบคลาวด์แล้ว", true, false);
+  }
+
+  function tareScale() {
+    document.getElementById('scaleDisplay').textContent = "0.00";
+    playWarehouseAudio('success');
+    showAlert("เซ็ตศูนย์เครื่องชั่ง Bluetooth สำเร็จ (Tare = 0.00 kg)", true, false);
+    setTimeout(() => {
+      document.getElementById('scaleDisplay').textContent = "2.80";
+    }, 2000);
+  }
+
+  function holdOrder() {
+    playWarehouseAudio('error');
+    showAlert("พักออเดอร์ IV-202410-0284 ย้ายเข้าสถานะ On-Hold เพื่อรอตรวจสอบแล้ว", false, true);
+  }
+
+  function reprintLabel() {
+    playWarehouseAudio('success');
+    showAlert("ส่งคำสั่งพิมพ์ฉลากซ้ำไปยัง Flash Direct Thermal (USB001)...", true, false);
+  }
+
+  function switchActiveOrder(orderNo) {
+    showAlert(`กำลังสลับไปยังออเดอร์ ${orderNo}...`, true, false);
+  }
+
+  // Keyboard shortcut listener for high ergonomics
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F8') {
+      e.preventDefault();
+      completeOrderPacking();
+    } else if (e.key === 'F4') {
+      e.preventDefault();
+      reprintLabel();
+    }
+  });
+</script><div id="wrongItemModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-space-md bg-inverse-surface/70 backdrop-blur"><div class="bg-surface-container-lowest max-w-xl w-full rounded-xl shadow-md border-2 border-error overflow-hidden flex flex-col"><div class="bg-error px-space-md py-space-sm flex items-center justify-between text-on-error"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-2xl animate-bounce">emergency</span><div><h3 class="font-title-sm text-title-sm font-bold leading-tight">ตรวจพบสินค้าไม่ตรงคำสั่งขาย! (WRONG ITEM ALERT)</h3><p class="font-mono-num-sm text-mono-num-sm text-on-error/90">บาร์โค้ดไม่ตรงกับสินค้าในใบสั่งขาย IV-202410-0284</p></div></div><span class="px-2 py-0.5 rounded bg-on-error text-error font-mono-num-sm text-mono-num-sm font-bold animate-pulse">ระบบล็อกกล่องอัตโนมัติ</span></div><div class="p-space-md flex flex-col gap-space-md"><div class="p-space-sm bg-error-container/50 rounded-lg flex items-start gap-space-sm"><span class="material-symbols-outlined text-error text-2xl mt-0.5">cancel</span><div><p class="font-body-compact text-body-compact text-on-error-container font-semibold">คำเตือนความปลอดภัย: สแกนเนอร์อ่านพบบาร์โค้ดที่ไม่มีในออเดอร์นี้</p><p class="font-label-text text-label-text text-on-error-container">ระบบระงับการพิมพ์ใบปะหน้าและหยุดการทำงานของสถานีชั่วคราว เพื่อป้องกันการส่งสินค้าผิดพลาดไปยังลูกค้า</p></div></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm"><div class="bg-error-container/20 p-space-sm rounded-lg border border-error"><div class="font-label-text text-label-text text-error font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">close</span> สินค้าที่เพิ่งสแกน (ผิดพลาด)</div><div class="mt-space-xs font-title-sm text-body-compact font-bold text-on-surface" id="scannedWrongItemName">เครื่องพิมพ์ใบเสร็จพกพา Mobile POS</div><div class="mt-1 font-mono-num-sm text-mono-num-sm text-error font-semibold">SKU: POS-MOB-58MM</div><div class="font-mono-num-sm text-mono-num-sm text-outline">Barcode: <span id="scannedWrongBarcode" class="text-error font-bold">8859999999999</span></div></div><div class="bg-secondary-container/20 p-space-sm rounded-lg border border-secondary"><div class="font-label-text text-label-text text-secondary font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> สินค้าที่ต้องแพ็กถัดไป (ถูกต้อง)</div><div class="mt-space-xs font-title-sm text-body-compact font-bold text-on-surface">ม้วนกระดาษความร้อน 100x150 มม.</div><div class="mt-1 font-mono-num-sm text-mono-num-sm text-secondary font-semibold">SKU: ROLL-TH-100150 (เชลฟ์ C-01-08)</div><div class="font-mono-num-sm text-mono-num-sm text-outline">Barcode: 8852938401928</div></div></div><div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between text-on-surface-variant font-label-text text-label-text"><span class="">บันทึกเหตุการณ์ลงระบบ Audit Trail: <strong class="text-error font-mono-num-sm">LOG #ERR-9921</strong></span><span class="flex items-center gap-1 font-semibold text-error"><span class="w-2 h-2 rounded-full bg-error animate-ping"></span> เสียงแจ้งเตือนเปิดอยู่</span></div><div class="flex flex-col sm:flex-row items-center justify-end gap-space-sm pt-space-xs border-t border-surface-container"><button type="button" onclick="closeWrongItemModal()" class="w-full sm:w-auto px-space-md py-2 bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-label-text font-semibold rounded-lg transition-colors flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">qr_code_scanner</span><span class="">สแกนสินค้าใหม่ (ESC)</span></button><button type="button" onclick="overrideWrongItemSupervisor()" class="w-full sm:w-auto px-space-md py-2 bg-error hover:bg-error/80 text-on-error font-title-sm text-label-text font-bold rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm"><span class="material-symbols-outlined text-sm">lock_open</span><span class="">ปลดล็อกโดยหัวหน้างาน (Supervisor Override)</span></button></div></div></div></div><div id="packCompleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-space-sm sm:p-space-md bg-inverse-surface/70 backdrop-blur overflow-y-auto"><div class="bg-surface-container-lowest max-w-4xl w-full rounded-2xl shadow-lg border border-surface-container overflow-hidden flex flex-col my-auto"><div class="bg-surface-container-low px-space-md py-space-sm border-b border-surface-container flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container"><span class="material-symbols-outlined text-xl">verified</span></div><div><div class="flex items-center gap-2"><h3 class="font-title-sm text-title-sm font-bold text-on-surface">ยืนยันการแพ็ก &amp; ตัวอย่างใบปะหน้าพัสดุ (Print Preview &amp; Confirm)</h3><span class="px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-text text-label-text font-bold flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span> สแกนครบถ้วน 100% (All Items Verified)</span></div><p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">คำสั่งซื้อ: <strong class="text-primary font-bold">IV-202410-0284</strong> • รหัสใบกำกับ: TAX-202410-0419 • ใบหยิบ: PK-241028-091</p></div></div><button type="button" onclick="document.getElementById('packCompleteModal').classList.add('hidden')" class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">close</span></button></div><div class="bg-surface px-space-md py-space-xs border-b border-surface-container grid grid-cols-2 sm:grid-cols-4 gap-space-xs font-label-text text-label-text text-on-surface-variant"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-tertiary-container text-base">local_shipping</span><span class="">ขนส่ง: <strong class="text-on-surface">Flash Express (กล่อง C)</strong></span></div><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">scale</span><span class="">ชั่งจริง: <strong class="text-secondary font-mono-num-sm">2.80 kg</strong> (เกณฑ์ผ่าน)</span></div><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">checklist_rtl</span><span class="">สแกนสินค้า: <strong class="text-primary font-mono-num-sm">3 รายการ / 7 ชิ้น</strong></span></div><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base">photo_camera</span><span class="">หลักฐาน: <strong class="text-on-surface">Proof Cam บันทึกแล้ว</strong></span></div></div><div class="p-space-md grid grid-cols-1 md:grid-cols-12 gap-space-md max-h-[70vh] overflow-y-auto"><div class="md:col-span-6 flex flex-col gap-space-sm"><div class="bg-surface-container-low p-space-sm rounded-xl"><div class="flex items-center justify-between mb-space-xs"><span class="font-title-sm text-body-compact font-bold text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-secondary">fact_check</span> ผลการตรวจสอบสินค้าในกล่อง</span><span class="font-mono-num-sm text-mono-num-sm text-secondary font-bold">7/7 ชิ้น ครบ 100%</span></div><div class="space-y-1.5"><div class="p-2 rounded-lg bg-surface-container-lowest border border-surface-container flex items-center justify-between text-body-compact"><div class="flex flex-col"><span class="font-semibold text-on-surface">1. สแกนเนอร์ไร้สาย Rugged 2D</span><span class="font-mono-num-sm text-xs text-outline">SN: 24098112, 24098113</span></div><div class="text-right"><span class="px-2 py-0.5 rounded bg-secondary-container/60 text-on-secondary-container font-mono-num-sm text-xs font-bold">2/2 ชิ้น</span></div></div><div class="p-2 rounded-lg bg-surface-container-lowest border border-surface-container flex items-center justify-between text-body-compact"><div class="flex flex-col"><span class="font-semibold text-on-surface">2. ม้วนกระดาษความร้อน 100x150 มม.</span><span class="font-mono-num-sm text-xs text-outline">LOT-202410-B (บาร์โค้ด 8852938401928)</span></div><div class="text-right"><span class="px-2 py-0.5 rounded bg-secondary-container/60 text-on-secondary-container font-mono-num-sm text-xs font-bold">4/4 ม้วน</span></div></div><div class="p-2 rounded-lg bg-surface-container-lowest border border-surface-container flex items-center justify-between text-body-compact"><div class="flex flex-col"><span class="font-semibold text-on-surface">3. สาย USB-C to Serial Interface</span><span class="font-mono-num-sm text-xs text-outline">SKU: ACC-CAB-USB2SER</span></div><div class="text-right"><span class="px-2 py-0.5 rounded bg-secondary-container/60 text-on-secondary-container font-mono-num-sm text-xs font-bold">1/1 เส้น</span></div></div></div></div><div class="bg-surface-container-low p-space-sm rounded-xl flex items-center gap-space-sm"><div class="w-24 h-20 rounded-lg overflow-hidden relative flex-shrink-0 bg-surface-container"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAujjqaXDSSyM_zdqztnBM1zPJ9-rorYBgml-s4Xe5pj4IUuhJmMuDpopG8eaO-rFV3SsmdUqMk_4hfWzxfx4eyUL-Qxxs7QauWv1vBaNHhiPiB_ujuENpW7N7iPK_VCu89ffbRHAsmTBg_qWuq9Z254yeBAXhkQfzXk7LfSKlFiim-KKujS6uSYgxeZU4bXAJIdziLvLrdABDBmYGvNxOOl9IGzL-lO0182S7B7pJ3mQ_D2nPBWaDsw" alt="Proof Snapshot" class="w-full h-full object-cover"><span class="absolute bottom-1 right-1 px-1 rounded bg-inverse-surface/80 text-inverse-on-surface font-mono-num-sm text-[10px]">Overhead #01</span></div><div class="flex flex-col text-body-compact"><span class="font-semibold text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-secondary">photo_library</span> ภาพถ่ายหลักฐานก่อนปิดเทป</span><span class="font-label-text text-outline text-xs mt-0.5">ถ่ายบันทึกเวลา 14:38:12 น. พร้อมแนบใน Cloud Tracking ป้องกันข้อพิพาทเคลมสินค้า</span></div></div><div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-xl">print</span><div><p class="font-label-text font-bold text-on-surface">เครื่องพิมพ์ Thermal (USB001)</p><p class="font-mono-num-sm text-xs text-outline">Flash Direct Thermal 100x150 • กระดาษพร้อม</p></div></div><span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-text text-xs font-semibold">Ready</span></div></div><div class="md:col-span-6 flex flex-col items-center gap-space-xs"><div class="w-full flex items-center justify-between pb-space-xs"><span class="font-title-sm text-body-compact font-bold text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-primary">print</span> รูปแบบพิมพ์ &amp; ตัวอย่างใบปะหน้า</span><span class="font-mono-num-sm text-xs text-outline" id="previewModeTag">Thermal 100×150 mm</span></div><div class="w-full bg-surface-container-low p-1.5 rounded-xl border border-surface-container grid grid-cols-2 gap-1.5 mb-1"><button type="button" id="printerTabThermal" onclick="selectPrinterFormat('thermal')" class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm border border-primary/20 transition-all text-left"><span class="material-symbols-outlined text-xl flex-shrink-0 text-primary">receipt_long</span><div class="flex flex-col truncate"><div class="flex items-center gap-1"><span class="font-body-compact font-bold text-xs text-on-surface">Thermal 100×150 mm</span><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span></div><span class="text-[11px] text-outline font-mono-num-sm truncate">USB001 • เหลือ 420 แผ่น (1.2 วิ)</span></div></button><button type="button" id="printerTabA4" onclick="selectPrinterFormat('a4')" class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all text-left"><span class="material-symbols-outlined text-xl flex-shrink-0 text-outline">description</span><div class="flex flex-col truncate"><div class="flex items-center gap-1"><span class="font-body-compact font-bold text-xs text-on-surface">Laser สติกเกอร์ A4</span><span class="px-1 rounded bg-surface-container text-[9px] font-mono-num-sm text-outline">4 ดวง</span></div><span class="text-[11px] text-outline font-mono-num-sm truncate">IP .1.180 • 1200 DPI (ถาด 1)</span></div></button></div><div id="hardwareStatusInfo" class="w-full px-2.5 py-1.5 rounded-lg bg-surface-container-low flex items-center justify-between text-xs font-mono-num-sm text-on-surface-variant mb-1"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="">เครื่องพิมพ์: <strong class="text-on-surface font-semibold" id="activePrinterName">Flash Direct Thermal 100x150</strong> (พอร์ต USB001)</span></div><span class="text-[11px] text-secondary font-semibold" id="activePrinterStatus">กระดาษพร้อม • ม้วน 4×6 นิ้ว</span></div><div id="previewThermalContainer" class="w-full flex justify-center"><div class="w-full max-w-[340px] bg-surface-container-lowest border-2 border-on-surface rounded-lg p-3 shadow-md flex flex-col gap-2 font-mono text-on-surface select-none"><div class="flex items-center justify-between border-b-2 border-on-surface pb-1.5"><div class="flex items-center gap-1"><span class="material-symbols-outlined text-2xl font-bold">bolt</span><span class="font-black text-xl tracking-tighter">FLASH EXPRESS</span></div><div class="text-right"><span class="font-black text-base px-2 py-0.5 bg-inverse-surface text-inverse-on-surface rounded">BKK-STH-04</span><p class="text-[10px] text-on-surface-variant">HUB ชลบุรี-พานทอง</p></div></div><div class="flex flex-col items-center justify-center py-1 bg-surface-container-lowest border border-dashed border-outline/40 rounded"><div class="text-xs font-bold tracking-widest text-center">||| | ||||| || |||||| |||| ||| ||||||| |||||</div><div class="font-mono-num-md font-bold text-sm tracking-wider text-center">TH019284920485A</div></div><div class="grid grid-cols-2 gap-2 text-xs border-b border-on-surface pb-1"><div class="flex flex-col"><span class="font-bold text-[10px] text-outline uppercase">ผู้ส่ง (Sender):</span><p class="font-semibold text-on-surface leading-tight text-[11px]">FlowLedger Express Gateway</p><p class="text-[10px] text-on-surface-variant truncate">บจก. สยาม โกลบอล เทรดดิ้ง สาขาใหญ่</p></div><div class="flex flex-col text-right"><span class="font-bold text-[10px] text-outline uppercase">เลขที่อ้างอิง:</span><p class="font-bold text-[11px]">IV-202410-0284</p><p class="text-[10px] text-on-surface-variant font-mono">PK-241028-091</p></div></div><div class="border-b-2 border-on-surface pb-1.5 flex flex-col gap-0.5 text-xs"><span class="font-bold text-[10px] text-outline uppercase">ผู้รับ (Recipient):</span><p class="font-bold text-sm leading-tight text-on-surface">บมจ. อมตะ ดิจิทัล โซลูชั่นส์</p><p class="text-[11px] leading-tight text-on-surface-variant">คุณสมศักดิ์ (แผนกจัดซื้อ) 081-492-xxxx</p><p class="text-[10px] text-on-surface-variant">700/84 นิคมอุตสาหกรรมอมตะซิตี้ ม.1 ต.คลองตำหรุ อ.เมือง จ.ชลบุรี 20000</p></div><div class="grid grid-cols-3 gap-1 text-center py-1 border-b border-on-surface text-[10px]"><div class="border-r border-outline/30 flex flex-col"><span class="text-outline">กล่อง / บรรจุ</span><span class="font-bold text-xs">กล่อง C (20x30x11)</span></div><div class="border-r border-outline/30 flex flex-col"><span class="text-outline">น้ำหนักพัสดุ</span><span class="font-bold text-xs text-primary">2.80 KG</span></div><div class="flex flex-col"><span class="text-outline">เก็บเงินปลายทาง</span><span class="font-bold text-xs text-secondary">- ไม่มียอด COD -</span></div></div><div class="flex items-center justify-between pt-1"><div class="flex items-center gap-1.5"><div class="w-10 h-10 border border-on-surface flex items-center justify-center p-0.5"><span class="material-symbols-outlined text-2xl">qr_code_2</span></div><div class="flex flex-col text-[10px]"><span class="font-bold">SORT: 04-A</span><span class="">LINE แจ้งสถานะเปิดใช้งาน</span></div></div><div class="text-right"><span class="text-[9px] text-outline">พิมพ์เมื่อ 28 ต.ค. 14:39 น.</span><p class="text-[10px] font-bold text-on-surface">Station #B-04 (Packer)</p></div></div></div></div><div id="previewA4Container" class="hidden w-full max-w-[340px] bg-surface-container-lowest border-2 border-outline-variant rounded-lg p-2.5 shadow-md flex-col gap-2 select-none"><div class="flex items-center justify-between border-b border-surface-container pb-1 text-xs"><div class="flex items-center gap-1 font-semibold text-primary"><span class="material-symbols-outlined text-sm">auto_awesome_motion</span><span class="">สติกเกอร์ A4 (4 ดวง/แผ่น)</span></div><span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed text-[10px] font-mono-num-sm font-bold">พิมพ์ดวงที่ 1 (บนซ้าย)</span></div><div class="grid grid-cols-2 gap-2 bg-surface-container-low p-2 rounded border border-dashed border-outline/40 aspect-[1/1.3] relative"><div class="border-2 border-primary bg-surface-container-lowest rounded p-1.5 flex flex-col justify-between shadow-sm relative overflow-hidden"><div class="absolute top-0 right-0 bg-primary text-on-primary font-mono-num-sm text-[9px] px-1 font-bold rounded-bl">#1 ออเดอร์นี้</div><div class="flex items-center justify-between border-b border-on-surface/40 pb-0.5 pt-2"><div class="flex items-center gap-0.5"><span class="material-symbols-outlined text-xs text-primary">bolt</span><span class="font-black text-[10px] tracking-tight">FLASH</span></div><span class="text-[8px] font-mono bg-inverse-surface text-inverse-on-surface px-1 rounded">BKK-STH-04</span></div><div class="my-auto text-center py-0.5"><div class="text-[8px] font-bold tracking-widest text-center truncate">|||||||||||||||||||||</div><div class="text-[9px] font-bold font-mono">TH019284920485A</div></div><div class="text-[8px] leading-tight border-t border-on-surface/20 pt-0.5"><p class="font-bold truncate text-on-surface">บมจ. อมตะ ดิจิทัล</p><p class="text-outline font-mono">IV-202410-0284 • 2.80 kg</p></div></div><div class="border border-dashed border-outline/40 bg-surface-container/40 rounded p-1.5 flex flex-col items-center justify-center text-center opacity-70"><span class="material-symbols-outlined text-outline text-lg">add_circle_outline</span><span class="text-[10px] font-bold text-outline mt-0.5">ดวงที่ 2 (บนขวา)</span><span class="text-[9px] text-outline/80">ว่าง (พิมพ์ครั้งถัดไป)</span></div><div class="border border-dashed border-outline/40 bg-surface-container/40 rounded p-1.5 flex flex-col items-center justify-center text-center opacity-70"><span class="material-symbols-outlined text-outline text-lg">add_circle_outline</span><span class="text-[10px] font-bold text-outline mt-0.5">ดวงที่ 3 (ล่างซ้าย)</span><span class="text-[9px] text-outline/80">ว่าง (พิมพ์ครั้งถัดไป)</span></div><div class="border border-dashed border-outline/40 bg-surface-container/40 rounded p-1.5 flex flex-col items-center justify-center text-center opacity-70"><span class="material-symbols-outlined text-outline text-lg">add_circle_outline</span><span class="text-[10px] font-bold text-outline mt-0.5">ดวงที่ 4 (ล่างขวา)</span><span class="text-[9px] text-outline/80">ว่าง (พิมพ์ครั้งถัดไป)</span></div></div><div class="flex items-center justify-between text-[10px] text-on-surface-variant pt-0.5 px-0.5"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>บันทึกตำแหน่งเพื่อพิมพ์ดวงถัดไปไม่ให้เปลืองกระดาษ</span><span class="font-mono-num-sm text-outline">HP LaserJet MFP</span></div></div></div></div><div class="bg-surface-container-low px-space-md py-space-sm border-t border-surface-container flex flex-col sm:flex-row items-center justify-between gap-space-sm"><label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" checked="" class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary"><span class="font-label-text text-label-text text-on-surface">พิมพ์แล้วเปลี่ยนสถานะเป็นพร้อมจัดส่ง และส่ง LINE / SMS แจ้งลูกค้าอัตโนมัติ</span></label><div class="flex items-center gap-space-xs w-full sm:w-auto justify-end"><button type="button" onclick="document.getElementById('packCompleteModal').classList.add('hidden')" class="px-space-md py-2 bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-label-text font-semibold rounded-lg transition-colors"><span class="">แก้ไข / ตรวจสอบซ้ำ (Esc)</span></button><button type="button" id="modalConfirmPrintBtn" onclick="document.getElementById('packCompleteModal').classList.add('hidden'); completeOrderPacking();" class="px-space-md py-2 bg-secondary hover:bg-secondary/80 text-on-secondary font-title-sm text-label-text font-bold rounded-lg shadow-sm transition-all flex items-center gap-1.5 animate-pulse"><span class="material-symbols-outlined text-base">print</span><span id="modalConfirmPrintBtnText" class="">ยืนยันและพิมพ์ใบปะหน้าความร้อนทันที (Enter / F8)</span></button></div></div></div></div></main><footer class="w-full bg-surface-container-low py-space-md px-space-lg flex flex-col md:flex-row items-center justify-between text-on-surface-variant font-label-text text-label-text gap-space-sm"><div class="flex items-center gap-space-md"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>API สถานะปกติ: กรมสรรพากร (RD Net) • KBank Business Click • SCB Business Anywhere</span></div><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">คู่มือการใช้งาน</a><a class="hover:text-on-surface transition-colors" href="#">ติดต่อเจ้าหน้าที่สนับสนุน (LINE OA)</a><span class="">© 2025 FlowLedger ERP &amp; Cloud Accounting.</span></div></footer></div>
+
+<script>
+function selectPrinterFormat(mode) {
+  const thermalTab = document.getElementById('printerTabThermal');
+  const a4Tab = document.getElementById('printerTabA4');
+  const thermalPreview = document.getElementById('previewThermalContainer');
+  const a4Preview = document.getElementById('previewA4Container');
+  const modeTag = document.getElementById('previewModeTag');
+  const printerName = document.getElementById('activePrinterName');
+  const printerStatus = document.getElementById('activePrinterStatus');
+  const btnText = document.getElementById('modalConfirmPrintBtnText');
+
+  if (mode === 'thermal') {
+    thermalTab.className = 'flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm border border-primary/20 transition-all text-left';
+    a4Tab.className = 'flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all text-left border border-transparent';
+    thermalPreview.classList.remove('hidden');
+    thermalPreview.classList.add('flex');
+    a4Preview.classList.add('hidden');
+    a4Preview.classList.remove('flex');
+    if (modeTag) modeTag.textContent = 'Thermal 100×150 mm';
+    if (printerName) printerName.textContent = 'Flash Direct Thermal 100x150';
+    if (printerStatus) {
+      printerStatus.textContent = 'กระดาษพร้อม • ม้วน 4×6 นิ้ว (420 แผ่น)';
+      printerStatus.className = 'text-[11px] text-secondary font-semibold';
+    }
+    if (btnText) btnText.textContent = 'ยืนยันและพิมพ์ใบปะหน้าความร้อนทันที (Enter / F8)';
+  } else {
+    a4Tab.className = 'flex items-center gap-2 p-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm border border-primary/20 transition-all text-left';
+    thermalTab.className = 'flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all text-left border border-transparent';
+    a4Preview.classList.remove('hidden');
+    a4Preview.classList.add('flex');
+    thermalPreview.classList.add('hidden');
+    thermalPreview.classList.remove('flex');
+    if (modeTag) modeTag.textContent = 'สติกเกอร์ A4 (4 ดวง/แผ่น)';
+    if (printerName) printerName.textContent = 'Office Laser MFP (192.168.1.180)';
+    if (printerStatus) {
+      printerStatus.textContent = 'ถาด 1 พร้อมพิมพ์ • สติกเกอร์ 4 ดวง (ดวงที่ 1)';
+      printerStatus.className = 'text-[11px] text-primary font-semibold';
+    }
+    if (btnText) btnText.textContent = 'ยืนยันและพิมพ์สติกเกอร์ A4 ทันที (Enter / F8)';
+  }
+}
+</script></body></html>

@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+
+<html lang="th"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-high": "#e2e7ff",
+          "surface-container": "#eaedff",
+          "on-error-container": "#93000a",
+          "on-secondary-fixed-variant": "#005049",
+          "error-container": "#ffdad6",
+          "secondary-fixed-dim": "#6bd8cb",
+          "surface": "#faf8ff",
+          "on-background": "#131b2e",
+          "surface-tint": "#3755c3",
+          "surface-bright": "#faf8ff",
+          "on-error": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "on-primary-fixed": "#001453",
+          "surface-dim": "#d2d9f4",
+          "on-secondary": "#ffffff",
+          "on-tertiary-container": "#ffa929",
+          "surface-container-low": "#f2f3ff",
+          "on-tertiary-fixed": "#2a1700",
+          "tertiary-container": "#6b4200",
+          "primary": "#00288e",
+          "secondary-container": "#86f2e4",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed": "#dde1ff",
+          "on-surface-variant": "#444653",
+          "inverse-on-surface": "#eef0ff",
+          "secondary": "#006a61",
+          "primary-fixed-dim": "#b8c4ff",
+          "surface-variant": "#dae2fd",
+          "primary-container": "#1e40af",
+          "tertiary-fixed": "#ffddb8",
+          "on-primary-container": "#a8b8ff",
+          "secondary-fixed": "#89f5e7",
+          "tertiary": "#4c2e00",
+          "on-surface": "#131b2e",
+          "on-tertiary-fixed-variant": "#653e00",
+          "background": "#faf8ff",
+          "inverse-surface": "#283044",
+          "inverse-primary": "#b8c4ff",
+          "on-primary-fixed-variant": "#173bab",
+          "error": "#ba1a1a",
+          "tertiary-fixed-dim": "#ffb95f",
+          "on-secondary-fixed": "#00201d",
+          "on-secondary-container": "#006f66",
+          "outline-variant": "#c4c5d5",
+          "on-tertiary": "#ffffff",
+          "outline": "#757684",
+          "on-primary": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "space-lg": "1.25rem",
+          "space-md": "0.75rem",
+          "gutter-lg": "1.5rem",
+          "space-sm": "0.5rem",
+          "gutter": "1rem",
+          "space-xl": "2rem",
+          "margin-md": "1.5rem",
+          "margin-lg": "2rem",
+          "margin": "1rem"
+        },
+        "fontFamily": {
+          "mono-num-lg": [
+            "JetBrains Mono"
+          ],
+          "mono-num-md": [
+            "JetBrains Mono"
+          ],
+          "display": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Inter"
+          ],
+          "label-text": [
+            "Inter"
+          ],
+          "title-sm": [
+            "Inter"
+          ],
+          "body-compact": [
+            "Inter"
+          ],
+          "headline-lg-mobile": [
+            "Inter"
+          ],
+          "body-regular": [
+            "Inter"
+          ],
+          "mono-num-sm": [
+            "JetBrains Mono"
+          ],
+          "headline-lg": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "mono-num-lg": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "mono-num-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "display": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-text": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "title-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-compact": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-regular": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "mono-num-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-regular text-body-regular text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="FlowLedger Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UW2182kbEUN2-IVCJKIgShUNSJxahA1J8co-bonyrFJwCju1y5dFHgHS90HxNl4aI3GzWN717VyiWOhmK1WRFdcfAUl1JNtto-mVs50OBhBuyW70Ahb65_GeVoRoylJ7Cp6HS2bSbfF_WPM_psNBV1m_crQlvPYTx5R-iLRFMMa0SJGENWWRy5mVV30n2HYmgzUJCnVFA1fc5xfTsWQYAD7tnNijyK8I6Dzx7N986g-30UxR6QHHh9MHtk"/><div class="flex flex-col"><span class="font-title-sm text-title-sm text-primary leading-tight font-bold">FlowLedger</span><span class="font-label-text text-label-text text-on-surface-variant">โฟลว์เลดเจอร์ ERP</span></div></div><div class="px-space-md pt-space-sm pb-space-xs"><div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"><div class="flex items-center gap-space-xs overflow-hidden"><span class="material-symbols-outlined text-primary text-lg">corporate_fare</span><div class="truncate"><p class="font-label-text text-label-text text-on-surface font-medium truncate">บจก. สยาม โกลบอล เทรดดิ้ง</p><p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">สาขาใหญ่ (00000)</p></div></div><span class="material-symbols-outlined text-on-surface-variant text-base">unfold_more</span></div></div><nav class="flex flex-col px-space-sm pt-space-sm gap-space-xs" data-active-classes="bg-primary text-on-primary font-bold"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="#"><span class="font-body-compact text-body-compact">แดชบอร์ดภาพรวม</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ฝ่ายขายและลูกหนี้</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-quotations" href="#"><span class="font-body-compact text-body-compact">ใบเสนอราคา (QT)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sales-invoices" href="#"><span class="font-body-compact text-body-compact">ใบแจ้งหนี้ / วางบิล (IV)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-invoices" href="#"><span class="font-body-compact text-body-compact">ใบกำกับภาษี (TAX)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="official-receipts" href="#"><span class="font-body-compact text-body-compact">ใบเสร็จรับเงิน (RE)</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="credit-debit-notes" href="#"><span class="font-body-compact text-body-compact">ใบลดหนี้ / เพิ่มหนี้</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ค่าใช้จ่ายและภาษี</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="purchases-and-expenses" href="#"><span class="font-body-compact text-body-compact">เอกสารซื้อและค่าใช้จ่าย</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="tax-accounting-reports" href="#"><span class="font-body-compact text-body-compact">ภาษี &amp; บัญชี (ภ.พ.30 / ภ.ง.ด.)</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">ระบบงานและจัดส่ง</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="inventory-stock" href="#"><span class="font-body-compact text-body-compact">สินค้าและสต็อก</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="contacts-directory" href="#"><span class="font-body-compact text-body-compact">สมุดรายชื่อผู้ติดต่อ</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="logistics-and-shipping" href="#"><span class="font-body-compact text-body-compact">การจัดส่ง &amp; ใบปะหน้า</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="financial-reports" href="#"><span class="font-body-compact text-body-compact">รายงานสรุปผู้บริหาร</span></a><div class="pt-space-xs pb-space-xs px-space-sm"><span class="font-label-text text-label-text text-outline uppercase tracking-wider">การจัดการระบบ</span></div><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg shadow-sm transition-all bg-primary text-on-primary font-bold" data-path="system-settings-roles" href="#"><span class="font-body-compact text-body-compact">ตั้งค่าระบบ &amp; สิทธิ์ผู้ใช้งาน</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="system-settings" href="#"><span class="font-body-compact text-body-compact">ตั้งค่าระบบ &amp; เชื่อมต่อ API</span></a></nav></div><div class="p-space-md bg-surface-container-low mx-space-sm mb-space-md rounded-xl"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-text text-label-text text-on-surface font-semibold">Live Bank Feed</span><span class="flex items-center gap-1 font-label-text text-label-text text-secondary font-medium"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Syncing</span></div><div class="flex items-center gap-space-xs text-on-surface-variant font-mono-num-sm text-mono-num-sm"><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">KBANK</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">SCB</span><span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-semibold">BBL</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span><input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary" placeholder="ค้นหาเอกสาร (QT, IV, TAX), ลูกค้า, ผู้ใช้งาน..." type="text"/></div></div><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-text text-label-text text-on-surface">ธนาคารเชื่อมต่อแล้ว 3 บัญชี</span></div><button class="flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-title-sm text-label-text px-space-md py-2 rounded-lg transition-colors"><span class="material-symbols-outlined text-base">add</span><span>สร้างเอกสาร</span></button><div class="h-6 w-px bg-outline-variant"></div><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><button class="relative p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"><span class="material-symbols-outlined text-xl">chat</span><span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span></button><div class="flex items-center gap-space-sm pl-space-xs cursor-pointer"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsfJrYp-v0Uh-hH0XzSPJfniv_vTzX1KLPUhuD6K0Qv3EAmp8bywl6zMvsig9S3XtWhdW4j6BKOB7iuMhu1bV4ndOz4hkbUg0RFI3mkgbQzycmzLiNWn55d8uPfM7uznnWAqd29enJ6tZFR99LTIz2NNhS02RBFSncS9Qd1_f7QHz96_QiTC88duk-7eUVD-Yw0lw2Tzc43xYIhd74Qhwns2oHb8eKftfcgLm6lWddQ9ll9do3MnHwdg"/><div class="hidden sm:flex flex-col text-left"><span class="font-body-compact text-body-compact text-on-surface font-semibold leading-tight">กานต์สิริ เลิศวิทยสกุล</span><span class="font-label-text text-label-text text-on-surface-variant">ผู้จัดการฝ่ายบัญชีและการเงิน</span></div><span class="material-symbols-outlined text-on-surface-variant text-base">keyboard_arrow_down</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Command & Breadcrumb Area -->
+<div class="w-full bg-surface-container-lowest px-space-xl py-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<!-- Title Block & Breadcrumbs -->
+<div class="flex flex-col gap-space-xs">
+<nav class="flex items-center gap-space-xs text-on-surface-variant font-label-text text-label-text">
+<a class="hover:text-primary transition-colors" href="#">หน้าหลัก</a>
+<span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">ตั้งค่าระบบ</a>
+<span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+<span class="text-primary font-semibold">สิทธิ์และการจัดการผู้ใช้งาน (User Roles &amp; Permissions)</span>
+</nav>
+<div class="flex items-center gap-space-sm flex-wrap mt-space-xs">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            จัดการผู้ใช้งานและกำหนดสิทธิ์ 3 ระดับ
+          </h1>
+<span class="px-space-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-mono-num-sm text-mono-num-sm font-semibold flex items-center gap-1 shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            RBAC v3.2 Active
+          </span>
+<span class="px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified_user</span>
+            PDPA Compliant
+          </span>
+</div>
+<p class="font-body-regular text-body-regular text-on-surface-variant max-w-4xl">
+          ควบคุมสิทธิ์การเข้าถึงข้อมูลระบบบัญชี เอกสารขาย คลังสต็อก และการเงินอย่างปลอดภัยตามมาตรฐานความปลอดภัยข้อมูลองค์กร (Enterprise Access Control Engine)
+        </p>
+</div>
+<!-- Action CTA Buttons -->
+<div class="flex items-center gap-space-sm self-start lg:self-center shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-title-sm text-body-compact font-semibold transition-colors shadow-xs">
+<span class="material-symbols-outlined text-base text-primary">history_toggle_off</span>
+<span>บันทึกประวัติความปลอดภัย (Audit Logs)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-body-compact font-semibold transition-all shadow-sm shadow-primary/20 hover:scale-[1.01]">
+<span class="material-symbols-outlined text-base">person_add</span>
+<span>+ เชิญผู้ใช้งานใหม่ (Invite User)</span>
+</button>
+</div>
+</div>
+</div>
+<!-- KPI Metrics Dashboard (4 Cards Bento Bar) -->
+<div class="px-space-xl py-space-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter-lg">
+<!-- Card 1: Total Users & Licenses -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-on-surface-variant uppercase tracking-wider font-semibold">ผู้ใช้งานทั้งหมด (Total Active Users)</span>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-display text-display text-on-surface font-bold">18</span>
+<span class="font-title-sm text-title-sm text-on-surface-variant">/ 25 Licenses</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">badge</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 72%;"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-text text-label-text">
+<span class="flex items-center gap-1 text-secondary font-medium">
+<span class="material-symbols-outlined text-sm">trending_up</span> +2 ผู้ใช้ใหม่เดือนนี้
+          </span>
+<span class="font-mono-num-sm text-mono-num-sm">เหลือ 7 สิทธิ์</span>
+</div>
+</div>
+</div>
+<!-- Card 2: 3-Tier Roles Breakdown -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-on-surface-variant uppercase tracking-wider font-semibold">3 ระดับบทบาท (3-Tier Roles)</span>
+<span class="font-title-sm text-title-sm text-on-surface font-bold mt-space-xs">การจัดสรรหน้าที่ความรับผิดชอบ</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shield_person</span>
+</div>
+</div>
+<div class="mt-space-sm flex flex-col gap-1.5 font-label-text text-label-text">
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-1 rounded">
+<span class="flex items-center gap-1.5 text-on-surface font-medium">
+<span class="text-sm">👑</span> Admin (ผู้ดูแลระบบ)
+          </span>
+<span class="font-mono-num-md text-mono-num-md font-semibold text-primary">3 บัญชี</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-1 rounded">
+<span class="flex items-center gap-1.5 text-on-surface font-medium">
+<span class="text-sm">💼</span> UserSeller (พนักงานขาย)
+          </span>
+<span class="font-mono-num-md text-mono-num-md font-semibold text-secondary">11 บัญชี</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-1 rounded">
+<span class="flex items-center gap-1.5 text-on-surface font-medium">
+<span class="text-sm">👥</span> Member / Caller (ประสานงาน)
+          </span>
+<span class="font-mono-num-md text-mono-num-md font-semibold text-on-surface-variant">4 บัญชี</span>
+</div>
+</div>
+</div>
+<!-- Card 3: 2FA Security Level -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-on-surface-variant uppercase tracking-wider font-semibold">ความปลอดภัย &amp; 2FA Status</span>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-display text-display text-secondary font-bold">100%</span>
+<span class="font-label-text text-label-text text-secondary font-semibold">Strict Mode</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-container/50 flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">enhanced_encryption</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-col gap-space-xs">
+<div class="flex items-center gap-1.5 text-secondary font-label-text text-label-text font-medium">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>เปิดใช้งาน 2FA ครบทุกบัญชีผู้ใช้</span>
+</div>
+<p class="font-label-text text-label-text text-on-surface-variant">
+          บังคับผ่าน Microsoft / Google Auth และ WebAuthn Passkeys ทุกครั้งที่เข้าระบบภายนอกออฟฟิศ
+        </p>
+</div>
+</div>
+<!-- Card 4: Active Sessions & Sync -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-text text-label-text text-on-surface-variant uppercase tracking-wider font-semibold">การเข้าใช้งานวันนี้ (Active Sessions)</span>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-display text-display text-on-surface font-bold">14</span>
+<span class="font-title-sm text-title-sm text-on-surface-variant">กำลังทำงาน</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">devices</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-on-surface-variant font-label-text text-label-text">
+<span class="flex items-center gap-1 text-on-surface font-medium">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> Token Heartbeat
+          </span>
+<span class="font-mono-num-sm text-mono-num-sm text-secondary font-semibold">ซิงค์สิทธิ์สด 0.8s</span>
+</div>
+<p class="font-mono-num-sm text-mono-num-sm text-on-surface-variant truncate">
+          Session ID: FL-AUTH-202505-TH89X
+        </p>
+</div>
+</div>
+</div>
+<!-- Role Overview Navigation Switcher Tabs -->
+<div class="px-space-xl">
+<div class="flex items-center gap-space-xs bg-surface-container-low p-1 rounded-xl max-w-fit shadow-xs">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container-lowest text-primary font-title-sm text-body-compact font-bold shadow-xs">
+<span class="material-symbols-outlined text-base">group</span>
+<span>รายชื่อผู้ใช้งานทั้งหมด (Users Directory - 18)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-title-sm text-body-compact font-medium">
+<span class="material-symbols-outlined text-base">table_chart</span>
+<span>กำหนดตารางสิทธิ์ 3 ระดับ (Role Permission Matrix)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-title-sm text-body-compact font-medium">
+<span class="material-symbols-outlined text-base">security_update_good</span>
+<span>ประวัติกิจกรรมความปลอดภัย (Security &amp; Audit Trail)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-title-sm text-body-compact font-medium">
+<span class="material-symbols-outlined text-base">lock_clock</span>
+<span>นโยบายความปลอดภัย &amp; SSO / 2FA (Security Policies)</span>
+</button>
+</div>
+</div>
+<!-- Main Section A: Interactive Users Directory Table -->
+<div class="px-space-xl py-space-lg flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<!-- Search, Quick Filter Toolbar -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative w-full lg:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full pl-9 pr-16 py-2 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-inner" placeholder="ค้นหาชื่อผู้ใช้, อีเมล, แผนก, หรือระดับสิทธิ์... (⌘ + K)" type="text"/>
+<span class="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono-num-sm text-mono-num-sm font-semibold">⌘K</span>
+</div>
+<!-- Filter Dropdowns & Batch Operations -->
+<div class="flex items-center gap-space-sm w-full lg:w-auto flex-wrap justify-between lg:justify-end">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-text text-label-text text-on-surface-variant">ตัวกรอง:</span>
+<!-- Role Filter -->
+<select class="px-space-sm py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none cursor-pointer">
+<option>ระดับสิทธิ์ทั้งหมด (All Roles)</option>
+<option>👑 Admin (ผู้ดูแลระบบ)</option>
+<option>💼 UserSeller (พนักงานขาย)</option>
+<option>👥 Member / Caller (ประสานงาน)</option>
+</select>
+<!-- Department Filter -->
+<select class="px-space-sm py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none cursor-pointer">
+<option>แผนกทั้งหมด (Departments)</option>
+<option>ฝ่ายบริหารการเงิน &amp; บัญชี</option>
+<option>ฝ่ายขายองค์กร (B2B Sales)</option>
+<option>แผนกลูกค้าสัมพันธ์ &amp; Call Support</option>
+<option>แผนกลอจิสติกส์ &amp; คลังสินค้า</option>
+<option>แผนกการตลาด</option>
+</select>
+<!-- Status Filter -->
+<select class="px-space-sm py-1.5 bg-surface-container-low rounded-lg font-body-compact text-body-compact text-on-surface focus:outline-none cursor-pointer">
+<option>สถานะ: ใช้งานปกติ (Active)</option>
+<option>ระงับสิทธิ์ชั่วคราว (Suspended)</option>
+<option>รอการตอบรับคำเชิญ (Invited)</option>
+</select>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="ดาวน์โหลดรายชื่อ Excel">
+<span class="material-symbols-outlined text-lg">download</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="ปรับแต่งคอลัมน์">
+<span class="material-symbols-outlined text-lg">view_column</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Users Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-text text-label-text uppercase tracking-wider">
+<th class="py-space-md px-space-md w-12 text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</th>
+<th class="py-space-md px-space-md">ผู้ใช้งาน (User Profile)</th>
+<th class="py-space-md px-space-md">ระดับบทบาท (Role)</th>
+<th class="py-space-md px-space-md">แผนก / หน่วยงาน</th>
+<th class="py-space-md px-space-md">สิทธิ์การเข้าถึงหลัก (Access Scopes)</th>
+<th class="py-space-md px-space-md">ความปลอดภัย 2FA</th>
+<th class="py-space-md px-space-md">เข้าสู่ระบบล่าสุด</th>
+<th class="py-space-md px-space-md text-right">จัดการ</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-compact text-body-compact text-on-surface">
+<!-- Row 1: กานต์ศิริ (Admin) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Professional Thai female corporate executive headshot, wearing dark navy business attire with warm subtle smile in modern minimal accounting firm office, soft lighting, fintech enterprise visual aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuqrS7l61LIJWUflupaXq7zQxzlwRPR9zROP6os8QHg0bcUgsYenY0KF__d0EHoD6Us0Mh-vJ9USfHmr_OAxekZ6g5xxLH_pzk5hgOs8FzOVZViH2BgmpSqXLRX1ZlcuIQrJJaVT_8GzrxIySHo1Yb3-KV_T8wtmu2j9je-OeoeclPWQVI5IoD30JViRqiNgAMfqTvCW-4ljfDNWCpzcTpJbcaNNHHQ4wvVM9aXq2aBn9B3GOChqO6GA"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">กานต์สิริ เลิศวิทยสกุล</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Karnsiri Lertwittayasakul (CFO &amp; Director)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-primary font-medium">karnsiri@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>👑</span> Admin (ผู้ดูแลระบบสูงสุด)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">ฝ่ายบริหารการเงิน &amp; บัญชี</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">HQ สำนักงานใหญ่</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ทุกโมดูลระบบ</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">อนุมัติการจ่ายเงิน</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ยื่นภาษี RD Net</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">key</span> Passkey / App
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-secondary font-medium font-label-text text-label-text">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> กำลังออนไลน์
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">IP: 184.22.45.190 (สำนักงานใหญ่)</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: สมศักดิ์ (UserSeller) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Confident Asian male sales executive in mid 30s with neat collared business casual shirt, friendly expression, well groomed, set against crisp corporate glass wall background, modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxR0fXLrLkeB1MsDuSDSd6Xo2SXjx_ysDQH52RYXkhl_l-g1CpG7_7N2gaD4-G3wteTpTpMzXLKuAsjSh-wQv9tOpWkQSN1YKNPIhxbahbnqYq76GfsFC3LttAjeq-tvn3OsVRUKuHMJhYJmZh-gCoFXifPzuZKfATo_bL6nSlfgVJs_nrWzS5IkfwI_bn1iOAaYQCsT9LCyDC7YVsqMQrqjptj_DV0Wq-G78WRsG4C76Exb7O0grbNA"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">สมศักดิ์ กิจพานิชย์</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Somsak Kitpanich (Senior Sales Lead)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">somsak.k@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>💼</span> UserSeller (พนักงานขาย)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">ฝ่ายขายองค์กร (B2B)</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">ทีมกรุงเทพฯ และปริมณฑล</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">สร้าง/ส่ง QT, IV</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">วงเงินไม่เกิน 2,000,000฿</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">สมุดคู่ค้า CRM</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phonelink_lock</span> Google Auth
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface font-medium font-label-text text-label-text">
+                  12 นาทีที่แล้ว
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">Chrome macOS (MBP-M3)</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: วิชญ์ (Admin) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Polished Thai male professional accountant with spectacles, sharp dark blue blazer, standing in clean modern corporate conference room with data analytics chart softly blurred in background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4UlqIjRjWwblfGCIJ926Nd-uAVZGteNPyq7lOOQT7c8IDFPtNlCmpbCFix9sWmvPe99rDq4aNXBhblCGI22HK7OupUMJTkHEPxHfJeg4RZ4jQlZ0CARbiBdEXMiuqcN0blLZ8LnSLm4O2Ffx0wnEjPE1AI9MUNUNy854BQIngivIBX8ULCljOZnpobjTED3Ifxj0TPNUOk8BofAa7fi2_evg3DqC_w309pzrZWG03Aiv9gvhijhLtEQ"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-outline ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">วิชญ์ ชื่นปรีดา</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Witch Chuenpreeda (Tax &amp; Chief Auditor)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">witch.c@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>👑</span> Admin (ผู้ดูแลระบบ)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">ฝ่ายบัญชีและการเงิน</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">งานตรวจสอบภาษีและปิดงบ</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ภ.พ.30 / ภ.ง.ด.53</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">OCR บิลค่าใช้จ่าย</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">เชื่อมต่อ Bank Feed</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phonelink_lock</span> MS Authenticator
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface font-medium font-label-text text-label-text">
+                  1 ชม. ที่แล้ว
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">Windows 11 Workstation</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: พรรณิภา (Member / Caller) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Energetic Southeast Asian female customer relationship specialist wearing modern lightweight telephone headset in bright contemporary customer contact center, friendly supportive expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAChYHPQgYWV9V1qj2UoZZSxFyEqzLG0ZPEIUL3O1X8QZs13P9UxkiTWLKgOUKcq2fephowkJ-wZ4cQ_j2cbbd6A-WAK_CJw9xWDGCGhNfXKcao-kJ8cR-x9DbgXZntld5A6Tan30amJyFeynkeZoAXArO7R7gNWay0Vy__Dkangvl-LaSU_o8fvnTQw9Vr7Qlb25s3HF1ehgjXXS-2PZ7hQRe0TgxAbp1je7T4iwTErM6FZAzer2dg4Q"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-outline ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">พรรณิภา สุวรรณเวช</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Pannipa Suwanwej (Customer Service)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">pannipa.s@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>👥</span> Member / Caller (ประสานงาน)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">แผนกลูกค้าสัมพันธ์ &amp; Call</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">ทีม Tele-support Support</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ค้นหาประวัติลูกค้า CRM</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">บันทึก Call Follow-up</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-text text-label-text">ห้ามดูต้นทุน/กำไร</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">sms</span> SMS OTP (+66 81-xxx)
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface font-medium font-label-text text-label-text">
+                  3 ชม. ที่แล้ว
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">Dell Contact Center Hub</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: วรเมธ (UserSeller) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Portrait of an approachable Thai logistics operations supervisor holding tablet in organized tech-driven modern warehouse depot with high shelving and ambient daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfJbCbUYzeB5qYXK-7zBU6vWNeBWgXJlzfwFr-ij-NVQA0PamrrB42yuXlR5mkU2iE9czrecGp1CwuxBIkEsryql_7gFtWuASm99GPoZ16pj0_IiFZ1eeDkqmtUQ9Ru0wL7q6dODDIFLuSZ-E3TV0lLBDWpI7-WjvPVFKYai_cDSIZVnUJPrUxkbj9eeVBuQcdqZ57hHdBVy2qJ9WkjnUvr1sJq82zD2CIYuA-D4T4pAVvZ5hcQP_aCg"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-outline ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">วรเมธ ตันติวาณิช</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Worameth Tantiwanich (Logistics Lead)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">worameth.t@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>💼</span> UserSeller (ปฏิบัติการ)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">แผนกลอจิสติกส์ &amp; คลังสินค้า</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">ศูนย์กระจายสินค้าบางนา</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">บาร์โค้ดรับเข้าสต็อก</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ตรวจนับสต็อก (Stock Op)</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ออกใบเบิกสินค้า (DO)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phonelink_lock</span> Google Auth
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface font-medium font-label-text text-label-text">
+                  เมื่อวาน 16:45
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">Zebra Android Scanner</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: นภัสสร (Member / Caller) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md text-center">
+<input class="rounded text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover shadow-xs" data-alt="Young professional Thai female marketing coordinator at creative collaborative desk, modern laptop, sunny bright minimalist agency workspace, clean corporate attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP7zUSIGW058L3gYt8AaDiy2l_hxY5F8SL-oTPnuXXuQ3TIUuW7PT_B18cL0a6YzK6TVQShQIK-UHVQPgPbQmT7dwKfm-fHXM8_BjHXwqZ5u6HEzeUCpEVwDMiqnXqr5HZIYcCXll5RlLII7pxBrVKyqO-uecn7tN58MEjrqqeY7oaF4Y-BsQc76iauBocxStfGQzDVcIZ4_IiA-ITB9dY3VFfELYcQQjU-HjgbExfXsL_Tjxa1FOBBg"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-outline ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">นภัสสร จิตต์จำนงค์</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Napassorn Jitjamnong (Marketing Staff)</span>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">napassorn.j@siamglobal.co.th</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface font-title-sm text-label-text font-bold inline-flex items-center gap-1 shadow-xs">
+<span>👥</span> Member / Caller (ประสานงาน)
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-medium text-on-surface">แผนกการตลาดดิจิทัล</span>
+<span class="block font-label-text text-label-text text-on-surface-variant">แคมเปญ &amp; ประชาสัมพันธ์</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-wrap gap-1 max-w-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ดูรายชื่อลูกค้าเพื่อส่งสื่อ</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-label-text text-label-text">ใช้ Data ร่วมกัน</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-text text-label-text">ห้ามออกเอกสารการเงิน</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phonelink_lock</span> Google Auth
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-text text-label-text">
+                  2 วันที่แล้ว
+                </div>
+<span class="font-mono-num-sm text-mono-num-sm text-on-surface-variant">MacBook Air M2</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-primary hover:text-primary-container font-medium text-label-text" title="แก้ไขสิทธิ์">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="เมนูเพิ่มเติม">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Table Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-label-text text-label-text">
+<div class="flex items-center gap-space-xs">
+<span>แสดงรายการ 1-6 จากทั้งหมด 18 รายชื่อ</span>
+<span class="mx-1">•</span>
+<span>เลือกแสดง:</span>
+<select class="px-2 py-0.5 bg-surface-container-lowest rounded text-on-surface focus:outline-none cursor-pointer">
+<option>10 รายการ / หน้า</option>
+<option>25 รายการ / หน้า</option>
+<option>50 รายการ / หน้า</option>
+</select>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface disabled:opacity-40" disabled="">ก่อนหน้า</button>
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-bold">1</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container">2</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container">ถัดไป</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Section B: Granular Role Permission Matrix (ตารางเปรียบเทียบและกำหนดสิทธิ์ 3 ระดับ) -->
+<div class="px-space-xl pb-space-xl flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-lg">
+<!-- Section Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-md text-headline-md text-on-surface">
+              ตารางกำหนดสิทธิ์เชิงลึกตามบทบาท (Granular Role-Based Access Control - RBAC)
+            </h2>
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-mono-num-sm text-mono-num-sm font-semibold">Tier-3 Matrix</span>
+</div>
+<p class="font-body-regular text-body-regular text-on-surface-variant mt-1">
+            กำหนดขอบเขตและนโยบายความปลอดภัยของ 3 บทบาทหลัก เพื่อให้พนักงานใช้งานระบบร่วมกันบนฐานข้อมูลกลางอย่างโปร่งใสและรัดกุม
+          </p>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="px-space-md py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-title-sm text-body-compact font-semibold transition-colors">
+            รีเซ็ตค่ามาตรฐาน (Reset Defaults)
+          </button>
+<button class="px-space-md py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-body-compact font-semibold transition-colors shadow-xs">
+            บันทึกนโยบายสิทธิ์ (Save Matrix)
+          </button>
+</div>
+</div>
+<!-- Matrix Comparison Table -->
+<div class="overflow-x-auto rounded-xl">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface font-title-sm text-body-compact">
+<th class="py-space-md px-space-lg w-1/3 font-bold">
+                หมวดหมู่งานและโมดูลระบบ (Module / Function)
+              </th>
+<!-- Column Role 1 -->
+<th class="py-space-md px-space-md w-1/5 bg-primary-fixed/30 text-primary font-bold">
+<div class="flex items-center gap-1.5">
+<span class="text-base">👑</span>
+<div class="flex flex-col">
+<span>Admin</span>
+<span class="font-label-text text-label-text font-normal text-on-surface-variant">ควบคุมภาพรวมทั้งหมด</span>
+</div>
+</div>
+</th>
+<!-- Column Role 2 -->
+<th class="py-space-md px-space-md w-1/4 bg-secondary-fixed/20 text-secondary font-bold">
+<div class="flex items-center gap-1.5">
+<span class="text-base">💼</span>
+<div class="flex flex-col">
+<span>UserSeller</span>
+<span class="font-label-text text-label-text font-normal text-on-surface-variant">ฝ่ายขายและออกเอกสาร</span>
+</div>
+</div>
+</th>
+<!-- Column Role 3 -->
+<th class="py-space-md px-space-md w-1/4 bg-surface-container-high/40 text-on-surface font-bold">
+<div class="flex items-center gap-1.5">
+<span class="text-base">👥</span>
+<div class="flex flex-col">
+<span>Member / Caller</span>
+<span class="font-label-text text-label-text font-normal text-on-surface-variant">บุคคลากรประสานงาน Data รวม</span>
+</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-compact text-body-compact">
+<!-- Module 1: แดชบอร์ดภาพรวมการเงิน & ยอดขาย -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">insights</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">1. แดชบอร์ดภาพรวมการเงิน &amp; ยอดขาย</span>
+<span class="font-label-text text-label-text text-on-surface-variant">Dashboard, Cash Flow, Live Bank Feed, KPI กำไรสุทธิ</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">check_circle</span> สิทธิ์เต็ม (Full Access)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ดูได้ทุกตัวชี้วัด, ยอดเงินสดคงเหลือธนาคาร, งบกำไร-ขาดทุนรายเดือน
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">visibility</span> ยอดขายเฉพาะตนเอง
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    เห็นเฉพาะยอดขาย, สถานะเอกสาร QT/IV ที่ตนเป็นผู้ดูแล (ซ่อนยอดกำไร)
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">support_agent</span> ตัวชี้วัดงานบริการ
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ดูเฉพาะสถิติจำนวนสายโทร, งานบริการลูกค้า และคิวนัดหมาย (ซ่อนการเงิน 100%)
+                  </p>
+</div>
+</td>
+</tr>
+<!-- Module 2: ศูนย์เอกสารขาย -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">2. ศูนย์เอกสารขาย (Sales Documents: QT / IV / TAX / RE)</span>
+<span class="font-label-text text-label-text text-on-surface-variant">ใบเสนอราคา, ใบแจ้งหนี้, ใบกำกับภาษี, ใบเสร็จรับเงิน</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">check_circle</span> สิทธิ์เต็ม (Full Approval)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    สร้าง, แก้ไข, อนุมัติวงเงินเกินเพดาน, ลบ/ยกเลิกเอกสาร และออก e-Tax สรรพากร
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">edit_document</span> สร้างและส่งเอกสาร
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    เปิดใบเสนอราคา (QT), ออกบิลวางบิล (IV) ตามวงเงิน, ส่ง PDF ให้ลูกค้าทางอีเมล
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">visibility</span> อ่านข้อมูลอย่างเดียว (Read-Only)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    เปิดดูเลขที่เอกสารและสถานะชำระเงินเพื่อตอบคำถามลูกค้า (ไม่สามารถสร้าง/แก้ไขได้)
+                  </p>
+</div>
+</td>
+</tr>
+<!-- Module 3: บันทึกค่าใช้จ่ายและภาษี -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">3. ระบบบันทึกค่าใช้จ่ายและภาษี (Expenses &amp; Tax)</span>
+<span class="font-label-text text-label-text text-on-surface-variant">ภาษีมูลค่าเพิ่ม ภ.พ.30, ภาษีหัก ณ ที่จ่าย ภ.ง.ด.3/53, บันทึกสลิป OCR</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">check_circle</span> สิทธิ์เต็ม (Tax Filing)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    จัดการสมุดรายวัน, ตรวจสอบภาษีซื้อ-ขาย, ส่งออกไฟล์ Text ยื่นกรมสรรพากร
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">receipt</span> เบิกค่าใช้จ่ายตนเอง
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ส่งสลิปเบิกค่าเดินทาง/ค่ารับรองลูกค้าของตนเองเข้าคิวรอ Admin อนุมัติ
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">block</span> ไม่มีสิทธิ์เข้าถึง (No Access)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ปิดการมองเห็นเมนูและเอกสารทางภาษีทั้งหมดเพื่อความปลอดภัยข้อมูลลับ
+                  </p>
+</div>
+</td>
+</tr>
+<!-- Module 4: ระบบสินค้าและคลังสต็อก -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">4. ระบบสินค้าและคลังสต็อก (Inventory &amp; Warehouses)</span>
+<span class="font-label-text text-label-text text-on-surface-variant">ยอดคงเหลือ, ตรวจนับสต็อก, ต้นทุน FIFO, โอนย้ายคลังสินค้า</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">check_circle</span> สิทธิ์เต็ม (Inventory Master)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ปรับยอด Stock Adjust, ดูราคาทุนเฉลี่ย FIFO, สั่งเปิดใบสั่งซื้อ (PO) ซัพพลายเออร์
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">inventory</span> ดูสต็อกพร้อมขาย + จองสินค้า
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ตรวจสอบ Available Stock ทุกคลัง, ล็อกสต็อกสินค้าเพื่อเปิดบิล (ไม่เห็นต้นทุนนำเข้า)
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">menu_book</span> แคตตาล็อก &amp; คุณสมบัติ
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ดูคู่มือสินค้า สเปก และราคาขายมาตรฐาน เพื่อให้ข้อมูลเบื้องต้นแก่ผู้ติดต่อทางโทรศัพท์
+                  </p>
+</div>
+</td>
+</tr>
+<!-- Module 5: สมุดรายชื่อลูกค้า & CRM -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">contacts</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">5. สมุดรายชื่อลูกค้า &amp; CRM (Contacts &amp; Customer 360°)</span>
+<span class="font-label-text text-label-text text-on-surface-variant">ฐานข้อมูลลูกค้ากลาง (Shared Customer Pool), วงเงินเครดิต, ประวัติการโทร</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">check_circle</span> สิทธิ์เต็ม (Credit Control)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    กำหนดวงเงิน Credit Term, เชื่อมโยง DBD API, จัดกลุ่มเกรดลูกค้า (Tier A/B/C)
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">person_edit</span> เพิ่ม/อัปเดตข้อมูลลูกค้า
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    เพิ่มรายชื่อบริษัท, แก้ไขที่อยู่ออกใบกำกับภาษี, บันทึกชื่อผู้ติดต่อจัดซื้อ
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">phone_in_talk</span> โทรติดต่อ &amp; บันทึก Note
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    เข้าถึงเบอร์โทรและข้อมูลบริษัทชุดเดียวกันเพื่อโทรติดตาม พร้อมบันทึกข้อความสรุปการคุย
+                  </p>
+</div>
+</td>
+</tr>
+<!-- Module 6: จัดการระบบและสิทธิ์ผู้ใช้ -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">6. จัดการระบบและสิทธิ์ผู้ใช้ (System Settings &amp; Security)</span>
+<span class="font-label-text text-label-text text-on-surface-variant">เพิ่มผู้ใช้งาน, จัดการ Role, เชื่อมต่อ API ธนาคาร, ตรวจ Audit Log</span>
+</div>
+</div>
+</td>
+<!-- Admin -->
+<td class="py-space-md px-space-md bg-primary-fixed/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">admin_panel_settings</span> สิทธิ์ดูแลระบบ (SysAdmin)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    จัดการสิทธิ์พนักงานทุกคน, บังคับรีเซ็ตรหัสผ่าน, ตรวจสอบ Log, จัดการ Secret Key API
+                  </p>
+</div>
+</td>
+<!-- UserSeller -->
+<td class="py-space-md px-space-md bg-secondary-fixed/5">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">block</span> ไม่มีสิทธิ์เข้าถึง (No Access)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ไม่สามารถเปิดหน้าตั้งค่าระบบ หรือดูรายชื่อสิทธิ์ของพนักงานท่านอื่นได้
+                  </p>
+</div>
+</td>
+<!-- Member / Caller -->
+<td class="py-space-md px-space-md bg-surface-container-high/10">
+<div class="flex flex-col gap-1">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-text text-label-text font-semibold inline-flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-xs">block</span> ไม่มีสิทธิ์เข้าถึง (No Access)
+                  </span>
+<p class="font-label-text text-label-text text-on-surface-variant">
+                    ไม่สามารถเปิดหน้าตั้งค่าระบบ หรือดูรายชื่อสิทธิ์ของพนักงานท่านอื่นได้
+                  </p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Security Compliance & Sticky Action Highlights Footer Bar -->
+<div class="px-space-xl pb-space-xl">
+<div class="bg-surface-container-high/60 rounded-xl p-space-md flex flex-col md:flex-row items-center justify-between gap-space-md shadow-xs">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary shrink-0">
+<span class="material-symbols-outlined text-xl">verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-body-compact font-bold text-on-surface">มาตรฐานความปลอดภัย PDPA &amp; ISO 27001 Certified</span>
+<span class="font-label-text text-label-text text-on-surface-variant">
+            รองรับการเข้ารหัสข้อมูลระดับ AES-256 บันทึกประวัติการเปลี่ยนแปลงสิทธิ์ (Audit Log) ย้อนหลัง 90 วันโดยอัตโนมัติ ไม่สามารถลบหรือแก้ไขย้อนหลังได้
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-sm text-body-compact font-semibold transition-colors shadow-xs">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+<span>ส่งออกรายงานสิทธิ์ผู้ใช้ (RBAC PDF/Excel)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-body-compact font-semibold transition-colors shadow-xs">
+<span class="material-symbols-outlined text-base">save</span>
+<span>บันทึกการเปลี่ยนแปลงสิทธิ์ (Save Changes)</span>
+</button>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low py-space-md px-space-lg flex flex-col md:flex-row items-center justify-between text-on-surface-variant font-label-text text-label-text gap-space-sm"><div class="flex items-center gap-space-md"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>API สถานะปกติ: กรมสรรพากร (RD Net) • KBank Business Click • SCB Business Anywhere</span></div><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">คู่มือการใช้งาน</a><a class="hover:text-on-surface transition-colors" href="#">ติดต่อเจ้าหน้าที่สนับสนุน (LINE OA)</a><span>© 2025 FlowLedger ERP &amp; Cloud Accounting.</span></div></footer></div></body></html>

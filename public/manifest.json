@@ -1,0 +1,17 @@
+{
+  "short_name": "AccData",
+  "name": "AccData Cloud Accounting & Tax ERP",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#faf8ff",
+  "theme_color": "#00288e",
+  "display": "standalone",
+  "orientation": "portrait"
+}
+
