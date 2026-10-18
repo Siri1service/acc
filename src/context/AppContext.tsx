@@ -63,6 +63,8 @@ interface AppContextType {
 
   // Onboarding & Modal Dialogs
   isOnboardingCompleted: boolean;
+  isUsageGuideOpen: boolean;
+  setIsUsageGuideOpen: (open: boolean) => void;
   completeOnboarding: (info: {
     entityType: EntityType;
     name: string;
@@ -71,7 +73,7 @@ interface AppContextType {
     address: string;
     shippingAddress?: string;
     enabledModules?: Record<string, boolean>;
-  }) => void;
+  }) => Promise<void>;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   isOrgSwitcherOpen: boolean;
@@ -197,7 +199,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     isActive: false
   }));
 
-  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean>(() => loadStored('onboarded', true));
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean>(() => loadStored('onboarded', false));
+  const [isUsageGuideOpen, setIsUsageGuideOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isOrgSwitcherOpen, setIsOrgSwitcherOpen] = useState<boolean>(false);
   const [isBankSyncing, setIsBankSyncing] = useState<boolean>(false);
@@ -210,16 +213,53 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const client = getSupabase();
     if (!client) { setAuthLoading(false); return; }
     let alive = true;
+    let initializedUserId: string | null = null;
     const loadAuthUser = async (user: SupabaseAuthUser | null) => {
       if (!alive) return;
       setAuthUser(user);
       if (!user) { setAuthProfile(null); setAuthLoading(false); return; }
-      const { data } = await client.from('user_profiles').select('id,email,full_name,avatar_url,phone,role,current_org_id,is_active,registered_at,last_login').eq('id', user.id).maybeSingle();
+      if (initializedUserId !== user.id) {
+        initializedUserId = user.id;
+        const marker = `accdata_cleaned_for_${user.id}`;
+        if (!localStorage.getItem(marker)) {
+          setBankAccounts([]); setContacts([]); setProducts([]); setDocuments([]);
+          setShipments([]); setSlips([]); setAuditLogs([]); setChartOfAccounts([]); setCampaigns([]);
+          localStorage.setItem(marker, '1');
+        }
+      }
+      const [{ data }, { data: orgRows, error: orgError }] = await Promise.all([
+        client.from('user_profiles').select('id,email,full_name,avatar_url,phone,role,current_org_id,is_active,registered_at,last_login').eq('id', user.id).maybeSingle(),
+        client.from('organizations').select('*').eq('owner_user_id', user.id).order('created_at', { ascending: true }).limit(1)
+      ]);
       if (!alive) return;
+      if (orgError) console.error('โหลดข้อมูลองค์กรไม่สำเร็จ:', orgError);
+      const orgRow = orgRows?.[0];
+      if (orgRow) {
+        const settings = orgRow.settings || {};
+        const organization: Organization = {
+          id: orgRow.id, name: orgRow.name, entityType: orgRow.entity_type || 'juristic',
+          taxId: orgRow.tax_id || '', branch: orgRow.branch || '', address: orgRow.address || '',
+          shippingAddress: orgRow.shipping_address || '', phone: orgRow.phone || '', email: orgRow.email || '',
+          website: orgRow.website || '', logoUrl: orgRow.logo_url || '',
+          settings: {
+            vatRate: settings.vat_rate ?? 7, withholdingTaxEnabled: settings.withholding_tax_enabled ?? true,
+            stockEnabled: settings.stock_enabled ?? true, logisticsEnabled: settings.logistics_enabled ?? true,
+            lineNotifyEnabled: settings.line_notify_enabled ?? false, bankFeedEnabled: settings.bank_feed_enabled ?? false,
+            docPrefixes: settings.doc_prefixes || { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' },
+            activeTemplate: settings.active_template || 'modern_cyan',
+            enabledModules: settings.enabled_modules || { sales: true, purchases: true, taxes: true, inventory: true, logistics: true, crm: true, banking: true, reports: true, auditLogs: true, marketing: true }
+          }, createdAt: orgRow.created_at
+        };
+        setOrganizations([organization]); setCurrentOrgId(organization.id);
+        setIsOnboardingCompleted(true); setIsAuthModalOpen(false);
+      } else {
+        setOrganizations([]); setCurrentOrgId('');
+        setIsOnboardingCompleted(false); setIsAuthModalOpen(true);
+      }
       const profile: UserProfile = {
         id: user.id, email: user.email || '', fullName: data?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'ผู้ใช้',
         avatarUrl: data?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture,
-        phone: data?.phone || '', role: data?.role || 'user', currentOrgId: data?.current_org_id || currentOrgId,
+        phone: data?.phone || '', role: data?.role || 'user', currentOrgId: orgRow?.id || data?.current_org_id || '',
         isActive: data?.is_active ?? true, registeredAt: data?.registered_at || user.created_at,
         lastLogin: data?.last_login || undefined
       };
@@ -264,7 +304,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Derived current values with bulletproof defaults
   // Derived current values with bulletproof defaults
-  const rawOrg = organizations.find(o => o.id === currentOrgId) || organizations[0] || initialOrganizations[0]!;
+  const rawOrg = organizations.find(o => o.id === currentOrgId) || organizations[0] || {
+    id: '', name: '', entityType: 'juristic' as const, taxId: '', branch: '', address: '', shippingAddress: '', phone: '', email: '', createdAt: new Date().toISOString(),
+    settings: { vatRate: 7, withholdingTaxEnabled: true, stockEnabled: true, logisticsEnabled: true, lineNotifyEnabled: false, bankFeedEnabled: false,
+      docPrefixes: { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' }, activeTemplate: 'modern_cyan' as const,
+      enabledModules: { sales: true, purchases: true, taxes: true, inventory: true, logistics: true, crm: true, banking: true, reports: true, auditLogs: true, marketing: true } }
+  };
   const mergedSettings: Organization['settings'] = {
     vatRate: rawOrg.settings?.vatRate ?? 7,
     withholdingTaxEnabled: rawOrg.settings?.withholdingTaxEnabled ?? true,
@@ -304,6 +349,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const currentUser = authProfile || users.find(u => u.id === currentUserId) || users[0] || initialUsers[0]!;
 
   useEffect(() => {
+    if (!currentOrg.id || !currentOrg.taxId) return;
     let cancelled = false;
     loadDocuments(currentOrg).then(rows => {
       if (!cancelled && rows) setDocuments(previous => [...rows, ...previous.filter(d => d.orgId !== currentOrg.id)]);
@@ -471,7 +517,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Onboarding
-  const completeOnboarding = (info: {
+  const completeOnboarding = async (info: {
     entityType: EntityType;
     name: string;
     taxId: string;
@@ -480,8 +526,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     shippingAddress?: string;
     enabledModules?: Record<string, boolean>;
   }) => {
+    if (!info.name.trim() || !/^\d{13}$/.test(info.taxId) || !info.branch.trim() || !info.address.trim()) {
+      throw new Error('กรุณากรอกชื่อกิจการ เลขประจำตัวผู้เสียภาษี 13 หลัก สาขา และที่อยู่');
+    }
+    const db = getSupabase();
+    if (!db || !authUser) throw new Error('ไม่พบการเชื่อมต่อฐานข้อมูลหรือบัญชีผู้ใช้ กรุณาเข้าสู่ระบบใหม่');
+    const organizationData = {
+      owner_user_id: authUser.id, name: info.name.trim(), entity_type: info.entityType, tax_id: info.taxId,
+      branch: info.branch.trim(), address: info.address.trim(), shipping_address: (info.shippingAddress || info.address).trim(),
+      email: authUser.email || '', settings: { vat_rate: 7, withholding_tax_enabled: true, stock_enabled: true, logistics_enabled: true,
+        line_notify_enabled: false, bank_feed_enabled: false,
+        doc_prefixes: { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' },
+        active_template: 'modern_cyan', enabled_modules: info.enabledModules || {} }
+    };
+    const { data: savedOrg, error } = await db.from('organizations').insert(organizationData).select('*').single();
+    if (error) throw error;
     const updatedOrg: Organization = {
       ...currentOrg,
+      id: savedOrg.id,
       name: info.name,
       entityType: info.entityType,
       taxId: info.taxId,
@@ -497,8 +559,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     };
 
-    setOrganizations(prev => prev.map(o => o.id === currentOrg.id ? updatedOrg : o));
+    setOrganizations([updatedOrg]);
+    setCurrentOrgId(savedOrg.id);
     setIsOnboardingCompleted(true);
+    setIsUsageGuideOpen(true);
     addAuditLog('COMPLETE_ONBOARDING', 'Onboarding', currentOrg.id, `เสร็จสิ้นขั้นตอนการลงทะเบียนตั้งค่าเริ่มต้นสำหรับ ${info.name}`);
   };
 
@@ -961,18 +1025,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setUsers(initialUsers);
       setCurrentUserId(initialUsers[0]?.id || 'usr-admin-01');
     }
-    setBankAccounts(initialBankAccounts);
-    setContacts(initialContacts);
-    setProducts(initialProducts);
-    setChartOfAccounts(initialChartOfAccounts);
-    setDocuments(initialDocuments);
-    setShipments(initialShipments);
-    setSlips(initialSlips);
-    setAuditLogs(initialAuditLogs);
-    setCampaigns(initialCampaigns);
+    setBankAccounts(authUser ? [] : initialBankAccounts);
+    setContacts(authUser ? [] : initialContacts);
+    setProducts(authUser ? [] : initialProducts);
+    setChartOfAccounts(authUser ? [] : initialChartOfAccounts);
+    setDocuments(authUser ? [] : initialDocuments);
+    setShipments(authUser ? [] : initialShipments);
+    setSlips(authUser ? [] : initialSlips);
+    setAuditLogs(authUser ? [] : initialAuditLogs);
+    setCampaigns(authUser ? [] : initialCampaigns);
     setLineSettings({ lineNotifyToken: '', channelId: '', channelSecret: '', notifyOnCreate: true, notifyOnApprove: true, notifyOnPay: true, isActive: false });
     setLastLineNotification(null);
-    setIsOnboardingCompleted(true);
+    setIsOnboardingCompleted(authUser ? Boolean(currentOrg.id) : true);
   };
 
   return (
@@ -1002,6 +1066,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       toggleModule,
 
       isOnboardingCompleted,
+      isUsageGuideOpen,
+      setIsUsageGuideOpen,
       completeOnboarding,
       isAuthModalOpen,
       setIsAuthModalOpen,

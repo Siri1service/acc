@@ -37,76 +37,13 @@ interface ExpenseItem {
 export const TaxExpensesView: React.FC = () => {
   const { currentOrg, documents } = useApp();
   const [activeTab, setActiveTab] = useState<'vat30' | 'wht' | 'expenses'>('vat30');
-  const [selectedMonth, setSelectedMonth] = useState('2026-10');
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
   const [previewing50Tawi, setPreviewing50Tawi] = useState<ExpenseItem | null>(null);
 
-  // Sample expenses data
-  const [expenses, setExpenses] = useState<ExpenseItem[]>([
-    {
-      id: 'exp-01',
-      docNumber: 'EXP-2026-0081',
-      date: '2026-10-14',
-      vendorName: 'บริษัท เจริญซัพพลายส์ แอนด์ โลจิสติกส์ จำกัด',
-      vendorTaxId: '0105557001999',
-      category: 'ค่าอุปกรณ์และวัสดุสิ้นเปลือง',
-      description: 'สั่งซื้อเครื่องอ่านบาร์โค้ดและกระดาษความร้อนเข้าคลัง',
-      subtotal: 48000.00,
-      vatAmount: 3360.00,
-      withholdingTaxRate: 0,
-      withholdingTaxAmount: 0,
-      formType: 'ภ.ง.ด.53',
-      grandTotal: 51360.00,
-      status: 'paid'
-    },
-    {
-      id: 'exp-02',
-      docNumber: 'EXP-2026-0082',
-      date: '2026-10-12',
-      vendorName: 'บริษัท สยาม โลจิสติกส์ เอ็กซ์เพรส จำกัด',
-      vendorTaxId: '0105558004567',
-      category: 'ค่าขนส่งและโลจิสติกส์',
-      description: 'ค่าบริการขนส่งพัสดุ Flash & Kerry ประจำรอบ',
-      subtotal: 15000.00,
-      vatAmount: 1050.00,
-      withholdingTaxRate: 1, // 1% for transport
-      withholdingTaxAmount: 150.00,
-      formType: 'ภ.ง.ด.53',
-      grandTotal: 15900.00,
-      status: 'paid'
-    },
-    {
-      id: 'exp-03',
-      docNumber: 'EXP-2026-0083',
-      date: '2026-10-08',
-      vendorName: 'นายพงษ์ศักดิ์ ธรรมรัตน์ (วิศวกรที่ปรึกษา)',
-      vendorTaxId: '1100500123456',
-      category: 'ค่าบริการวิชาชีพ',
-      description: 'ค่าบริการดูแลระบบความปลอดภัย Cloud Server',
-      subtotal: 30000.00,
-      vatAmount: 0,
-      withholdingTaxRate: 3, // 3% for services
-      withholdingTaxAmount: 900.00,
-      formType: 'ภ.ง.ด.3',
-      grandTotal: 29100.00,
-      status: 'paid'
-    },
-    {
-      id: 'exp-04',
-      docNumber: 'EXP-2026-0084',
-      date: '2026-10-02',
-      vendorName: 'บริษัท อาคาร สาทร ทาวเวอร์ แอสเซท จำกัด',
-      vendorTaxId: '0105549008888',
-      category: 'ค่าเช่าสถานที่สำนักงาน',
-      description: 'ค่าเช่าพื้นที่สำนักงานชั้น 18 ประจำเดือนตุลาคม',
-      subtotal: 45000.00,
-      vatAmount: 3150.00,
-      withholdingTaxRate: 5, // 5% for rent
-      withholdingTaxAmount: 2250.00,
-      formType: 'ภ.ง.ด.53',
-      grandTotal: 45900.00,
-      status: 'paid'
-    }
-  ]);
+  const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
 
   // VAT calculations
   // Output Tax (ภาษีขาย) from paid receipts & tax invoices

@@ -27,14 +27,16 @@ export const AuthOnboardingModal: React.FC = () => {
   } = useApp();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [formError, setFormError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   // Form State
   const [entityType, setEntityType] = useState<EntityType>('juristic');
-  const [businessName, setBusinessName] = useState('บริษัท นวัตกรรม บัญชีดิจิทัล จำกัด');
-  const [taxId, setTaxId] = useState('0105568999123');
+  const [businessName, setBusinessName] = useState('');
+  const [taxId, setTaxId] = useState('');
   const [branch, setBranch] = useState('สำนักงานใหญ่ (00000)');
-  const [address, setAddress] = useState('99 อาคารดิจิทัล พาร์ค ชั้น 10 ถนนวิภาวดีรังสิต แขวงจตุจักร เขตจตุจักร กรุงเทพฯ 10900');
-  const [shippingAddress, setShippingAddress] = useState('99 อาคารดิจิทัล พาร์ค ชั้น 10 ถนนวิภาวดีรังสิต แขวงจตุจักร เขตจตุจักร กรุงเทพฯ 10900');
+  const [address, setAddress] = useState('');
+  const [shippingAddress, setShippingAddress] = useState('');
 
   // Initial Feature Toggles (Step 3)
   const [featureFlags, setFeatureFlags] = useState({
@@ -55,8 +57,11 @@ export const AuthOnboardingModal: React.FC = () => {
     setFeatureFlags(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleFinish = () => {
-    completeOnboarding({
+  const handleFinish = async () => {
+    setFormError('');
+    setSaving(true);
+    try {
+      await completeOnboarding({
       entityType,
       name: businessName,
       taxId,
@@ -64,8 +69,22 @@ export const AuthOnboardingModal: React.FC = () => {
       address,
       shippingAddress,
       enabledModules: featureFlags
-    });
-    setIsAuthModalOpen(false);
+      });
+      setIsAuthModalOpen(false);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const goToFeatures = () => {
+    if (!businessName.trim() || !/^\d{13}$/.test(taxId) || !branch.trim() || !address.trim()) {
+      setFormError('กรุณากรอกชื่อกิจการ เลขผู้เสียภาษี 13 หลัก สาขา และที่อยู่ให้ครบ');
+      return;
+    }
+    setFormError('');
+    setStep(3);
   };
 
   return (
@@ -91,6 +110,7 @@ export const AuthOnboardingModal: React.FC = () => {
 
         {/* Wizard Steps */}
         <div className="p-6 text-xs space-y-5">
+          {formError && <div role="alert" className="rounded-xl border border-error/30 bg-error/5 p-3 text-error">{formError}</div>}
           {/* STEP 1: Gmail Account & Entity Type */}
           {step === 1 && (
             <div className="space-y-4 animate-in fade-in">
@@ -168,10 +188,11 @@ export const AuthOnboardingModal: React.FC = () => {
           {step === 2 && (
             <div className="space-y-4 animate-in fade-in">
               <div>
-                <label className="block font-bold text-on-surface mb-1">ชื่อองค์กร / ชื่อสถานประกอบการ <span className="text-primary">*</span></label>
+                  <label className="block font-bold text-on-surface mb-1">ชื่อองค์กร / ชื่อสถานประกอบการ <span className="text-primary">*</span></label>
                 <input
                   type="text"
                   required
+                    placeholder="กรอกชื่อกิจการตามเอกสารจดทะเบียน"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl font-medium"
@@ -180,19 +201,22 @@ export const AuthOnboardingModal: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold mb-1">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
+                  <label className="block font-semibold mb-1">เลขประจำตัวผู้เสียภาษี (13 หลัก) <span className="text-primary">*</span></label>
                   <input
                     type="text"
                     maxLength={13}
+                    inputMode="numeric"
+                    placeholder="กรอกตัวเลข 13 หลัก"
                     value={taxId}
                     onChange={(e) => setTaxId(e.target.value.replace(/\D/g, ''))}
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl font-mono font-bold"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold mb-1">สาขา</label>
+                  <label className="block font-semibold mb-1">สาขา <span className="text-primary">*</span></label>
                   <input
                     type="text"
+                    required
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl"
@@ -201,9 +225,11 @@ export const AuthOnboardingModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold mb-1">ที่อยู่ออกใบกำกับภาษี</label>
+                <label className="block font-semibold mb-1">ที่อยู่ออกใบกำกับภาษี <span className="text-primary">*</span></label>
                 <textarea
                   rows={2}
+                  required
+                  placeholder="เลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด และรหัสไปรษณีย์"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl resize-none"
@@ -230,7 +256,7 @@ export const AuthOnboardingModal: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStep(3)}
+                  onClick={goToFeatures}
                   className="flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary hover:bg-primary-container font-bold rounded-xl shadow-xs transition-all"
                 >
                   <span>ถัดไป: เลือกฟังก์ชันที่ต้องการใช้</span>
@@ -291,10 +317,11 @@ export const AuthOnboardingModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleFinish}
+                  disabled={saving}
                   className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>เริ่มใช้งานระบบ AccData ทันที</span>
+                  <span>{saving ? 'กำลังบันทึกข้อมูล…' : 'บันทึกและเริ่มใช้งาน'}</span>
                 </button>
               </div>
             </div>

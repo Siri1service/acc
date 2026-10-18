@@ -77,49 +77,42 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
     };
   }, [documents, currentOrg.id]);
 
-  // Chart data simulation based on selected period
+  // Build the chart from paid receipt documents; show zeroes until real data exists.
   const chartData = useMemo(() => {
-    if (timePeriod === '7days') {
-      return [
-        { label: '12 ต.ค.', amount: 15000 },
-        { label: '13 ต.ค.', amount: 28000 },
-        { label: '14 ต.ค.', amount: 12000 },
-        { label: '15 ต.ค.', amount: 72800 },
-        { label: '16 ต.ค.', amount: 35000 },
-        { label: '17 ต.ค.', amount: 10700 },
-        { label: '18 ต.ค. (วันนี้)', amount: 24500 }
-      ];
-    } else if (timePeriod === '30days') {
-      return [
-        { label: 'สัปดาห์ 1', amount: 85000 },
-        { label: 'สัปดาห์ 2', amount: 142000 },
-        { label: 'สัปดาห์ 3', amount: 198000 },
-        { label: 'สัปดาห์ 4', amount: 125000 }
-      ];
-    } else if (timePeriod === 'this_year') {
-      return [
-        { label: 'ม.ค.', amount: 280000 },
-        { label: 'ก.พ.', amount: 310000 },
-        { label: 'มี.ค.', amount: 390000 },
-        { label: 'เม.ย.', amount: 260000 },
-        { label: 'พ.ค.', amount: 420000 },
-        { label: 'มิ.ย.', amount: 450000 },
-        { label: 'ก.ค.', amount: 510000 },
-        { label: 'ส.ค.', amount: 480000 },
-        { label: 'ก.ย.', amount: 530000 },
-        { label: 'ต.ค.', amount: 580000 }
-      ];
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dateKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const amountOn = (from: Date, to: Date) => completedSales
+      .filter(doc => doc.issueDate >= dateKey(from) && doc.issueDate <= dateKey(to))
+      .reduce((sum, doc) => sum + doc.grandTotal, 0);
+
+    if (timePeriod === '7days' || timePeriod === '30days') {
+      const days = timePeriod === '7days' ? 7 : 30;
+      return Array.from({ length: days }, (_, index) => {
+        const day = new Date(today);
+        day.setDate(today.getDate() - (days - index - 1));
+        return { label: day.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }), amount: amountOn(day, day) };
+      });
     }
-    // Default this_month
-    return [
-      { label: '1-5 ต.ค.', amount: 65000 },
-      { label: '6-10 ต.ค.', amount: 104000 },
-      { label: '11-15 ต.ค.', amount: 185000 },
-      { label: '16-20 ต.ค.', amount: 92800 },
-      { label: '21-25 ต.ค.', amount: 45000 },
-      { label: '26-31 ต.ค.', amount: 30000 }
-    ];
-  }, [timePeriod]);
+
+    if (timePeriod === 'this_month') {
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      return Array.from({ length: Math.ceil(lastDay / 5) }, (_, index) => {
+        const start = index * 5 + 1;
+        const end = Math.min(start + 4, lastDay);
+        return { label: `${start}-${end}`, amount: amountOn(new Date(now.getFullYear(), now.getMonth(), start), new Date(now.getFullYear(), now.getMonth(), end)) };
+      });
+    }
+
+    const firstMonth = timePeriod === 'this_year' ? 0 : Math.floor(now.getMonth() / 3) * 3;
+    const monthCount = timePeriod === 'this_year' ? 12 : 3;
+    return Array.from({ length: monthCount }, (_, index) => {
+      const month = firstMonth + index;
+      const start = new Date(now.getFullYear(), month, 1);
+      const end = new Date(now.getFullYear(), month + 1, 0);
+      return { label: start.toLocaleDateString('th-TH', { month: 'short' }), amount: amountOn(start, end) };
+    });
+  }, [timePeriod, completedSales]);
 
   const maxChartAmount = Math.max(...chartData.map(d => d.amount), 1);
 
@@ -152,7 +145,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
               timePeriod === 'this_month' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            เดือนนี้ (ต.ค.)
+            เดือนนี้ ({new Date().toLocaleDateString('th-TH', { month: 'short' })})
           </button>
           <button
             onClick={() => setTimePeriod('this_quarter')}
@@ -160,7 +153,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
               timePeriod === 'this_quarter' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            ไตรมาส Q4
+            ไตรมาส Q{Math.floor(new Date().getMonth() / 3) + 1}
           </button>
           <button
             onClick={() => setTimePeriod('this_year')}
@@ -168,7 +161,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
               timePeriod === 'this_year' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            ปีนี้ (2569)
+            ปีนี้ ({new Date().toLocaleDateString('th-TH', { year: 'numeric' })})
           </button>
         </div>
       </div>
@@ -324,8 +317,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-sm font-bold text-on-surface">บัญชีธนาคารในไทย (Live Feed)</h2>
-                <span className="text-xs text-outline">อัพเดทยอดเงินปัจจุบันอัตโนมัติ</span>
+                <h2 className="text-sm font-bold text-on-surface">บัญชีธนาคาร</h2>
+                <span className="text-xs text-outline">ยอดคงเหลือจากข้อมูลที่บันทึกไว้</span>
               </div>
               <button
                 onClick={() => syncBankFeed()}
@@ -339,7 +332,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
 
             {/* List of 4 Banks */}
             <div className="space-y-3">
-              {bankAccounts.map((b) => {
+              {bankAccounts.filter(b => b.orgId === currentOrg.id).map((b) => {
                 const colorConfig = 
                   b.bankCode === 'KBANK' ? { bg: 'bg-emerald-50 text-emerald-800 border-emerald-200', tag: 'bg-emerald-600' } :
                   b.bankCode === 'SCB' ? { bg: 'bg-purple-50 text-purple-800 border-purple-200', tag: 'bg-purple-700' } :
@@ -368,11 +361,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenNewDocModal 
                   </div>
                 );
               })}
+              {bankAccounts.filter(b => b.orgId === currentOrg.id).length === 0 && (
+                <div className="rounded-xl border border-dashed border-outline-variant/50 p-5 text-center text-xs text-on-surface-variant">
+                  ยังไม่มีบัญชีธนาคารที่บันทึกไว้
+                </div>
+              )}
             </div>
           </div>
 
           <div className="pt-4 border-t border-outline-variant/30 mt-4 flex items-center justify-between">
-            <span className="text-[11px] text-outline">สถานะ API: เชื่อมต่อสมบูรณ์</span>
+            <span className="text-[11px] text-outline">{bankAccounts.some(b => b.orgId === currentOrg.id) ? 'บัญชีที่บันทึกไว้' : 'ยังไม่ได้เพิ่มบัญชี'}</span>
             <button
               onClick={() => setActiveView('banking')}
               className="text-xs text-primary font-semibold hover:underline"

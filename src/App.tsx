@@ -5,6 +5,7 @@ import { Sidebar } from './components/layout/Sidebar';
 import { MobileNavigation } from './components/layout/MobileNavigation';
 import { TenantSwitcherModal } from './components/layout/TenantSwitcherModal';
 import { AuthOnboardingModal } from './components/auth/AuthOnboardingModal';
+import { UsageGuideModal } from './components/auth/UsageGuideModal';
 import { DocumentEditorModal } from './components/documents/DocumentEditorModal';
 
 // Views
@@ -98,6 +99,7 @@ const MainAppContent: React.FC = () => {
       {/* Global Modals */}
       <TenantSwitcherModal />
       <AuthOnboardingModal />
+      <UsageGuideModal />
 
       {quickNewDocType && (
         <DocumentEditorModal

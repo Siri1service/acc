@@ -7,14 +7,14 @@ import {
   Plus, 
   Bell, 
   Shield, 
-  RefreshCw,
   FileText,
   UserCheck,
   CheckCircle2,
   X,
   CreditCard,
   Package,
-  Layers
+  Layers,
+  HelpCircle
 } from 'lucide-react';
 import { UserRole, DocumentType } from '../../types';
 
@@ -30,9 +30,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
     authUser,
     switchUserRole, 
     bankAccounts, 
-    isBankSyncing, 
-    syncBankFeed,
     setIsOrgSwitcherOpen,
+    setIsUsageGuideOpen,
     searchQuery,
     setSearchQuery,
     lastLineNotification,
@@ -125,16 +124,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
 
       {/* Right Controls */}
       <div className="flex items-center gap-2 lg:gap-3">
-        {/* Live Bank Feed Indicator */}
         <button
-          onClick={() => syncBankFeed()}
-          disabled={isBankSyncing}
-          className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 border border-secondary-container text-on-secondary-container text-xs font-medium hover:bg-secondary-container/60 transition-colors"
-          title="คลิกเพื่อรีเฟรชยอดเงินสดสดทุกธนาคารในไทย"
+          type="button"
+          onClick={() => setIsUsageGuideOpen(true)}
+          className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container hover:text-primary"
+          title="เปิดคู่มือการใช้งาน"
+          aria-label="เปิดคู่มือการใช้งาน"
         >
-          <span className={`w-2 h-2 rounded-full bg-secondary ${isBankSyncing ? 'animate-ping' : ''}`}></span>
-          <span>ธนาคารเชื่อมต่อ 4 บัญชี</span>
-          <RefreshCw className={`w-3 h-3 text-secondary ml-0.5 ${isBankSyncing ? 'animate-spin' : ''}`} />
+          <HelpCircle className="h-4 w-4" />
         </button>
 
         {/* Quick New Document Action Dropdown */}
