@@ -178,7 +178,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const selectedContact = contacts.find(c => c.id === contactId);
 
   // Submit
-  const handleSave = (status: 'draft' | 'approved') => {
+  const handleSave = async (status: 'draft' | 'approved') => {
     if (!contactId || items.length === 0) {
       alert('กรุณาเลือกผู้ติดต่อและเพิ่มรายการสินค้าอย่างน้อย 1 รายการ');
       return;
@@ -210,13 +210,17 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       items
     };
 
-    if (isEditing && editingDocument) {
-      updateDocument(editingDocument.id, payload);
-    } else {
-      addDocument(payload);
+    try {
+      if (isEditing && editingDocument) {
+        await updateDocument(editingDocument.id, payload);
+      } else {
+        await addDocument(payload);
+      }
+      onClose();
+    } catch (error) {
+      console.error('บันทึกเอกสารไม่สำเร็จ:', error);
+      alert(`บันทึกเอกสารไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
     }
-
-    onClose();
   };
 
   return (
@@ -279,7 +283,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                 type="text"
                 value={referenceDocNumber}
                 onChange={(e) => setReferenceDocNumber(e.target.value)}
-                placeholder="เช่น QT-2026-0042"
+                placeholder="เช่น QT-2026-10-0001"
                 className="w-full px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface font-mono focus:outline-none focus:border-primary"
               />
             </div>

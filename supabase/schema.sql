@@ -165,6 +165,53 @@ CREATE TABLE IF NOT EXISTS public.documents (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Snapshot recipient identity on each document so imported/local contacts that
+-- do not yet have database UUIDs still print correctly after reload.
+ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_name VARCHAR(255);
+ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_tax_id VARCHAR(20);
+ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_branch VARCHAR(100);
+ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_address TEXT;
+
+-- Monthly document sequences are stored per organization and document type.
+-- The RPC locks a single counter row, so concurrent users cannot receive the
+-- same number. CASH uses the customer-facing code CS.
+CREATE TABLE IF NOT EXISTS public.document_number_sequences (
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    doc_type VARCHAR(50) NOT NULL,
+    period CHAR(6) NOT NULL,
+    last_number BIGINT NOT NULL DEFAULT 0,
+    PRIMARY KEY (organization_id, doc_type, period)
+);
+
+CREATE OR REPLACE FUNCTION public.next_document_number(
+    p_organization_id UUID,
+    p_doc_type VARCHAR,
+    p_issue_date DATE DEFAULT CURRENT_DATE
+) RETURNS TEXT
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = public
+AS $$
+DECLARE
+    v_period TEXT := to_char(p_issue_date, 'YYYYMM');
+    v_prefix TEXT := CASE WHEN p_doc_type = 'CASH' THEN 'CS' ELSE p_doc_type END;
+    v_number BIGINT;
+BEGIN
+    INSERT INTO public.document_number_sequences (organization_id, doc_type, period, last_number)
+    SELECT p_organization_id, p_doc_type, v_period,
+      COALESCE(MAX(NULLIF(substring(d.doc_number FROM '-([0-9]+)$'), '')::BIGINT), 0) + 1
+    FROM public.documents d
+    WHERE d.organization_id = p_organization_id
+      AND d.doc_type = p_doc_type
+      AND d.doc_number LIKE v_prefix || '-' || to_char(p_issue_date, 'YYYY-MM') || '-%'
+    ON CONFLICT (organization_id, doc_type, period)
+    DO UPDATE SET last_number = public.document_number_sequences.last_number + 1
+    RETURNING last_number INTO v_number;
+
+    RETURN v_prefix || '-' || to_char(p_issue_date, 'YYYY-MM') || '-' || lpad(v_number::TEXT, 4, '0');
+END;
+$$;
+
 -- 8. Document Items
 CREATE TABLE IF NOT EXISTS public.document_items (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

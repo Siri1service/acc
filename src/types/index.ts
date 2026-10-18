@@ -193,6 +193,8 @@ export interface Document {
   updatedAt: string;
 }
 
+export type AccountingDocument = Document;
+
 export type CourierCode = 'flash' | 'kerry' | 'thailand_post' | 'jnt';
 
 export interface Shipment {

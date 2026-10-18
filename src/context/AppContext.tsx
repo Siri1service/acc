@@ -29,6 +29,7 @@ import {
   initialChartOfAccounts,
   initialCampaigns
 } from '../lib/mockData';
+import { deleteDocumentFromDatabase, loadDocuments, nextNumber, saveDocument } from '../lib/documentRepository';
 
 interface AppContextType {
   // Navigation & View
@@ -72,8 +73,8 @@ interface AppContextType {
 
   // Documents
   documents: Document[];
-  addDocument: (doc: Partial<Document>) => Document;
-  updateDocument: (id: string, updates: Partial<Document>) => void;
+  addDocument: (doc: Partial<Document>) => Promise<Document>;
+  updateDocument: (id: string, updates: Partial<Document>) => Promise<void>;
   deleteDocument: (id: string) => void;
   approveDocument: (id: string) => void;
   convertDocument: (sourceDocId: string, targetType: DocumentType) => Document;
@@ -203,9 +204,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => saveStored('line', lineSettings), [lineSettings]);
   useEffect(() => saveStored('onboarded', isOnboardingCompleted), [isOnboardingCompleted]);
 
-  // Derived current values
-  const currentOrg = organizations.find(o => o.id === currentOrgId) || organizations[0] || initialOrganizations[0]!;
+  // Derived current values with bulletproof defaults
+  // Derived current values with bulletproof defaults
+  const rawOrg = organizations.find(o => o.id === currentOrgId) || organizations[0] || initialOrganizations[0]!;
+  const mergedSettings: Organization['settings'] = {
+    vatRate: rawOrg.settings?.vatRate ?? 7,
+    withholdingTaxEnabled: rawOrg.settings?.withholdingTaxEnabled ?? true,
+    stockEnabled: rawOrg.settings?.stockEnabled ?? true,
+    logisticsEnabled: rawOrg.settings?.logisticsEnabled ?? true,
+    lineNotifyEnabled: rawOrg.settings?.lineNotifyEnabled ?? true,
+    bankFeedEnabled: rawOrg.settings?.bankFeedEnabled ?? true,
+    activeTemplate: rawOrg.settings?.activeTemplate || 'modern_cyan',
+    docPrefixes: {
+      QT: rawOrg.settings?.docPrefixes?.QT || 'QT-2026-',
+      BL: rawOrg.settings?.docPrefixes?.BL || 'BL-2026-',
+      TAX: rawOrg.settings?.docPrefixes?.TAX || 'TAX-2026-',
+      RE: rawOrg.settings?.docPrefixes?.RE || 'RE-2026-',
+      CASH: rawOrg.settings?.docPrefixes?.CASH || 'CS-2026-',
+      CN: rawOrg.settings?.docPrefixes?.CN || 'CN-2026-',
+      DN: rawOrg.settings?.docPrefixes?.DN || 'DN-2026-',
+      PO: rawOrg.settings?.docPrefixes?.PO || 'PO-2026-',
+      GR: rawOrg.settings?.docPrefixes?.GR || 'GR-2026-'
+    },
+    enabledModules: {
+      sales: rawOrg.settings?.enabledModules?.sales ?? true,
+      purchases: rawOrg.settings?.enabledModules?.purchases ?? true,
+      taxes: rawOrg.settings?.enabledModules?.taxes ?? true,
+      inventory: rawOrg.settings?.enabledModules?.inventory ?? true,
+      logistics: rawOrg.settings?.enabledModules?.logistics ?? true,
+      crm: rawOrg.settings?.enabledModules?.crm ?? true,
+      banking: rawOrg.settings?.enabledModules?.banking ?? true,
+      reports: rawOrg.settings?.enabledModules?.reports ?? true,
+      auditLogs: rawOrg.settings?.enabledModules?.auditLogs ?? true,
+      marketing: rawOrg.settings?.enabledModules?.marketing ?? true
+    }
+  };
+  const currentOrg: Organization = {
+    ...rawOrg,
+    settings: mergedSettings
+  };
   const currentUser = users.find(u => u.id === currentUserId) || users[0] || initialUsers[0]!;
+
+  useEffect(() => {
+    let cancelled = false;
+    loadDocuments(currentOrg).then(rows => {
+      if (!cancelled && rows) setDocuments(previous => [...rows, ...previous.filter(d => d.orgId !== currentOrg.id)]);
+    }).catch(error => console.error('โหลดเอกสารจาก Supabase ไม่สำเร็จ:', error));
+    return () => { cancelled = true; };
+  }, [currentOrg.id]);
 
   // Audit Log helper
   const addAuditLog = (action: string, entityType: string, entityId: string, details: string) => {
@@ -400,14 +446,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Document Helpers
   const getNextDocNumber = (type: DocumentType): string => {
-    const prefix = currentOrg.settings.docPrefixes[type] || `${type}-2026-`;
-    const count = documents.filter(d => d.docType === type && d.orgId === currentOrg.id).length + 1;
-    return `${prefix}${count.toString().padStart(4, '0')}`;
+    // Keep the document type code stable; legacy prefixes such as QT-2026- or
+    // QT-IND- must not leak year or tenant labels into the issued number.
+    const prefix = type === 'CASH' ? 'CS' : type;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const numberPrefix = `${prefix}-${year}-${month}-`;
+    const latestSequence = documents.reduce((latest, document) => {
+      if (document.orgId !== currentOrg.id || document.docType !== type || !document.docNumber.startsWith(numberPrefix)) {
+        return latest;
+      }
+
+      const sequence = Number(document.docNumber.slice(numberPrefix.length));
+      return Number.isInteger(sequence) ? Math.max(latest, sequence) : latest;
+    }, 0);
+
+    return `${numberPrefix}${String(latestSequence + 1).padStart(4, '0')}`;
   };
 
-  const addDocument = (doc: Partial<Document>): Document => {
+  const addDocument = async (doc: Partial<Document>): Promise<Document> => {
     const docType = doc.docType || 'QT';
-    const docNumber = doc.docNumber || getNextDocNumber(docType);
+    const issueDate = doc.issueDate || new Date().toISOString().split('T')[0]!;
+    const docNumber = await nextNumber(currentOrg, docType, issueDate) || doc.docNumber || getNextDocNumber(docType);
     
     const newDoc: Document = {
       id: `doc-${Date.now()}`,
@@ -443,23 +504,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       referenceDocNumber: doc.referenceDocNumber
     };
 
-    setDocuments(prev => [newDoc, ...prev]);
+    const savedDoc = await saveDocument(currentOrg, newDoc);
+    setDocuments(prev => [savedDoc, ...prev]);
     addAuditLog('CREATE_DOCUMENT', docType, docNumber, `สร้างเอกสาร ${docType} เลขที่ ${docNumber}`);
 
     if (lineSettings.notifyOnCreate) {
       sendLineNotify(`🔔 แจ้งเตือน AccData: มีการสร้างเอกสารใหม่ [${docType}] เลขที่ ${docNumber} ยอดเงิน ฿${newDoc.grandTotal.toLocaleString()} โดย ${currentUser.fullName}`);
     }
 
-    return newDoc;
+    return savedDoc;
   };
 
-  const updateDocument = (id: string, updates: Partial<Document>) => {
+  const updateDocument = async (id: string, updates: Partial<Document>) => {
+    const target = documents.find(d => d.id === id);
+    if (target) await saveDocument(currentOrg, { ...target, ...updates, updatedAt: new Date().toISOString() });
     setDocuments(prev => prev.map(d => d.id === id ? { ...d, ...updates, updatedAt: new Date().toISOString() } : d));
     addAuditLog('UPDATE_DOCUMENT', 'Document', id, `แก้ไขเอกสาร ID: ${id}`);
   };
 
   const deleteDocument = (id: string) => {
     const target = documents.find(d => d.id === id);
+    void deleteDocumentFromDatabase(id).catch(error => console.error('ลบเอกสารจาก Supabase ไม่สำเร็จ:', error));
     setDocuments(prev => prev.filter(d => d.id !== id));
     if (target) {
       addAuditLog('DELETE_DOCUMENT', target.docType, target.docNumber, `ลบเอกสาร ${target.docType} เลขที่ ${target.docNumber}`);

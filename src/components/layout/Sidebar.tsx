@@ -35,7 +35,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
     setIsAuthModalOpen
   } = useApp();
 
-  const enabled = currentOrg.settings.enabledModules;
+  const enabled = currentOrg?.settings?.enabledModules || {
+    sales: true,
+    purchases: true,
+    taxes: true,
+    inventory: true,
+    logistics: true,
+    crm: true,
+    banking: true,
+    reports: true,
+    auditLogs: true,
+    marketing: true
+  };
 
   const menuSections = [
     {

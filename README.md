@@ -131,7 +131,4 @@ bun run build
 - **iOS (Safari)**: กดปุ่มแชร์ ➔ เลือก **"Add to Home Screen" (เพิ่มไปยังหน้าจอโฮม)**
 - **Android (Chrome)**: กดจุดสามจุด ➔ เลือก **"Install app" (ติดตั้งแอป)**
 แอปจะมีไอคอนบนหน้าจอและทำงานแบบเต็มหน้าจอ (Standalone) พร้อม Bottom Navigation Bar สำหรับมือถือโดยเฉพาะ
-# acc
-# acc
-# acc
-# acc
+

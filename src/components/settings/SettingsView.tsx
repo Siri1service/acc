@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { checkSupabaseConnection, isSupabaseConfigured } from '../../lib/supabase';
+import { checkSupabaseConnection, isSupabaseConfigured, getSupabaseConfig, saveSupabaseConfig } from '../../lib/supabase';
 import {
   Settings,
   Sliders,
@@ -37,6 +37,9 @@ export const SettingsView: React.FC = () => {
     connected: false,
     message: ''
   });
+
+  const [supabaseUrlInput, setSupabaseUrlInput] = useState(() => getSupabaseConfig().url);
+  const [supabaseKeyInput, setSupabaseKeyInput] = useState(() => getSupabaseConfig().anonKey);
 
   // Local state for Doc Prefixes
   const [prefixes, setPrefixes] = useState(currentOrg.settings.docPrefixes);
@@ -434,23 +437,63 @@ export const SettingsView: React.FC = () => {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={handleTestSupabase}
-                className="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high font-bold text-primary flex items-center gap-1.5 transition-colors"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>ทดสอบการเชื่อมต่อ</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    saveSupabaseConfig(supabaseUrlInput, supabaseKeyInput);
+                    handleTestSupabase();
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>บันทึกและเชื่อมต่อ</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTestSupabase}
+                  className="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high font-bold text-primary flex items-center gap-1.5 transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>ทดสอบการเชื่อมต่อ</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-semibold mb-1">Supabase Project URL</label>
+                <input
+                  type="text"
+                  value={supabaseUrlInput}
+                  onChange={(e) => setSupabaseUrlInput(e.target.value)}
+                  placeholder="https://your-project-id.supabase.co"
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg font-mono text-xs"
+                />
+              </div>
+              <div>
+                <label className="block font-semibold mb-1">Supabase Anon Key</label>
+                <input
+                  type="password"
+                  value={supabaseKeyInput}
+                  onChange={(e) => setSupabaseKeyInput(e.target.value)}
+                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg font-mono text-xs"
+                />
+              </div>
             </div>
 
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-on-surface">สถานะการเชื่อมต่อ:</span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  isSupabaseConfigured ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'
+                  supabaseStatus.connected ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                 }`}>
-                  {isSupabaseConfigured ? 'เชื่อมต่อ Supabase Live' : 'ทำงานบน Local DB อัจฉริยะ (พร้อมเชื่อมต่อ)'}
+                  {supabaseStatus.connected
+                    ? 'เชื่อมต่อ Supabase PostgreSQL แล้ว'
+                    : isSupabaseConfigured()
+                      ? supabaseStatus.checked ? 'เชื่อมต่อ Supabase ไม่สำเร็จ' : 'ตั้งค่าแล้ว (กดทดสอบเพื่อตรวจเช็ค)'
+                      : 'โหมด Local Database อัจฉริยะ (พร้อมเชื่อมต่อ)'}
                 </span>
               </div>
               <div className="text-[11px] text-outline font-mono">
@@ -458,7 +501,7 @@ export const SettingsView: React.FC = () => {
               </div>
               {supabaseStatus.checked && (
                 <div className={`p-2 rounded text-[11px] font-medium ${
-                  supabaseStatus.connected ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-100 text-slate-700'
+                  supabaseStatus.connected ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700'
                 }`}>
                   {supabaseStatus.message}
                 </div>
