@@ -211,6 +211,69 @@ END;
 $$;
 GRANT EXECUTE ON FUNCTION public.update_my_contact_profile(TEXT, TEXT) TO authenticated;
 
+-- Complete first-run setup atomically. This avoids orphaned organizations when
+-- one of the profile or membership writes fails, and keeps owner assignment
+-- bound to the authenticated session rather than client-supplied user IDs.
+CREATE OR REPLACE FUNCTION public.complete_account_onboarding(
+  p_entity_type TEXT,
+  p_name TEXT,
+  p_tax_id TEXT,
+  p_branch TEXT,
+  p_address TEXT,
+  p_shipping_address TEXT,
+  p_phone TEXT,
+  p_contact_name TEXT,
+  p_enabled_modules JSONB DEFAULT '{}'::jsonb
+) RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_email TEXT := auth.jwt()->>'email';
+  v_org public.organizations%ROWTYPE;
+  v_permissions JSONB := '{"view_documents":true,"create_documents":true,"edit_documents":true,"approve_documents":true,"delete_documents":true,"view_contacts":true,"manage_contacts":true,"view_products":true,"manage_products":true,"view_banking":true,"manage_banking":true,"view_reports":true,"view_logistics":true,"manage_logistics":true,"view_taxes":true,"view_audit_logs":true,"write_audit_logs":true,"manage_users":true,"manage_settings":true}'::jsonb;
+BEGIN
+  IF v_user_id IS NULL THEN RAISE EXCEPTION 'กรุณาเข้าสู่ระบบใหม่ก่อนบันทึกข้อมูล'; END IF;
+  IF p_entity_type NOT IN ('individual', 'juristic') THEN RAISE EXCEPTION 'ประเภทกิจการไม่ถูกต้อง'; END IF;
+  IF NULLIF(trim(p_name), '') IS NULL OR NULLIF(trim(p_branch), '') IS NULL
+     OR NULLIF(trim(p_address), '') IS NULL OR NULLIF(trim(p_contact_name), '') IS NULL
+     OR NULLIF(trim(p_phone), '') IS NULL OR COALESCE(p_tax_id, '') !~ '^[0-9]{13}$' THEN
+    RAISE EXCEPTION 'กรุณากรอกข้อมูลกิจการและผู้ดูแลให้ครบ และเลขผู้เสียภาษีต้องมี 13 หลัก';
+  END IF;
+
+  INSERT INTO public.organizations (
+    owner_user_id, name, entity_type, tax_id, branch, address,
+    shipping_address, phone, email, settings
+  ) VALUES (
+    v_user_id, trim(p_name), p_entity_type, p_tax_id, trim(p_branch), trim(p_address),
+    COALESCE(NULLIF(trim(p_shipping_address), ''), trim(p_address)), trim(p_phone),
+    COALESCE(v_email, ''),
+    jsonb_build_object(
+      'vat_rate', 7, 'withholding_tax_enabled', true, 'stock_enabled', true,
+      'logistics_enabled', true, 'line_notify_enabled', false, 'bank_feed_enabled', false,
+      'doc_prefixes', '{"QT":"QT","BL":"BL","TAX":"TAX","RE":"RE","CASH":"CS","CN":"CN","DN":"DN","PO":"PO","GR":"GR"}'::jsonb,
+      'active_template', 'modern_cyan', 'enabled_modules', COALESCE(p_enabled_modules, '{}'::jsonb)
+    )
+  ) RETURNING * INTO v_org;
+
+  UPDATE public.user_profiles
+  SET full_name = trim(p_contact_name), phone = trim(p_phone), current_org_id = v_org.id
+  WHERE id = v_user_id;
+  IF NOT FOUND THEN RAISE EXCEPTION 'ไม่พบโปรไฟล์ผู้ใช้ กรุณาออกจากระบบแล้วเข้าสู่ระบบใหม่'; END IF;
+
+  INSERT INTO public.organization_members (organization_id, user_id, role, permissions)
+  VALUES (v_org.id, v_user_id, 'admin', v_permissions)
+  ON CONFLICT (organization_id, user_id) DO UPDATE
+  SET role = 'admin', permissions = v_permissions;
+
+  RETURN to_jsonb(v_org);
+END;
+$$;
+REVOKE ALL ON FUNCTION public.complete_account_onboarding(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.complete_account_onboarding(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) TO authenticated;
+
 -- 4. Bank Accounts (Thai Bank Feeds & Payment Tracking)
 CREATE TABLE IF NOT EXISTS public.bank_accounts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

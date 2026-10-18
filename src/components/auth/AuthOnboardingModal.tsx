@@ -76,7 +76,15 @@ export const AuthOnboardingModal: React.FC = () => {
       });
       setIsAuthModalOpen(false);
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง');
+      const dbError = error && typeof error === 'object' ? error as Record<string, unknown> : {};
+      const message = [dbError.message, dbError.details, dbError.hint, dbError.code]
+        .filter((part): part is string => typeof part === 'string' && part.trim().length > 0)
+        .join(' · ');
+      const missingOnboardingRpc = dbError.code === 'PGRST202'
+        || (typeof dbError.message === 'string' && dbError.message.includes('complete_account_onboarding'));
+      setFormError(missingOnboardingRpc
+        ? `ฐานข้อมูลยังไม่ได้อัปเดตฟังก์ชันตั้งค่าเริ่มต้น กรุณารัน SQL ล่าสุดจาก supabase/schema.sql ใน Supabase SQL Editor แล้วลองอีกครั้ง${message ? ` (${message})` : ''}`
+        : message || (error instanceof Error ? error.message : 'บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อฐานข้อมูลแล้วลองอีกครั้ง'));
     } finally {
       setSaving(false);
     }

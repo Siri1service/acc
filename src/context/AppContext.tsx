@@ -602,31 +602,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     const db = getSupabase();
     if (!db || !authUser) throw new Error('ไม่พบการเชื่อมต่อฐานข้อมูลหรือบัญชีผู้ใช้ กรุณาเข้าสู่ระบบใหม่');
-    const organizationData = {
-      owner_user_id: authUser.id, name: info.name.trim(), entity_type: info.entityType, tax_id: info.taxId,
-      branch: info.branch.trim(), address: info.address.trim(), shipping_address: (info.shippingAddress || info.address).trim(),
-      phone: info.phone.trim(), email: authUser.email || '', settings: { vat_rate: 7, withholding_tax_enabled: true, stock_enabled: true, logistics_enabled: true,
-        line_notify_enabled: false, bank_feed_enabled: false,
-        doc_prefixes: { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' },
-        active_template: 'modern_cyan', enabled_modules: info.enabledModules || {} }
-    };
-    const { data: savedOrg, error } = await db.from('organizations').insert(organizationData).select('*').single();
-    if (error) throw error;
-    const { error: profileError } = await db.rpc('update_my_contact_profile', {
-      p_full_name: info.contactName.trim(), p_phone: info.phone.trim()
+    const { data: savedOrg, error } = await db.rpc('complete_account_onboarding', {
+      p_entity_type: info.entityType,
+      p_name: info.name.trim(),
+      p_tax_id: info.taxId,
+      p_branch: info.branch.trim(),
+      p_address: info.address.trim(),
+      p_shipping_address: (info.shippingAddress || info.address).trim(),
+      p_phone: info.phone.trim(),
+      p_contact_name: info.contactName.trim(),
+      p_enabled_modules: info.enabledModules || {}
     });
-    if (profileError) {
-      await db.from('organizations').delete().eq('id', savedOrg.id);
-      throw profileError;
-    }
-    const allOrgPermissions = Object.fromEntries(['view_documents','create_documents','edit_documents','approve_documents','delete_documents','view_contacts','manage_contacts','view_products','manage_products','view_banking','manage_banking','view_reports','view_logistics','manage_logistics','view_taxes','view_audit_logs','write_audit_logs','manage_users','manage_settings'].map(key => [key, true]));
-    const { error: ownerMembershipError } = await db.from('organization_members').upsert({
-      organization_id: savedOrg.id, user_id: authUser.id, role: 'admin', permissions: allOrgPermissions
-    }, { onConflict: 'organization_id,user_id' });
-    if (ownerMembershipError) {
-      await db.from('organizations').delete().eq('id', savedOrg.id);
-      throw ownerMembershipError;
-    }
+    if (error) throw error;
+    if (!savedOrg?.id) throw new Error('ฐานข้อมูลบันทึกการตั้งค่าแล้ว แต่ไม่ได้ส่งข้อมูลองค์กรกลับมา กรุณาโหลดหน้าใหม่');
     const updatedOrg: Organization = {
       ...currentOrg,
       id: savedOrg.id,
