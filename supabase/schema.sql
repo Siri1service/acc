@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS public.organizations (
 );
 
 ALTER TABLE public.organizations ADD COLUMN IF NOT EXISTS owner_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.organizations ADD COLUMN IF NOT EXISTS signature_url TEXT;
+ALTER TABLE public.organizations ADD COLUMN IF NOT EXISTS stamp_url TEXT;
 
 -- 2. User Profiles
 CREATE TABLE IF NOT EXISTS public.user_profiles (
@@ -371,6 +373,7 @@ ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_name VARCHAR(255);
 ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_tax_id VARCHAR(20);
 ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_branch VARCHAR(100);
 ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS contact_address TEXT;
+ALTER TABLE public.documents ADD COLUMN IF NOT EXISTS prices_include_vat BOOLEAN NOT NULL DEFAULT FALSE;
 
 -- Monthly document sequences are stored per organization and document type.
 -- The RPC locks a single counter row, so concurrent users cannot receive the

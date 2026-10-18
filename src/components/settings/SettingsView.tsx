@@ -52,6 +52,10 @@ export const SettingsView: React.FC = () => {
   const [shippingAddress, setShippingAddress] = useState(currentOrg.shippingAddress || currentOrg.address);
   const [phone, setPhone] = useState(currentOrg.phone);
   const [email, setEmail] = useState(currentOrg.email);
+  const [logoUrl, setLogoUrl] = useState(currentOrg.logoUrl || '');
+  const [signatureUrl, setSignatureUrl] = useState(currentOrg.signatureUrl || '');
+  const [stampUrl, setStampUrl] = useState(currentOrg.stampUrl || '');
+  const [saveError, setSaveError] = useState('');
 
   // Local state for Line
   const [lineToken, setLineToken] = useState(lineSettings.lineNotifyToken || '');
@@ -82,22 +86,20 @@ export const SettingsView: React.FC = () => {
     });
   };
 
-  const handleSaveAll = (e: React.FormEvent) => {
+  const handleSaveAll = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaveError('');
 
     // Save Doc Prefixes
     updateOrgSettings({ docPrefixes: prefixes });
 
     // Save Company Details
-    updateOrgDetails({
-      name: companyName,
-      taxId,
-      branch,
-      address,
-      shippingAddress,
-      phone,
-      email
-    });
+    try {
+      await updateOrgDetails({ name: companyName, taxId, branch, address, shippingAddress, phone, email, logoUrl, signatureUrl, stampUrl });
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : 'บันทึกข้อมูลบริษัทไม่สำเร็จ');
+      return;
+    }
 
     // Save Line Settings
     updateLineSettings({
@@ -416,6 +418,26 @@ export const SettingsView: React.FC = () => {
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg"
                 />
               </div>
+            </div>
+
+            <div className="space-y-3 border-t border-outline-variant/30 pt-4">
+              <p className="font-bold text-on-surface">โลโก้ ลายเซ็น และตราประทับบนเอกสาร</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold mb-1">URL โลโก้</label>
+                  <input type="url" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://…/logo.png" className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg" />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">URL รูปลายเซ็น</label>
+                  <input type="url" value={signatureUrl} onChange={e => setSignatureUrl(e.target.value)} placeholder="https://…/signature.png" className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg" />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">URL ตราประทับ</label>
+                  <input type="url" value={stampUrl} onChange={e => setStampUrl(e.target.value)} placeholder="https://…/stamp.png" className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg" />
+                </div>
+              </div>
+              <p className="text-[11px] text-outline">ใส่ลิงก์รูปภาพที่เปิดดูได้โดยตรง (PNG พื้นหลังโปร่งใสเหมาะกับลายเซ็นและตราประทับ)</p>
+              {saveError && <p role="alert" className="text-error">{saveError}</p>}
             </div>
           </div>
         </div>

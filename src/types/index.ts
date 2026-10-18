@@ -65,6 +65,8 @@ export interface Organization {
   email: string;
   website?: string;
   logoUrl?: string;
+  signatureUrl?: string;
+  stampUrl?: string;
   settings: OrganizationSettings;
   createdAt: string;
 }
@@ -181,6 +183,7 @@ export interface Document {
   vatAmount: number;
   withholdingTaxRate: number; // 0, 1, 2, 3, 5%
   withholdingTaxAmount: number;
+  pricesIncludeVat?: boolean;
   grandTotal: number;
   notes?: string;
   termsConditions?: string;

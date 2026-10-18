@@ -45,6 +45,8 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   // Form State
   const [docNumber, setDocNumber] = useState('');
   const [contactId, setContactId] = useState('');
+  const [contactSearch, setContactSearch] = useState('');
+  const [showContactResults, setShowContactResults] = useState(false);
   const [referenceDocNumber, setReferenceDocNumber] = useState('');
   const [issueDate, setIssueDate] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -54,6 +56,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const [notes, setNotes] = useState('');
   const [vatRate, setVatRate] = useState<number>(currentOrg.settings.vatRate || 7);
   const [withholdingTaxRate, setWithholdingTaxRate] = useState<number>(0);
+  const [pricesIncludeVat, setPricesIncludeVat] = useState(false);
   
   // Items state
   const [items, setItems] = useState<DocumentItem[]>([]);
@@ -67,6 +70,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     if (editingDocument) {
       setDocNumber(editingDocument.docNumber);
       setContactId(editingDocument.contactId);
+      setContactSearch(editingDocument.contactName || '');
       setReferenceDocNumber(editingDocument.referenceDocNumber || '');
       setIssueDate(editingDocument.issueDate);
       setDueDate(editingDocument.dueDate);
@@ -76,11 +80,13 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       setNotes(editingDocument.notes || '');
       setVatRate(editingDocument.vatRate);
       setWithholdingTaxRate(editingDocument.withholdingTaxRate);
+      setPricesIncludeVat(Boolean(editingDocument.pricesIncludeVat));
       setItems(editingDocument.items);
     } else {
       setDocNumber(getNextDocNumber(docType));
       const defaultContact = contacts.find(contact => contact.contactType !== 'vendor');
       setContactId(defaultContact ? defaultContact.id : '');
+      setContactSearch(defaultContact?.name || '');
       const today = new Date().toISOString().split('T')[0]!;
       setIssueDate(today);
       const due = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0]!;
@@ -89,6 +95,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       setBankAccountId(bankAccounts[0]?.id || '');
       setVatRate(currentOrg.settings.vatRate || 7);
       setWithholdingTaxRate(docType === 'RE' || docType === 'TAX' ? 3 : 0);
+      setPricesIncludeVat(false);
 
       // Add a starter item
       if (products.length > 0) {
@@ -184,6 +191,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
         shippingAddress: newContact.address.trim(), phone: newContact.phone.trim(), email: newContact.email.trim()
       });
       setContactId(created.id);
+      setContactSearch(created.name);
       setNewContact({ name: '', taxId: '', branch: 'สำนักงานใหญ่ (00000)', address: '', phone: '', email: '' });
       setIsAddingContact(false);
     } catch (error) {
@@ -214,12 +222,21 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   };
 
   // Calculations
-  const subtotal = items.reduce((sum, item) => sum + (item.totalAmount || 0), 0);
-  const vatAmount = vatRate > 0 ? (subtotal * vatRate) / 100 : 0;
-  const withholdingTaxAmount = withholdingTaxRate > 0 ? (subtotal * withholdingTaxRate) / 100 : 0;
-  const grandTotal = subtotal + vatAmount - withholdingTaxAmount;
+  const enteredSubtotal = items.reduce((sum, item) => sum + (Number(item.quantity || 0) * Number(item.unitPrice || 0)), 0);
+  const enteredDiscount = items.reduce((sum, item) => sum + Number(item.discountAmount || 0), 0);
+  const enteredNet = Math.max(0, enteredSubtotal - enteredDiscount);
+  const subtotal = enteredSubtotal;
+  const discountAmount = enteredDiscount;
+  const taxableSubtotal = pricesIncludeVat && vatRate > 0
+    ? enteredNet / (1 + vatRate / 100)
+    : Math.max(0, subtotal - discountAmount);
+  const vatAmount = vatRate > 0 ? taxableSubtotal * vatRate / 100 : 0;
+  const withholdingTaxAmount = withholdingTaxRate > 0 ? taxableSubtotal * withholdingTaxRate / 100 : 0;
+  const grandTotal = pricesIncludeVat ? enteredNet - withholdingTaxAmount : taxableSubtotal + vatAmount - withholdingTaxAmount;
 
   const selectedContact = contacts.find(c => c.id === contactId);
+  const filteredContacts = contacts.filter(contact => contact.contactType !== 'vendor' && [contact.name, contact.phone, contact.taxId, contact.email]
+    .some(value => (value || '').toLocaleLowerCase('th-TH').includes(contactSearch.trim().toLocaleLowerCase('th-TH'))));
 
   // Submit
   const handleSave = async (status: 'draft' | 'approved') => {
@@ -244,11 +261,12 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       bankAccountId: paymentMethod === 'transfer' ? bankAccountId : undefined,
       paymentDate: (docType === 'RE' || docType === 'CASH') ? paymentDate : undefined,
       subtotal,
-      discountAmount: items.reduce((sum, item) => sum + (item.discountAmount || 0), 0),
+      discountAmount,
       vatRate,
       vatAmount,
       withholdingTaxRate,
       withholdingTaxAmount,
+      pricesIncludeVat,
       grandTotal,
       notes,
       items
@@ -440,16 +458,28 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                   เลือกลูกค้าจากสมุดรายชื่อ
                 </label>
                 <div className="flex gap-2">
-                  <select
-                    value={contactId}
-                    onChange={(e) => setContactId(e.target.value)}
-                    className="min-w-0 flex-1 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface focus:outline-none focus:border-primary"
-                  >
-                    <option value="">-- เลือกลูกค้า --</option>
-                    {contacts.filter(c => c.contactType !== 'vendor').map((c) => (
-                      <option key={c.id} value={c.id}>{c.name} ({c.taxId || 'ไม่ระบุเลขภาษี'})</option>
-                    ))}
-                  </select>
+                  <div className="relative min-w-0 flex-1">
+                    <input
+                      value={contactSearch}
+                      onChange={e => { setContactSearch(e.target.value); setContactId(''); setShowContactResults(true); }}
+                      onFocus={() => setShowContactResults(true)}
+                      onBlur={() => window.setTimeout(() => setShowContactResults(false), 150)}
+                      placeholder="ค้นหาชื่อ เบอร์โทร เลขภาษี หรืออีเมลลูกค้า"
+                      className="w-full min-w-0 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface focus:outline-none focus:border-primary"
+                    />
+                    {showContactResults && contactSearch.trim() && (
+                      <div className="absolute z-20 top-full mt-1 left-0 right-0 max-h-48 overflow-y-auto rounded-lg border border-outline-variant/40 bg-white shadow-lg">
+                        {filteredContacts.length ? filteredContacts.slice(0, 12).map(contact => (
+                          <button key={contact.id} type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
+                            setContactId(contact.id); setContactSearch(contact.name); setShowContactResults(false);
+                          }} className="block w-full px-3 py-2 text-left hover:bg-surface-container-low">
+                            <span className="block font-semibold text-on-surface">{contact.name}</span>
+                            <span className="text-[10px] text-outline">{[contact.phone, contact.taxId, contact.email].filter(Boolean).join(' · ')}</span>
+                          </button>
+                        )) : <div className="px-3 py-2 text-outline">ไม่พบลูกค้าในสมุดรายชื่อ</div>}
+                      </div>
+                    )}
+                  </div>
                   {canCreateContact && <button type="button" onClick={() => { setIsAddingContact(value => !value); setContactError(''); }} className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-primary/10 px-2.5 text-primary font-semibold hover:bg-primary/15">
                     <Plus className="h-3.5 w-3.5" /> เพิ่มลูกค้า
                   </button>}
@@ -645,7 +675,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
               </div>
 
               {/* VAT Toggle & Selector */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span>ภาษีมูลค่าเพิ่ม:</span>
                   <select
@@ -660,6 +690,14 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                 <span className="font-mono font-bold text-on-surface">
                   ฿{vatAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}
                 </span>
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <span>รูปแบบราคาที่กรอก:</span>
+                <select value={pricesIncludeVat ? 'inclusive' : 'exclusive'} onChange={e => setPricesIncludeVat(e.target.value === 'inclusive')} className="max-w-[220px] px-2 py-1 rounded bg-surface-container-lowest border border-outline-variant/40 text-xs font-semibold">
+                  <option value="exclusive">ราคาก่อน VAT</option>
+                  <option value="inclusive">ราคารวม VAT แล้ว</option>
+                </select>
               </div>
 
               {/* Withholding Tax Selector */}

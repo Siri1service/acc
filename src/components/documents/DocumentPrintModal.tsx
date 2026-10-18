@@ -40,6 +40,8 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
 
   const docInfo = docTitleMap[document.docType] || { th: 'เอกสาร', en: 'DOCUMENT' };
   const targetBank = bankAccounts.find(b => b.id === document.bankAccountId) || bankAccounts[0];
+  const hasLineDiscounts = document.items.some(item => item.discountAmount > 0);
+  const hasCompanyStamp = Boolean(currentOrg.stampUrl);
 
   const handlePrint = () => {
     window.print();
@@ -158,18 +160,16 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                   {/* Company Info */}
                   <div className="max-w-[420px]">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-lg">
-                        A
-                      </div>
+                      {currentOrg.logoUrl ? <img src={currentOrg.logoUrl} alt="โลโก้กิจการ" className="max-h-14 max-w-28 object-contain" /> : <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-lg">{currentOrg.name.slice(0, 1) || 'A'}</div>}
                       <div>
                         <h2 className="text-base font-bold text-slate-900">{currentOrg.name}</h2>
-                        <div className="text-[11px] text-slate-600 font-medium">{currentOrg.branch}</div>
+                    {currentOrg.branch && <div className="text-[11px] text-slate-600 font-medium">{currentOrg.branch}</div>}
                       </div>
                     </div>
                     <div className="text-[11px] text-slate-600 mt-2 space-y-0.5">
-                      <p><b>เลขประจำตัวผู้เสียภาษี:</b> {currentOrg.taxId}</p>
-                      <p>{currentOrg.address}</p>
-                      <p>โทรศัพท์: {currentOrg.phone} | อีเมล: {currentOrg.email}</p>
+                      {currentOrg.taxId && <p><b>เลขประจำตัวผู้เสียภาษี:</b> {currentOrg.taxId}</p>}
+                      {currentOrg.address && <p>{currentOrg.address}</p>}
+                      {(currentOrg.phone || currentOrg.email) && <p>{[currentOrg.phone && `โทรศัพท์: ${currentOrg.phone}`, currentOrg.email && `อีเมล: ${currentOrg.email}`].filter(Boolean).join(' | ')}</p>}
                     </div>
                   </div>
 
@@ -201,10 +201,10 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                         <span className="text-slate-500">วันที่ออก: </span>
                         <span className="font-medium text-slate-800">{document.issueDate}</span>
                       </div>
-                      <div>
+                      {document.dueDate && <div>
                         <span className="text-slate-500">วันครบกำหนดชำระ: </span>
                         <span className="font-medium text-slate-800">{document.dueDate}</span>
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 </div>
@@ -217,9 +217,9 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                     </span>
                     <h3 className="text-xs font-bold text-slate-900 mt-1">{document.contactName}</h3>
                     <div className="text-[11px] text-slate-600 mt-1 space-y-0.5">
-                      <p><b>เลขประจำตัวผู้เสียภาษี:</b> {document.contactTaxId || '-'}</p>
-                      <p><b>สาขา:</b> {document.contactBranch || 'สำนักงานใหญ่'}</p>
-                      <p className="line-clamp-2">{document.contactAddress}</p>
+                      {document.contactTaxId && <p><b>เลขประจำตัวผู้เสียภาษี:</b> {document.contactTaxId}</p>}
+                      {document.contactBranch && <p><b>สาขา:</b> {document.contactBranch}</p>}
+                      {document.contactAddress && <p className="line-clamp-2">{document.contactAddress}</p>}
                     </div>
                   </div>
 
@@ -234,7 +234,7 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                           document.paymentMethod === 'cheque' ? 'เช็คธนาคาร (Cheque)' : 'เงินโอน (Bank Transfer)'
                         }
                       </p>
-                      {targetBank && (
+                      {targetBank && document.paymentMethod === 'transfer' && (
                         <div className="p-2 rounded bg-white border border-slate-200 mt-1 text-[10px]">
                           <div className="font-bold text-slate-800">{targetBank.bankName} ({targetBank.branchName})</div>
                           <div className="font-mono text-slate-900 font-bold">เลขที่: {targetBank.accountNumber}</div>
@@ -257,8 +257,8 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                       <th className="py-2.5 px-3">รายการสินค้า / บริการ</th>
                       <th className="py-2.5 px-3 w-20 text-right">จำนวน</th>
                       <th className="py-2.5 px-3 w-20 text-center">หน่วย</th>
-                      <th className="py-2.5 px-3 w-28 text-right">ราคา/หน่วย</th>
-                      <th className="py-2.5 px-3 w-24 text-right">ส่วนลด</th>
+                      <th className="py-2.5 px-3 w-28 text-right">ราคา/หน่วย{document.pricesIncludeVat ? ' (รวม VAT)' : ' (ก่อน VAT)'}</th>
+                      {hasLineDiscounts && <th className="py-2.5 px-3 w-24 text-right">ส่วนลด</th>}
                       <th className="py-2.5 px-3 w-32 text-right">จำนวนเงิน (บาท)</th>
                     </tr>
                   </thead>
@@ -275,7 +275,7 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                         <td className="py-2.5 px-3 text-right font-mono">{item.quantity}</td>
                         <td className="py-2.5 px-3 text-center text-slate-600">{item.unit}</td>
                         <td className="py-2.5 px-3 text-right font-mono">฿{item.unitPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                        <td className="py-2.5 px-3 text-right font-mono">{item.discountAmount > 0 ? `฿${item.discountAmount.toLocaleString()}` : '-'}</td>
+                        {hasLineDiscounts && <td className="py-2.5 px-3 text-right font-mono">{item.discountAmount > 0 ? `฿${item.discountAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}` : ''}</td>}
                         <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
                           ฿{item.totalAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}
                         </td>
@@ -292,14 +292,12 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                         <b>หมายเหตุ:</b> {document.notes}
                       </div>
                     )}
-                    <div className="text-[10px] text-slate-500 leading-relaxed">
-                      * เอกสารนี้สร้างจากระบบบัญชีและภาษีคลาวด์ AccData ได้รับการรับรองตามระเบียบกรมสรรพากรแห่งประเทศไทย
-                    </div>
+                    <div className="text-[10px] text-slate-500 leading-relaxed">เอกสารนี้จัดทำโดยระบบ AccData</div>
                   </div>
 
                   <div className="w-72 space-y-1.5 text-[11px]">
                     <div className="flex justify-between py-1 text-slate-600">
-                      <span>รวมเป็นเงิน (Subtotal):</span>
+                      <span>รวมเป็นเงิน{document.pricesIncludeVat ? ' (รวม VAT แล้ว)' : ' (ก่อน VAT)'}:</span>
                       <span className="font-mono font-bold">฿{document.subtotal.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
                     </div>
 
@@ -310,10 +308,10 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                       </div>
                     )}
 
-                    <div className="flex justify-between py-1 text-slate-600">
-                      <span>ภาษีมูลค่าเพิ่ม VAT {document.vatRate}%:</span>
+                    {document.vatAmount > 0 && <div className="flex justify-between py-1 text-slate-600">
+                      <span>ภาษีมูลค่าเพิ่ม VAT {document.vatRate}%{document.pricesIncludeVat ? ' (รวมอยู่ในราคา)' : ''}:</span>
                       <span className="font-mono font-bold">฿{document.vatAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</span>
-                    </div>
+                    </div>}
 
                     {document.withholdingTaxAmount > 0 && (
                       <div className="flex justify-between py-1 text-amber-700">
@@ -333,7 +331,7 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
               </div>
 
               {/* Signatures Footer */}
-              <div className="grid grid-cols-2 gap-12 pt-12 border-t border-slate-200 mt-12 text-center text-xs">
+              <div className={`grid ${hasCompanyStamp ? 'grid-cols-3' : 'grid-cols-2'} gap-8 pt-12 border-t border-slate-200 mt-12 text-center text-xs`}>
                 <div>
                   <div className="h-12 border-b border-dashed border-slate-400"></div>
                   <div className="font-bold text-slate-800 mt-2">ผู้รับเอกสาร / ผู้มีอำนาจลงนาม</div>
@@ -342,11 +340,16 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
 
                 <div>
                   <div className="h-12 border-b border-dashed border-slate-400">
-                    <span className="text-[10px] text-slate-400 font-mono italic">Electronic Authorized Signature</span>
+                    {currentOrg.signatureUrl && <img src={currentOrg.signatureUrl} alt="ลายเซ็นผู้มีอำนาจ" className="mx-auto h-12 max-w-40 object-contain" />}
                   </div>
                   <div className="font-bold text-slate-800 mt-2">{document.createdByName || currentOrg.name}</div>
                   <div className="text-[10px] text-slate-500">ผู้มีอำนาจลงนาม / ในนามบริษัท</div>
                 </div>
+                {hasCompanyStamp && <div className="relative flex h-24 items-center justify-center">
+                  <img src={currentOrg.stampUrl} alt="ตราประทับกิจการ" className="max-h-24 max-w-36 object-contain" />
+                  <div className="absolute bottom-0 w-full border-b border-dashed border-slate-300" />
+                  <span className="absolute -bottom-5 text-[10px] text-slate-500">ตราประทับบริษัท</span>
+                </div>}
               </div>
             </div>
           )}
@@ -355,10 +358,11 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
           {printFormat === 'slip' && (
             <div className="w-[320px] bg-white text-slate-900 p-6 shadow-xl rounded-lg font-mono text-[11px] leading-snug border border-slate-300">
               <div className="text-center pb-4 border-b border-dashed border-slate-400">
+                {currentOrg.logoUrl && <img src={currentOrg.logoUrl} alt="โลโก้กิจการ" className="mx-auto mb-2 max-h-10 max-w-32 object-contain" />}
                 <h2 className="font-bold text-sm text-slate-900">{currentOrg.name}</h2>
-                <p className="text-[10px] text-slate-600">{currentOrg.branch}</p>
-                <p className="text-[10px] text-slate-600">Tax ID: {currentOrg.taxId}</p>
-                <p className="text-[10px] text-slate-600">{currentOrg.phone}</p>
+                {currentOrg.branch && <p className="text-[10px] text-slate-600">{currentOrg.branch}</p>}
+                {currentOrg.taxId && <p className="text-[10px] text-slate-600">Tax ID: {currentOrg.taxId}</p>}
+                {currentOrg.phone && <p className="text-[10px] text-slate-600">{currentOrg.phone}</p>}
                 <div className="inline-block mt-2 px-2 py-0.5 border border-slate-800 text-[10px] font-bold">
                   {docInfo.th}
                 </div>
@@ -390,10 +394,10 @@ export const DocumentPrintModal: React.FC<DocumentPrintModalProps> = ({ document
                   <span>รวมเป็นเงิน:</span>
                   <span>฿{document.subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>VAT 7%:</span>
+                {document.vatAmount > 0 && <div className="flex justify-between">
+                  <span>VAT {document.vatRate}%{document.pricesIncludeVat ? ' (รวมในราคา)' : ''}:</span>
                   <span>฿{document.vatAmount.toLocaleString()}</span>
-                </div>
+                </div>}
                 <div className="flex justify-between font-bold text-xs pt-1 border-t border-slate-800">
                   <span>ยอดสุทธิ:</span>
                   <span>฿{document.grandTotal.toLocaleString()}</span>

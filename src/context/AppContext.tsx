@@ -59,7 +59,7 @@ interface AppContextType {
   organizations: Organization[];
   switchOrganization: (orgId: string) => void;
   createOrganization: (newOrg: Partial<Organization>) => void;
-  updateOrgDetails: (details: Partial<Organization>) => void;
+  updateOrgDetails: (details: Partial<Organization>) => Promise<void>;
   updateOrgSettings: (settingsUpdates: Partial<Organization['settings']>) => void;
   toggleModule: (moduleKey: keyof Organization['settings']['enabledModules'], enabled: boolean) => void;
 
@@ -257,7 +257,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           id: row.id, name: row.name, entityType: row.entity_type || 'juristic',
           taxId: row.tax_id || '', branch: row.branch || '', address: row.address || '',
           shippingAddress: row.shipping_address || '', phone: row.phone || '', email: row.email || '',
-          website: row.website || '', logoUrl: row.logo_url || '',
+          website: row.website || '', logoUrl: row.logo_url || '', signatureUrl: row.signature_url || '', stampUrl: row.stamp_url || '',
           settings: {
             vatRate: settings.vat_rate ?? 7, withholdingTaxEnabled: settings.withholding_tax_enabled ?? true,
             stockEnabled: settings.stock_enabled ?? true, logisticsEnabled: settings.logistics_enabled ?? true,
@@ -545,7 +545,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addAuditLog('CREATE_ORGANIZATION', 'Organization', fullOrg.name, `ลงทะเบียนองค์กรใหม่: ${fullOrg.name}`);
   };
 
-  const updateOrgDetails = (details: Partial<Organization>) => {
+  const updateOrgDetails = async (details: Partial<Organization>) => {
+    const db = getSupabase();
+    if (db && authUser && currentOrg.id) {
+      const databaseFields: Record<string, unknown> = {};
+      if (details.name !== undefined) databaseFields.name = details.name;
+      if (details.taxId !== undefined) databaseFields.tax_id = details.taxId;
+      if (details.branch !== undefined) databaseFields.branch = details.branch;
+      if (details.address !== undefined) databaseFields.address = details.address;
+      if (details.shippingAddress !== undefined) databaseFields.shipping_address = details.shippingAddress;
+      if (details.phone !== undefined) databaseFields.phone = details.phone;
+      if (details.email !== undefined) databaseFields.email = details.email;
+      if (details.logoUrl !== undefined) databaseFields.logo_url = details.logoUrl || null;
+      if (details.signatureUrl !== undefined) databaseFields.signature_url = details.signatureUrl || null;
+      if (details.stampUrl !== undefined) databaseFields.stamp_url = details.stampUrl || null;
+      const { data, error } = await db.from('organizations').update(databaseFields).eq('id', currentOrg.id).select('id').maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error('บันทึกไม่สำเร็จ: บัญชีนี้ไม่มีสิทธิ์แก้ไขข้อมูลกิจการ');
+    }
     setOrganizations(prev => prev.map(o => o.id === currentOrg.id ? { ...o, ...details } : o));
     addAuditLog('UPDATE_ORGANIZATION', 'Organization', currentOrg.id, `แก้ไขข้อมูลรายละเอียดองค์กร`);
   };

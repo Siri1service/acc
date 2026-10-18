@@ -57,6 +57,7 @@ export async function loadDocuments(org: Organization): Promise<Document[] | nul
     paymentDate: row.payment_date || undefined, subtotal: Number(row.subtotal || 0), discountAmount: Number(row.discount_amount || 0),
     vatRate: Number(row.vat_rate || 0), vatAmount: Number(row.vat_amount || 0),
     withholdingTaxRate: Number(row.withholding_tax_rate || 0), withholdingTaxAmount: Number(row.withholding_tax_amount || 0),
+    pricesIncludeVat: Boolean(row.prices_include_vat),
     grandTotal: Number(row.grand_total || 0), notes: row.notes || '', termsConditions: row.terms_conditions || '',
     createdBy: row.created_by || '', createdByName: '', approvedBy: row.approved_by || undefined,
     approvedByName: '', approvedAt: row.approved_at || undefined, items: (row.document_items || []).map((item: any): DocumentItem => ({
@@ -81,7 +82,7 @@ export async function saveDocument(org: Organization, doc: Document, saveItems =
     payment_method: doc.paymentMethod, bank_account_id: isUuid(doc.bankAccountId) ? doc.bankAccountId : null,
     payment_date: doc.paymentDate || null, subtotal: doc.subtotal, discount_amount: doc.discountAmount,
     vat_rate: doc.vatRate, vat_amount: doc.vatAmount, withholding_tax_rate: doc.withholdingTaxRate,
-    withholding_tax_amount: doc.withholdingTaxAmount, grand_total: doc.grandTotal, notes: doc.notes,
+    withholding_tax_amount: doc.withholdingTaxAmount, prices_include_vat: Boolean(doc.pricesIncludeVat), grand_total: doc.grandTotal, notes: doc.notes,
     terms_conditions: doc.termsConditions, created_by: isUuid(doc.createdBy) ? doc.createdBy : null,
     approved_by: isUuid(doc.approvedBy) ? doc.approvedBy : null, approved_at: doc.approvedAt || null,
     updated_at: new Date().toISOString()
