@@ -40,6 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
 
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false);
   const [isNewDocMenuOpen, setIsNewDocMenuOpen] = useState(false);
+  const canCreateDocuments = currentUser.role === 'admin' || currentUser.organizationPermissions?.create_documents === true;
 
   const rolesList: { role: UserRole; title: string; desc: string; badgeColor: string }[] = [
     { 
@@ -135,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
         </button>
 
         {/* Quick New Document Action Dropdown */}
-        <div className="relative">
+        {canCreateDocuments && <div className="relative">
           <button
             onClick={() => setIsNewDocMenuOpen(!isNewDocMenuOpen)}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary-container text-on-primary rounded-lg text-xs font-semibold shadow-sm transition-all"
@@ -216,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
               </button>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Role switching is only available in demo mode; authenticated roles come from the database. */}
         {!authUser && <>

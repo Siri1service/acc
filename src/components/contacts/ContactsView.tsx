@@ -19,7 +19,8 @@ import {
 } from 'lucide-react';
 
 export const ContactsView: React.FC = () => {
-  const { contacts, addContact, updateContact, deleteContact, verifyDbdTaxId, currentOrg } = useApp();
+  const { contacts, addContact, updateContact, deleteContact, verifyDbdTaxId, currentOrg, currentUser, authUser } = useApp();
+  const canManageContacts = !authUser || currentUser.role === 'admin' || currentUser.organizationPermissions?.manage_contacts === true;
   const [filterType, setFilterType] = useState<'ALL' | 'customer' | 'vendor'>('ALL');
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,12 +46,12 @@ export const ContactsView: React.FC = () => {
     setVerifyingDbd(contactId);
     const result = await verifyDbdTaxId(taxId);
     if (result.valid) {
-      updateContact(contactId, { dbdVerified: true });
+      await updateContact(contactId, { dbdVerified: true });
     }
     setVerifyingDbd(null);
   };
 
-  const handleSaveContact = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data: Partial<Contact> = {
@@ -69,14 +70,14 @@ export const ContactsView: React.FC = () => {
       dbdVerified: formData.get('taxId')?.toString().length === 13
     };
 
-    if (editingContact) {
-      updateContact(editingContact.id, data);
-    } else {
-      addContact(data);
+    try {
+      if (editingContact) await updateContact(editingContact.id, data);
+      else await addContact(data);
+      setIsModalOpen(false);
+      setEditingContact(null);
+    } catch (error) {
+      alert(`บันทึกผู้ติดต่อไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
     }
-
-    setIsModalOpen(false);
-    setEditingContact(null);
   };
 
   return (
@@ -92,7 +93,7 @@ export const ContactsView: React.FC = () => {
           </p>
         </div>
 
-        <button
+        {canManageContacts && <button
           onClick={() => {
             setEditingContact(null);
             setIsModalOpen(true);
@@ -101,7 +102,7 @@ export const ContactsView: React.FC = () => {
         >
           <Plus className="w-4 h-4" />
           <span>เพิ่มผู้ติดต่อใหม่</span>
-        </button>
+        </button>}
       </div>
 
       {/* Filter Tabs & Search */}
@@ -176,7 +177,7 @@ export const ContactsView: React.FC = () => {
                       <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                       <span>DBD ผ่านแล้ว</span>
                     </span>
-                  ) : (
+                  ) : canManageContacts ? (
                     <button
                       onClick={() => handleVerifyDbd(c.id, c.taxId)}
                       disabled={verifyingDbd === c.id}
@@ -185,7 +186,7 @@ export const ContactsView: React.FC = () => {
                       <ShieldCheck className="w-3 h-3" />
                       <span>{verifyingDbd === c.id ? 'กำลังตรวจ...' : 'ตรวจ DBD'}</span>
                     </button>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="mt-3">
@@ -229,7 +230,7 @@ export const ContactsView: React.FC = () => {
                   เครดิต: <b className="text-on-surface">{c.creditTermDays} วัน</b> (วงเงิน ฿{c.creditLimit.toLocaleString()})
                 </div>
 
-                <div className="flex items-center gap-1">
+                {canManageContacts && <div className="flex items-center gap-1">
                   <button
                     onClick={() => {
                       setEditingContact(c);
@@ -241,13 +242,13 @@ export const ContactsView: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm(`ลบผู้ติดต่อ ${c.name}?`)) deleteContact(c.id);
+                      if (confirm(`ลบผู้ติดต่อ ${c.name}?`)) void deleteContact(c.id).catch(error => alert(`ลบผู้ติดต่อไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`));
                     }}
                     className="p-1 rounded text-outline hover:text-error hover:bg-error-container/20"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
-                </div>
+                </div>}
               </div>
             </div>
           );
@@ -389,7 +390,7 @@ export const ContactsView: React.FC = () => {
                   <input
                     name="creditLimit"
                     type="number"
-                    defaultValue={editingContact?.creditLimit || 500000}
+                    defaultValue={editingContact?.creditLimit ?? 0}
                     className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-lg font-mono"
                   />
                 </div>

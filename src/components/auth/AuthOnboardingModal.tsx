@@ -37,6 +37,8 @@ export const AuthOnboardingModal: React.FC = () => {
   const [branch, setBranch] = useState('สำนักงานใหญ่ (00000)');
   const [address, setAddress] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
+  const [contactName, setContactName] = useState(currentUser.fullName || '');
+  const [phone, setPhone] = useState(currentUser.phone || '');
 
   // Initial Feature Toggles (Step 3)
   const [featureFlags, setFeatureFlags] = useState({
@@ -67,6 +69,8 @@ export const AuthOnboardingModal: React.FC = () => {
       taxId,
       branch,
       address,
+      contactName,
+      phone,
       shippingAddress,
       enabledModules: featureFlags
       });
@@ -79,8 +83,8 @@ export const AuthOnboardingModal: React.FC = () => {
   };
 
   const goToFeatures = () => {
-    if (!businessName.trim() || !/^\d{13}$/.test(taxId) || !branch.trim() || !address.trim()) {
-      setFormError('กรุณากรอกชื่อกิจการ เลขผู้เสียภาษี 13 หลัก สาขา และที่อยู่ให้ครบ');
+    if (!businessName.trim() || !/^\d{13}$/.test(taxId) || !branch.trim() || !address.trim() || !contactName.trim() || !phone.trim()) {
+      setFormError('กรุณากรอกข้อมูลกิจการ ชื่อผู้ดูแล และเบอร์โทรให้ครบ');
       return;
     }
     setFormError('');
@@ -244,6 +248,17 @@ export const AuthOnboardingModal: React.FC = () => {
                   onChange={(e) => setShippingAddress(e.target.value)}
                   className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl resize-none"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold mb-1">ชื่อผู้ดูแลบัญชีผู้ใช้ <span className="text-primary">*</span></label>
+                  <input name="contactName" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="ชื่อและนามสกุลผู้ดูแล" className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl" />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">เบอร์โทรติดต่อ <span className="text-primary">*</span></label>
+                  <input name="phone" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08x-xxx-xxxx" className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/40 rounded-xl" />
+                </div>
               </div>
 
               <div className="flex justify-between items-center pt-3 border-t border-outline-variant/30">

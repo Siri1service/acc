@@ -27,29 +27,30 @@ const MainAppContent: React.FC = () => {
   const { activeView, authUser, authLoading, currentUser } = useApp();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [quickNewDocType, setQuickNewDocType] = useState<DocumentType | null>(null);
+  const canAccess = (permission: string) => currentUser.role === 'admin' || currentUser.organizationPermissions?.[permission] === true;
 
   const renderActiveView = () => {
     switch (activeView) {
       case 'dashboard':
         return <DashboardView onOpenNewDocModal={(type) => setQuickNewDocType(type)} />;
       case 'documents':
-        return <DocumentsView />;
+        return canAccess('view_documents') || canAccess('create_documents') || canAccess('edit_documents') || canAccess('approve_documents') ? <DocumentsView /> : <RestrictedAdminView />;
       case 'taxes':
-        return <TaxExpensesView />;
+        return canAccess('view_taxes') ? <TaxExpensesView /> : <RestrictedAdminView />;
       case 'inventory':
-        return <InventoryView />;
+        return canAccess('view_products') || canAccess('manage_products') ? <InventoryView /> : <RestrictedAdminView />;
       case 'logistics':
-        return <LogisticsView />;
+        return canAccess('view_logistics') || canAccess('manage_logistics') ? <LogisticsView /> : <RestrictedAdminView />;
       case 'contacts':
-        return <ContactsView />;
+        return canAccess('view_contacts') || canAccess('manage_contacts') ? <ContactsView /> : <RestrictedAdminView />;
       case 'banking':
-        return <BankingSlipView />;
+        return canAccess('view_banking') || canAccess('manage_banking') ? <BankingSlipView /> : <RestrictedAdminView />;
       case 'reports':
-        return <ReportsView />;
+        return canAccess('view_reports') ? <ReportsView /> : <RestrictedAdminView />;
       case 'users':
-        return currentUser.role === 'admin' ? <UserManagementView /> : <RestrictedAdminView />;
+        return canAccess('manage_users') ? <UserManagementView /> : <RestrictedAdminView />;
       case 'settings':
-        return currentUser.role === 'admin' ? <SettingsView /> : <RestrictedAdminView />;
+        return canAccess('manage_settings') ? <SettingsView /> : <RestrictedAdminView />;
       default:
         return <DashboardView onOpenNewDocModal={(type) => setQuickNewDocType(type)} />;
     }
@@ -101,7 +102,7 @@ const MainAppContent: React.FC = () => {
       <AuthOnboardingModal />
       <UsageGuideModal />
 
-      {quickNewDocType && (
+      {quickNewDocType && canAccess('create_documents') && (
         <DocumentEditorModal
           initialType={quickNewDocType}
           onClose={() => setQuickNewDocType(null)}

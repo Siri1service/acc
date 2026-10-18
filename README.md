@@ -143,7 +143,8 @@ bun run build
 3. เปิด Supabase **SQL Editor** วางเนื้อหาทั้งไฟล์ `supabase/schema.sql` แล้วกด Run เพื่อสร้างตาราง, Google user profile, เลขเอกสาร และนโยบาย RLS สำหรับแยกข้อมูลองค์กร
 4. ตั้ง Google OAuth: ไปที่ **Authentication → Providers → Google** แล้วใส่ OAuth Client ID/Secret ที่สร้างจาก Google Cloud Console; ใช้ callback URL ที่ Supabase แสดงในหน้านั้น (รูปแบบ `https://<project-ref>.supabase.co/auth/v1/callback`) แล้วนำ callback นี้ไปเพิ่มใน Google OAuth Client → **Authorized redirect URIs** ในหน้าที่ส่งมาให้ตรวจ ให้ปิด **Allow users without an email** เพราะระบบต้องใช้ email สำหรับโปรไฟล์และสิทธิ์ผู้ใช้
 5. ใน **Authentication → URL Configuration** ใส่ URL เว็บ AccData ทั้งตอนพัฒนาและ URL production ที่ Redirect URLs เช่น `http://localhost:5173/**` และ `https://your-domain.example/**`
-6. เริ่มเว็บด้วย `bun run dev` เปิด URL ที่แสดง แล้วกด **เข้าสู่ระบบด้วย Google** การสมัครครั้งแรกจะสร้างโปรไฟล์ `user` อัตโนมัติ
+6. Deploy Edge Function สำหรับส่งคำเชิญด้วย Supabase CLI: `supabase functions deploy invite-organization-member` โดย Function ใช้ `SUPABASE_SERVICE_ROLE_KEY` ฝั่งเซิร์ฟเวอร์เท่านั้น ห้ามใส่คีย์นี้ในเว็บหรือไฟล์ `.env` ของ Vite
+7. เริ่มเว็บด้วย `bun run dev` เปิด URL ที่แสดง แล้วกด **เข้าสู่ระบบด้วย Google** ผู้ใช้ที่สร้างองค์กรครั้งแรกจะกรอกชื่อกิจการ เลขภาษี สาขา ที่อยู่ ชื่อผู้ดูแล และเบอร์โทร
 
 ### กำหนดผู้ดูแลระบบ
 
@@ -157,15 +158,7 @@ WHERE lower(email) = lower('siri1service@gmail.com');
 
 ตรวจผลลัพธ์ว่ามี 1 แถวถูกแก้ไข แล้ว refresh หน้าเว็บ สิทธิ์ `admin` จะถูกอ่านจากโปรไฟล์ในฐานข้อมูล ไม่มีรหัสแอดมินให้กรอกหรือแชร์ ใช้ Google Workspace ของบริษัท เปิด MFA/passkey และเก็บ recovery methods ไว้กับผู้รับผิดชอบ
 
-**ห้ามใส่ `service_role` key ในเว็บหรือ `.env` ของ Vite** ใช้เฉพาะ Publishable/Anon key ซึ่งออกแบบมาสำหรับ client และพึ่ง RLS ควบคุมสิทธิ์ ตาราง tenant เปิดให้อ่าน/เขียนเฉพาะผู้ใช้ที่เป็นเจ้าขององค์กรหรือถูกเพิ่มใน `organization_members` เท่านั้น การเพิ่มสมาชิกองค์กรที่มีอยู่ทำได้โดยเจ้าของผ่าน SQL Editor:
-
-```sql
-INSERT INTO public.organization_members (organization_id, user_id, role)
-SELECT o.id, p.id, 'user'
-FROM public.organizations o
-JOIN public.user_profiles p ON lower(p.email) = lower('staff@yourcompany.com')
-WHERE o.tax_id = 'เลขประจำตัวผู้เสียภาษีองค์กร';
-```
+**ห้ามใส่ `service_role` key ในเว็บหรือ `.env` ของ Vite** ใช้เฉพาะ Publishable/Anon key ใน client และให้ RLS ตรวจสิทธิ์ การเชิญสมาชิกทำจากเมนู **สมาชิกและสิทธิ์การเข้าถึง** โดยเลือก Role และสิทธิ์รายข้อมูลได้ ผู้ใช้ใหม่จะได้รับอีเมลเชิญผ่าน Supabase Auth; ผู้ใช้ที่มีบัญชีแล้วจะถูกเพิ่มเมื่อเข้าสู่ระบบครั้งถัดไป
 
 ค่า `.env` ใน checkout นี้ยังเป็น placeholder จึงต้องใส่ URL/key ของ Supabase Project จริงก่อน ระบบจะเชื่อมออนไลน์และบันทึกข้อมูลข้ามอุปกรณ์ได้
 

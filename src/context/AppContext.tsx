@@ -30,6 +30,8 @@ import {
   initialCampaigns
 } from '../lib/mockData';
 import { deleteDocumentFromDatabase, loadDocuments, nextNumber, saveDocument } from '../lib/documentRepository';
+import { deleteContactFromDatabase, loadContacts, saveContact } from '../lib/contactRepository';
+import { loadProducts, saveProduct } from '../lib/productRepository';
 import { getSupabase } from '../lib/supabase';
 import type { User as SupabaseAuthUser } from '@supabase/supabase-js';
 
@@ -71,6 +73,8 @@ interface AppContextType {
     taxId: string;
     branch: string;
     address: string;
+    contactName: string;
+    phone: string;
     shippingAddress?: string;
     enabledModules?: Record<string, boolean>;
   }) => Promise<void>;
@@ -108,16 +112,16 @@ interface AppContextType {
 
   // Contacts
   contacts: Contact[];
-  addContact: (c: Partial<Contact>) => void;
-  updateContact: (id: string, updates: Partial<Contact>) => void;
-  deleteContact: (id: string) => void;
+  addContact: (c: Partial<Contact>) => Promise<void>;
+  updateContact: (id: string, updates: Partial<Contact>) => Promise<void>;
+  deleteContact: (id: string) => Promise<void>;
   verifyDbdTaxId: (taxId: string) => Promise<{ valid: boolean; companyName?: string; registeredCapital?: string }>;
 
   // Inventory
   products: Product[];
-  addProduct: (p: Partial<Product>) => void;
-  updateProduct: (id: string, updates: Partial<Product>) => void;
-  adjustStock: (productId: string, quantityChange: number, reason: string) => void;
+  addProduct: (p: Partial<Product>) => Promise<void>;
+  updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
+  adjustStock: (productId: string, quantityChange: number, reason: string) => Promise<void>;
 
   // Accounting & Reports
   chartOfAccounts: ChartOfAccount[];
@@ -227,20 +231,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           localStorage.setItem(marker, '1');
         }
       }
-      const [{ data }, { data: orgRows, error: orgError }] = await Promise.all([
+      await client.rpc('accept_pending_org_invitations');
+      const [{ data }, { data: ownedRows, error: orgError }, { data: membershipRows, error: membershipError }] = await Promise.all([
         client.from('user_profiles').select('id,email,full_name,avatar_url,phone,role,current_org_id,is_active,registered_at,last_login').eq('id', user.id).maybeSingle(),
-        client.from('organizations').select('*').eq('owner_user_id', user.id).order('created_at', { ascending: true }).limit(1)
+        client.from('organizations').select('*').eq('owner_user_id', user.id).order('created_at', { ascending: true }),
+        client.from('organization_members').select('role,permissions,organizations(*)').eq('user_id', user.id)
       ]);
       if (!alive) return;
       if (orgError) console.error('โหลดข้อมูลองค์กรไม่สำเร็จ:', orgError);
-      const orgRow = orgRows?.[0];
-      if (orgRow) {
-        const settings = orgRow.settings || {};
-        const organization: Organization = {
-          id: orgRow.id, name: orgRow.name, entityType: orgRow.entity_type || 'juristic',
-          taxId: orgRow.tax_id || '', branch: orgRow.branch || '', address: orgRow.address || '',
-          shippingAddress: orgRow.shipping_address || '', phone: orgRow.phone || '', email: orgRow.email || '',
-          website: orgRow.website || '', logoUrl: orgRow.logo_url || '',
+      if (membershipError) console.error('โหลดสิทธิ์องค์กรไม่สำเร็จ:', membershipError);
+      const memberships = (membershipRows || []).map((membership: any) => {
+        const nested = Array.isArray(membership.organizations) ? membership.organizations[0] : membership.organizations;
+        return nested ? { row: nested, role: membership.role as UserRole, permissions: membership.permissions || {} } : null;
+      }).filter(Boolean) as { row: any; role: UserRole; permissions: Record<string, boolean> }[];
+      const orgRowsById = new Map<string, { row: any; role?: UserRole; permissions?: Record<string, boolean> }>();
+      for (const row of ownedRows || []) orgRowsById.set(row.id, { row, role: 'admin' });
+      for (const membership of memberships) if (!orgRowsById.has(membership.row.id)) orgRowsById.set(membership.row.id, membership);
+      const accessibleOrgs = Array.from(orgRowsById.values());
+      const selectedOrg = accessibleOrgs.find(entry => entry.row.id === data?.current_org_id) || accessibleOrgs[0];
+      const orgRow = selectedOrg?.row;
+      const orgMembership = selectedOrg ? { role: selectedOrg.role || 'user', permissions: selectedOrg.permissions || {} } : null;
+      const mappedOrganizations: Organization[] = accessibleOrgs.map(({ row }) => {
+        const settings = row.settings || {};
+        return {
+          id: row.id, name: row.name, entityType: row.entity_type || 'juristic',
+          taxId: row.tax_id || '', branch: row.branch || '', address: row.address || '',
+          shippingAddress: row.shipping_address || '', phone: row.phone || '', email: row.email || '',
+          website: row.website || '', logoUrl: row.logo_url || '',
           settings: {
             vatRate: settings.vat_rate ?? 7, withholdingTaxEnabled: settings.withholding_tax_enabled ?? true,
             stockEnabled: settings.stock_enabled ?? true, logisticsEnabled: settings.logistics_enabled ?? true,
@@ -248,9 +265,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             docPrefixes: settings.doc_prefixes || { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' },
             activeTemplate: settings.active_template || 'modern_cyan',
             enabledModules: settings.enabled_modules || { sales: true, purchases: true, taxes: true, inventory: true, logistics: true, crm: true, banking: true, reports: true, auditLogs: true, marketing: true }
-          }, createdAt: orgRow.created_at
+          }, createdAt: row.created_at
         };
-        setOrganizations([organization]); setCurrentOrgId(organization.id);
+      });
+      if (orgRow) {
+        setOrganizations(mappedOrganizations); setCurrentOrgId(orgRow.id);
         setIsOnboardingCompleted(true); setIsAuthModalOpen(false);
       } else {
         setOrganizations([]); setCurrentOrgId('');
@@ -259,7 +278,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const profile: UserProfile = {
         id: user.id, email: user.email || '', fullName: data?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'ผู้ใช้',
         avatarUrl: data?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture,
-        phone: data?.phone || '', role: data?.role || 'user', currentOrgId: orgRow?.id || data?.current_org_id || '',
+        phone: data?.phone || '',
+        role: data?.role === 'admin' || orgRow?.owner_user_id === user.id ? 'admin' : orgMembership?.role || data?.role || 'user',
+        organizationPermissions: data?.role === 'admin' || orgRow?.owner_user_id === user.id ? Object.fromEntries(['view_documents','create_documents','edit_documents','approve_documents','delete_documents','view_contacts','manage_contacts','view_products','manage_products','view_banking','manage_banking','view_reports','view_logistics','manage_logistics','view_taxes','view_audit_logs','write_audit_logs','manage_users','manage_settings'].map(key => [key, true])) : orgMembership?.permissions,
+        currentOrgId: orgRow?.id || data?.current_org_id || '',
         isActive: data?.is_active ?? true, registeredAt: data?.registered_at || user.created_at,
         lastLogin: data?.last_login || undefined
       };
@@ -346,6 +368,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     ...rawOrg,
     settings: mergedSettings
   };
+
+  useEffect(() => {
+    if (!authUser || !currentOrg.id || !/^[0-9a-f-]{36}$/i.test(currentOrg.id)) return;
+    const db = getSupabase();
+    if (!db) return;
+    let cancelled = false;
+    Promise.all([
+      db.from('organizations').select('owner_user_id').eq('id', currentOrg.id).maybeSingle(),
+      db.from('organization_members').select('role,permissions').eq('organization_id', currentOrg.id).eq('user_id', authUser.id).maybeSingle(),
+      db.from('user_profiles').select('role').eq('id', authUser.id).maybeSingle(),
+    ]).then(([{ data: organization }, { data: membership }, { data: profile }]) => {
+      if (cancelled) return;
+      const isOwner = organization?.owner_user_id === authUser.id;
+      const globalAdmin = profile?.role === 'admin' && Boolean(organization || membership);
+      const allPermissions = ['view_documents','create_documents','edit_documents','approve_documents','delete_documents','view_contacts','manage_contacts','view_products','manage_products','view_banking','manage_banking','view_reports','view_logistics','manage_logistics','view_taxes','view_audit_logs','write_audit_logs','manage_users','manage_settings'];
+      const permissions = isOwner || globalAdmin
+        ? Object.fromEntries(allPermissions.map(key => [key, true]))
+        : membership?.permissions || {};
+      setAuthProfile(previous => previous ? {
+        ...previous,
+        currentOrgId: currentOrg.id,
+        role: isOwner || globalAdmin ? 'admin' : (membership?.role as UserRole) || 'user',
+        organizationPermissions: permissions,
+      } : previous);
+    }).catch(error => console.error('โหลดสิทธิ์สมาชิกไม่สำเร็จ:', error));
+    return () => { cancelled = true; };
+  }, [authUser?.id, currentOrg.id]);
+
   const currentUser = authProfile || users.find(u => u.id === currentUserId) || users[0] || initialUsers[0]!;
 
   useEffect(() => {
@@ -354,6 +404,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     loadDocuments(currentOrg).then(rows => {
       if (!cancelled && rows) setDocuments(previous => [...rows, ...previous.filter(d => d.orgId !== currentOrg.id)]);
     }).catch(error => console.error('โหลดเอกสารจาก Supabase ไม่สำเร็จ:', error));
+    return () => { cancelled = true; };
+  }, [currentOrg.id]);
+
+  useEffect(() => {
+    if (!currentOrg.id || !currentOrg.taxId) return;
+    let cancelled = false;
+    loadProducts(currentOrg).then(rows => {
+      if (!cancelled && rows) setProducts(previous => [...rows, ...previous.filter(product => product.orgId !== currentOrg.id)]);
+    }).catch(error => console.error('โหลดสินค้าจาก Supabase ไม่สำเร็จ:', error));
+    return () => { cancelled = true; };
+  }, [currentOrg.id]);
+
+  useEffect(() => {
+    if (!currentOrg.id || !currentOrg.taxId) return;
+    let cancelled = false;
+    loadContacts(currentOrg).then(rows => {
+      if (!cancelled && rows) setContacts(previous => [...rows, ...previous.filter(contact => contact.orgId !== currentOrg.id)]);
+    }).catch(error => console.error('โหลดผู้ติดต่อจาก Supabase ไม่สำเร็จ:', error));
     return () => { cancelled = true; };
   }, [currentOrg.id]);
 
@@ -420,6 +488,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const target = organizations.find(o => o.id === orgId);
     if (target) {
       setCurrentOrgId(target.id);
+      if (authUser) void getSupabase()?.rpc('set_current_organization', { p_organization_id: target.id });
       addAuditLog('SWITCH_ORGANIZATION', 'Organization', target.name, `สลับการทำงานไปยังองค์กร: ${target.name}`);
     }
   };
@@ -523,27 +592,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     taxId: string;
     branch: string;
     address: string;
+    contactName: string;
+    phone: string;
     shippingAddress?: string;
     enabledModules?: Record<string, boolean>;
   }) => {
-    if (!info.name.trim() || !/^\d{13}$/.test(info.taxId) || !info.branch.trim() || !info.address.trim()) {
-      throw new Error('กรุณากรอกชื่อกิจการ เลขประจำตัวผู้เสียภาษี 13 หลัก สาขา และที่อยู่');
+    if (!info.name.trim() || !/^\d{13}$/.test(info.taxId) || !info.branch.trim() || !info.address.trim() || !info.contactName.trim() || !info.phone.trim()) {
+      throw new Error('กรุณากรอกชื่อกิจการ เลขผู้เสียภาษี 13 หลัก สาขา ที่อยู่ ชื่อผู้ดูแล และเบอร์โทร');
     }
     const db = getSupabase();
     if (!db || !authUser) throw new Error('ไม่พบการเชื่อมต่อฐานข้อมูลหรือบัญชีผู้ใช้ กรุณาเข้าสู่ระบบใหม่');
     const organizationData = {
       owner_user_id: authUser.id, name: info.name.trim(), entity_type: info.entityType, tax_id: info.taxId,
       branch: info.branch.trim(), address: info.address.trim(), shipping_address: (info.shippingAddress || info.address).trim(),
-      email: authUser.email || '', settings: { vat_rate: 7, withholding_tax_enabled: true, stock_enabled: true, logistics_enabled: true,
+      phone: info.phone.trim(), email: authUser.email || '', settings: { vat_rate: 7, withholding_tax_enabled: true, stock_enabled: true, logistics_enabled: true,
         line_notify_enabled: false, bank_feed_enabled: false,
         doc_prefixes: { QT: 'QT', BL: 'BL', TAX: 'TAX', RE: 'RE', CASH: 'CS', CN: 'CN', DN: 'DN', PO: 'PO', GR: 'GR' },
         active_template: 'modern_cyan', enabled_modules: info.enabledModules || {} }
     };
     const { data: savedOrg, error } = await db.from('organizations').insert(organizationData).select('*').single();
     if (error) throw error;
+    const { error: profileError } = await db.rpc('update_my_contact_profile', {
+      p_full_name: info.contactName.trim(), p_phone: info.phone.trim()
+    });
+    if (profileError) {
+      await db.from('organizations').delete().eq('id', savedOrg.id);
+      throw profileError;
+    }
+    const allOrgPermissions = Object.fromEntries(['view_documents','create_documents','edit_documents','approve_documents','delete_documents','view_contacts','manage_contacts','view_products','manage_products','view_banking','manage_banking','view_reports','view_logistics','manage_logistics','view_taxes','view_audit_logs','write_audit_logs','manage_users','manage_settings'].map(key => [key, true]));
+    const { error: ownerMembershipError } = await db.from('organization_members').upsert({
+      organization_id: savedOrg.id, user_id: authUser.id, role: 'admin', permissions: allOrgPermissions
+    }, { onConflict: 'organization_id,user_id' });
+    if (ownerMembershipError) {
+      await db.from('organizations').delete().eq('id', savedOrg.id);
+      throw ownerMembershipError;
+    }
     const updatedOrg: Organization = {
       ...currentOrg,
       id: savedOrg.id,
+      phone: info.phone.trim(),
       name: info.name,
       entityType: info.entityType,
       taxId: info.taxId,
@@ -561,6 +648,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setOrganizations([updatedOrg]);
     setCurrentOrgId(savedOrg.id);
+    setAuthProfile(prev => prev ? { ...prev, fullName: info.contactName.trim(), phone: info.phone.trim(), role: 'admin', currentOrgId: savedOrg.id } : prev);
     setIsOnboardingCompleted(true);
     setIsUsageGuideOpen(true);
     addAuditLog('COMPLETE_ONBOARDING', 'Onboarding', currentOrg.id, `เสร็จสิ้นขั้นตอนการลงทะเบียนตั้งค่าเริ่มต้นสำหรับ ${info.name}`);
@@ -587,6 +675,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addDocument = async (doc: Partial<Document>): Promise<Document> => {
+    if (authUser && !currentUser.organizationPermissions?.create_documents) throw new Error('คุณไม่มีสิทธิ์สร้างเอกสาร');
     const docType = doc.docType || 'QT';
     const issueDate = doc.issueDate || new Date().toISOString().split('T')[0]!;
     const docNumber = await nextNumber(currentOrg, docType, issueDate) || doc.docNumber || getNextDocNumber(docType);
@@ -637,15 +726,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateDocument = async (id: string, updates: Partial<Document>) => {
+    if (authUser && !currentUser.organizationPermissions?.edit_documents) throw new Error('คุณไม่มีสิทธิ์แก้ไขเอกสาร');
     const target = documents.find(d => d.id === id);
-    if (target) await saveDocument(currentOrg, { ...target, ...updates, updatedAt: new Date().toISOString() });
+    if (target) await saveDocument(currentOrg, { ...target, ...updates, updatedAt: new Date().toISOString() }, updates.items !== undefined);
     setDocuments(prev => prev.map(d => d.id === id ? { ...d, ...updates, updatedAt: new Date().toISOString() } : d));
     addAuditLog('UPDATE_DOCUMENT', 'Document', id, `แก้ไขเอกสาร ID: ${id}`);
   };
 
   const deleteDocument = async (id: string) => {
-    if (authUser && currentUser.role !== 'admin') {
-      alert('เฉพาะผู้ดูแลระบบเท่านั้นที่ลบเอกสารได้');
+    if (authUser && !currentUser.organizationPermissions?.delete_documents) {
+      alert('คุณไม่มีสิทธิ์ลบเอกสาร');
       return;
     }
     const target = documents.find(d => d.id === id);
@@ -663,8 +753,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const approveDocument = async (id: string) => {
-    if (authUser && currentUser.role !== 'admin') {
-      alert('เฉพาะผู้ดูแลระบบเท่านั้นที่อนุมัติเอกสารได้');
+    if (authUser && !currentUser.organizationPermissions?.approve_documents) {
+      alert('คุณไม่มีสิทธิ์อนุมัติเอกสาร');
       return;
     }
     const target = documents.find(d => d.id === id);
@@ -680,7 +770,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     try {
-      const saved = await saveDocument(currentOrg, updated);
+      const saved = await saveDocument(currentOrg, updated, false);
       setDocuments(prev => prev.map(d => d.id === id ? saved : d));
     } catch (error) {
       console.error('อนุมัติเอกสารใน Supabase ไม่สำเร็จ:', error);
@@ -899,7 +989,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Contacts
-  const addContact = (c: Partial<Contact>) => {
+  const addContact = async (c: Partial<Contact>) => {
     const newContact: Contact = {
       id: `c-${Date.now()}`,
       orgId: currentOrg.id,
@@ -907,7 +997,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       entityType: c.entityType || 'juristic',
       code: c.code || `CUST-${contacts.length + 1}`,
       name: c.name || 'ผู้ติดต่อใหม่',
-      taxId: c.taxId || '0000000000000',
+      taxId: c.taxId || '',
       branch: c.branch || 'สำนักงานใหญ่',
       address: c.address || '',
       shippingAddress: c.shippingAddress || c.address || '',
@@ -915,20 +1005,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       phone: c.phone || '',
       email: c.email || '',
       creditTermDays: c.creditTermDays || 30,
-      creditLimit: c.creditLimit || 100000,
+      creditLimit: c.creditLimit || 0,
       dbdVerified: Boolean(c.dbdVerified),
       notes: c.notes || ''
     };
-    setContacts(prev => [newContact, ...prev]);
+    const saved = await saveContact(currentOrg, newContact);
+    setContacts(prev => [saved, ...prev]);
     addAuditLog('ADD_CONTACT', newContact.contactType, newContact.name, `เพิ่มผู้ติดต่อใหม่: ${newContact.name}`);
   };
 
-  const updateContact = (id: string, updates: Partial<Contact>) => {
-    setContacts(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
+  const updateContact = async (id: string, updates: Partial<Contact>) => {
+    const target = contacts.find(c => c.id === id);
+    if (!target) return;
+    const saved = await saveContact(currentOrg, { ...target, ...updates });
+    setContacts(prev => prev.map(c => c.id === id ? saved : c));
     addAuditLog('UPDATE_CONTACT', 'Contact', id, `แก้ไขข้อมูลผู้ติดต่อ ID: ${id}`);
   };
 
-  const deleteContact = (id: string) => {
+  const deleteContact = async (id: string) => {
+    await deleteContactFromDatabase(currentOrg, id);
     setContacts(prev => prev.filter(c => c.id !== id));
     addAuditLog('DELETE_CONTACT', 'Contact', id, `ลบผู้ติดต่อ ID: ${id}`);
   };
@@ -946,7 +1041,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Inventory & Stock
-  const addProduct = (p: Partial<Product>) => {
+  const addProduct = async (p: Partial<Product>) => {
     const newProd: Product = {
       id: `prod-${Date.now()}`,
       orgId: currentOrg.id,
@@ -964,23 +1059,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       imageUrl: p.imageUrl,
       isActive: true
     };
-    setProducts(prev => [newProd, ...prev]);
+    const saved = await saveProduct(currentOrg, newProd);
+    setProducts(prev => [saved, ...prev]);
     addAuditLog('ADD_PRODUCT', 'Inventory', newProd.code, `เพิ่มสินค้าใหม่: ${newProd.name} (${newProd.code})`);
   };
 
-  const updateProduct = (id: string, updates: Partial<Product>) => {
-    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+  const updateProduct = async (id: string, updates: Partial<Product>) => {
+    const target = products.find(p => p.id === id);
+    if (!target) return;
+    const saved = await saveProduct(currentOrg, { ...target, ...updates });
+    setProducts(prev => prev.map(p => p.id === id ? saved : p));
     addAuditLog('UPDATE_PRODUCT', 'Inventory', id, `แก้ไขข้อมูลสินค้า ID: ${id}`);
   };
 
-  const adjustStock = (productId: string, quantityChange: number, reason: string) => {
-    setProducts(prev => prev.map(p => {
-      if (p.id === productId) {
-        const newQty = Math.max(0, p.stockQuantity + quantityChange);
-        return { ...p, stockQuantity: newQty };
-      }
-      return p;
-    }));
+  const adjustStock = async (productId: string, quantityChange: number, reason: string) => {
+    const target = products.find(p => p.id === productId);
+    if (!target) return;
+    const saved = await saveProduct(currentOrg, { ...target, stockQuantity: Math.max(0, target.stockQuantity + quantityChange) });
+    setProducts(prev => prev.map(p => p.id === productId ? saved : p));
     addAuditLog('ADJUST_STOCK', 'Inventory', productId, `ปรับยอดสต็อก (${quantityChange > 0 ? '+' : ''}${quantityChange}): ${reason}`);
   };
 

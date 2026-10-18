@@ -3,7 +3,7 @@ import { getSupabase } from './supabase';
 
 const isUuid = (value?: string) => Boolean(value && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value));
 
-async function organizationId(org: Organization): Promise<string> {
+export async function organizationId(org: Organization): Promise<string> {
   const db = getSupabase();
   if (!db) throw new Error('ยังไม่ได้ตั้งค่าการเชื่อมต่อ Supabase');
   if (isUuid(org.id)) return org.id;
@@ -67,7 +67,7 @@ export async function loadDocuments(org: Organization): Promise<Document[] | nul
   }));
 }
 
-export async function saveDocument(org: Organization, doc: Document): Promise<Document> {
+export async function saveDocument(org: Organization, doc: Document, saveItems = true): Promise<Document> {
   const db = getSupabase();
   if (!db) return doc;
   const orgId = await organizationId(org);
@@ -91,8 +91,11 @@ export async function saveDocument(org: Organization, doc: Document): Promise<Do
     : db.from('documents').insert(row).select('id').single();
   const { data, error } = await query;
   if (error) throw error;
-  await db.from('document_items').delete().eq('document_id', data.id);
-  if (doc.items.length) {
+  if (saveItems) {
+    const { error: deleteItemsError } = await db.from('document_items').delete().eq('document_id', data.id);
+    if (deleteItemsError) throw deleteItemsError;
+  }
+  if (saveItems && doc.items.length) {
     const { error: itemsError } = await db.from('document_items').insert(doc.items.map(item => ({
       document_id: data.id, product_id: isUuid(item.productId) ? item.productId : null,
       item_name: item.itemName, description: item.description || null, quantity: item.quantity,

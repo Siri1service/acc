@@ -115,16 +115,101 @@ CREATE TABLE IF NOT EXISTS public.organization_members (
     organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL DEFAULT 'user', -- 'admin', 'userSeller', 'user'
-    permissions JSONB DEFAULT '{
-      "can_approve_documents": false,
-      "can_manage_users": false,
-      "can_view_financial_reports": true,
-      "can_export_data": true,
-      "can_edit_settings": false
-    }'::jsonb,
+    permissions JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(organization_id, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS public.organization_invitations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    email VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'user',
+    permissions JSONB NOT NULL DEFAULT '{}'::jsonb,
+    invited_by UUID REFERENCES public.user_profiles(id) ON DELETE SET NULL,
+    accepted_user_id UUID REFERENCES public.user_profiles(id) ON DELETE SET NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','accepted','revoked')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    accepted_at TIMESTAMPTZ
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_org_invitations_pending_email
+  ON public.organization_invitations(organization_id, lower(email)) WHERE status = 'pending';
+
+-- Upgrade older membership permission JSON only once; preserve configured access thereafter.
+UPDATE public.organization_members
+SET permissions = CASE role
+  WHEN 'admin' THEN '{"view_documents":true,"create_documents":true,"edit_documents":true,"approve_documents":true,"delete_documents":true,"view_contacts":true,"manage_contacts":true,"view_products":true,"manage_products":true,"view_banking":true,"manage_banking":true,"view_reports":true,"view_logistics":true,"manage_logistics":true,"view_taxes":true,"view_audit_logs":true,"write_audit_logs":true,"manage_users":true,"manage_settings":true}'::jsonb
+  WHEN 'userSeller' THEN '{"view_documents":true,"create_documents":true,"edit_documents":true,"view_contacts":true,"manage_contacts":true,"view_products":true,"view_taxes":true}'::jsonb
+  ELSE '{"view_documents":true,"view_contacts":true,"view_products":true}'::jsonb
+END
+WHERE NOT (permissions ? 'view_documents');
+
+CREATE OR REPLACE FUNCTION public.prevent_member_self_escalation()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF auth.uid() = OLD.user_id AND NOT EXISTS (
+    SELECT 1 FROM public.organizations o WHERE o.id = OLD.organization_id AND o.owner_user_id = auth.uid()
+  ) THEN
+    RAISE EXCEPTION 'Members cannot change or remove their own organization role';
+  END IF;
+  IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;
+  RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS prevent_member_self_escalation ON public.organization_members;
+CREATE TRIGGER prevent_member_self_escalation
+BEFORE UPDATE OR DELETE ON public.organization_members
+FOR EACH ROW EXECUTE FUNCTION public.prevent_member_self_escalation();
+
+CREATE OR REPLACE FUNCTION public.attach_org_invitations_to_new_profile()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  INSERT INTO public.organization_members (organization_id, user_id, role, permissions)
+  SELECT i.organization_id, NEW.id, i.role, i.permissions
+  FROM public.organization_invitations i
+  WHERE lower(i.email) = lower(NEW.email) AND i.status = 'pending'
+  ON CONFLICT (organization_id, user_id) DO UPDATE
+    SET role = EXCLUDED.role, permissions = EXCLUDED.permissions;
+  UPDATE public.organization_invitations
+  SET status = 'accepted', accepted_user_id = NEW.id, accepted_at = NOW()
+  WHERE lower(email) = lower(NEW.email) AND status = 'pending';
+  RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS on_profile_accept_org_invitations ON public.user_profiles;
+CREATE TRIGGER on_profile_accept_org_invitations
+AFTER INSERT ON public.user_profiles
+FOR EACH ROW EXECUTE FUNCTION public.attach_org_invitations_to_new_profile();
+
+CREATE OR REPLACE FUNCTION public.accept_pending_org_invitations()
+RETURNS INTEGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE v_user_id UUID := auth.uid(); v_email TEXT := auth.jwt()->>'email'; v_count INTEGER;
+BEGIN
+  IF v_user_id IS NULL OR v_email IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;
+  INSERT INTO public.organization_members (organization_id, user_id, role, permissions)
+  SELECT i.organization_id, v_user_id, i.role, i.permissions
+  FROM public.organization_invitations i
+  WHERE lower(i.email) = lower(v_email) AND i.status = 'pending'
+  ON CONFLICT (organization_id, user_id) DO UPDATE
+    SET role = EXCLUDED.role, permissions = EXCLUDED.permissions;
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  UPDATE public.organization_invitations
+  SET status = 'accepted', accepted_user_id = v_user_id, accepted_at = NOW()
+  WHERE lower(email) = lower(v_email) AND status = 'pending';
+  RETURN v_count;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.accept_pending_org_invitations() TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.update_my_contact_profile(p_full_name TEXT, p_phone TEXT)
+RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  UPDATE public.user_profiles SET full_name = NULLIF(trim(p_full_name), ''), phone = NULLIF(trim(p_phone), '')
+  WHERE id = auth.uid();
+  IF NOT FOUND THEN RAISE EXCEPTION 'User profile not found'; END IF;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.update_my_contact_profile(TEXT, TEXT) TO authenticated;
 
 -- 4. Bank Accounts (Thai Bank Feeds & Payment Tracking)
 CREATE TABLE IF NOT EXISTS public.bank_accounts (
@@ -390,6 +475,25 @@ AS $$
 $$;
 GRANT EXECUTE ON FUNCTION public.has_organization_admin(UUID) TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.has_organization_permission(p_organization_id UUID, p_permission TEXT)
+RETURNS BOOLEAN LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT public.has_organization_admin(p_organization_id) OR EXISTS (
+    SELECT 1 FROM public.organization_members m
+    WHERE m.organization_id = p_organization_id AND m.user_id = (SELECT auth.uid())
+      AND COALESCE((m.permissions->>p_permission)::BOOLEAN, FALSE)
+  );
+$$;
+GRANT EXECUTE ON FUNCTION public.has_organization_permission(UUID, TEXT) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.set_current_organization(p_organization_id UUID)
+RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NOT public.has_organization_access(p_organization_id) THEN RAISE EXCEPTION 'Organization access denied'; END IF;
+  UPDATE public.user_profiles SET current_org_id = p_organization_id WHERE id = auth.uid();
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.set_current_organization(UUID) TO authenticated;
+
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS organizations_read_member ON public.organizations;
 CREATE POLICY organizations_read_member ON public.organizations FOR SELECT TO authenticated
@@ -402,22 +506,56 @@ DROP POLICY IF EXISTS organizations_update_owner ON public.organizations;
 CREATE POLICY organizations_update_owner ON public.organizations FOR UPDATE TO authenticated
 USING (owner_user_id = (SELECT auth.uid())) WITH CHECK (owner_user_id = (SELECT auth.uid()));
 
+DROP POLICY IF EXISTS user_profiles_read_organization_members ON public.user_profiles;
+CREATE POLICY user_profiles_read_organization_members ON public.user_profiles FOR SELECT TO authenticated
+USING (EXISTS (
+  SELECT 1 FROM public.organization_members m
+  WHERE m.user_id = user_profiles.id AND public.has_organization_access(m.organization_id)
+));
+
 ALTER TABLE public.organization_members ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS organization_members_read_accessible ON public.organization_members;
 CREATE POLICY organization_members_read_accessible ON public.organization_members FOR SELECT TO authenticated
 USING (public.has_organization_access(organization_id));
 DROP POLICY IF EXISTS organization_members_manage_owner ON public.organization_members;
-CREATE POLICY organization_members_manage_owner ON public.organization_members FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = organization_id AND o.owner_user_id = (SELECT auth.uid())))
-WITH CHECK (EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = organization_id AND o.owner_user_id = (SELECT auth.uid())));
+DROP POLICY IF EXISTS organization_members_manage_admin ON public.organization_members;
+CREATE POLICY organization_members_manage_admin ON public.organization_members FOR ALL TO authenticated
+USING (public.has_organization_permission(organization_id, 'manage_users'))
+WITH CHECK (public.has_organization_permission(organization_id, 'manage_users'));
+
+ALTER TABLE public.organization_invitations ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS organization_invitations_read_admin ON public.organization_invitations;
+CREATE POLICY organization_invitations_read_admin ON public.organization_invitations FOR SELECT TO authenticated
+USING (public.has_organization_permission(organization_id, 'manage_users'));
+DROP POLICY IF EXISTS organization_invitations_manage_admin ON public.organization_invitations;
+DROP POLICY IF EXISTS organization_invitations_update_admin ON public.organization_invitations;
+CREATE POLICY organization_invitations_update_admin ON public.organization_invitations FOR UPDATE TO authenticated
+USING (public.has_organization_permission(organization_id, 'manage_users'))
+WITH CHECK (public.has_organization_permission(organization_id, 'manage_users'));
 
 DO $$
-DECLARE t TEXT;
+DECLARE t TEXT; view_permission TEXT; manage_permission TEXT; item TEXT;
 BEGIN
-  FOREACH t IN ARRAY ARRAY['bank_accounts','contacts','products','document_number_sequences','shipments','slip_verifications','line_settings','audit_logs','chart_of_accounts'] LOOP
+  FOREACH item IN ARRAY ARRAY[
+    'bank_accounts:view_banking:manage_banking',
+    'contacts:view_contacts:manage_contacts',
+    'products:view_products:manage_products',
+    'document_number_sequences:create_documents:create_documents',
+    'shipments:view_logistics:manage_logistics',
+    'slip_verifications:view_banking:manage_banking',
+    'line_settings:manage_settings:manage_settings',
+    'audit_logs:view_audit_logs:write_audit_logs',
+    'chart_of_accounts:view_reports:manage_settings'
+  ] LOOP
+    t := split_part(item, ':', 1);
+    view_permission := split_part(item, ':', 2);
+    manage_permission := split_part(item, ':', 3);
     EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', t);
     EXECUTE format('DROP POLICY IF EXISTS tenant_access ON public.%I', t);
-    EXECUTE format('CREATE POLICY tenant_access ON public.%I FOR ALL TO authenticated USING (public.has_organization_access(organization_id)) WITH CHECK (public.has_organization_access(organization_id))', t);
+    EXECUTE format('DROP POLICY IF EXISTS tenant_read_permission ON public.%I', t);
+    EXECUTE format('DROP POLICY IF EXISTS tenant_manage_permission ON public.%I', t);
+    EXECUTE format('CREATE POLICY tenant_read_permission ON public.%I FOR SELECT TO authenticated USING (public.has_organization_permission(organization_id, %L))', t, view_permission);
+    EXECUTE format('CREATE POLICY tenant_manage_permission ON public.%I FOR ALL TO authenticated USING (public.has_organization_permission(organization_id, %L)) WITH CHECK (public.has_organization_permission(organization_id, %L))', t, manage_permission, manage_permission);
   END LOOP;
 END;
 $$;
@@ -426,23 +564,33 @@ ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS tenant_access ON public.documents;
 DROP POLICY IF EXISTS documents_read_member ON public.documents;
 CREATE POLICY documents_read_member ON public.documents FOR SELECT TO authenticated
-USING (public.has_organization_access(organization_id));
+USING (public.has_organization_permission(organization_id, 'view_documents') OR public.has_organization_permission(organization_id, 'create_documents') OR public.has_organization_permission(organization_id, 'edit_documents') OR public.has_organization_permission(organization_id, 'approve_documents'));
 DROP POLICY IF EXISTS documents_insert_member ON public.documents;
 CREATE POLICY documents_insert_member ON public.documents FOR INSERT TO authenticated
-WITH CHECK (public.has_organization_access(organization_id));
+WITH CHECK (public.has_organization_permission(organization_id, 'create_documents'));
 DROP POLICY IF EXISTS documents_update_draft_or_admin ON public.documents;
 CREATE POLICY documents_update_draft_or_admin ON public.documents FOR UPDATE TO authenticated
-USING (public.has_organization_access(organization_id) AND (status = 'draft' OR public.has_organization_admin(organization_id)))
-WITH CHECK (public.has_organization_access(organization_id) AND (status = 'draft' OR public.has_organization_admin(organization_id)));
+USING ((public.has_organization_permission(organization_id, 'view_documents') OR public.has_organization_permission(organization_id, 'edit_documents') OR public.has_organization_permission(organization_id, 'approve_documents')) AND (public.has_organization_permission(organization_id, 'edit_documents') OR public.has_organization_permission(organization_id, 'approve_documents')))
+WITH CHECK ((public.has_organization_permission(organization_id, 'view_documents') OR public.has_organization_permission(organization_id, 'edit_documents') OR public.has_organization_permission(organization_id, 'approve_documents')) AND (public.has_organization_permission(organization_id, 'edit_documents') OR public.has_organization_permission(organization_id, 'approve_documents')));
 DROP POLICY IF EXISTS documents_delete_admin ON public.documents;
 CREATE POLICY documents_delete_admin ON public.documents FOR DELETE TO authenticated
-USING (public.has_organization_admin(organization_id));
+USING (public.has_organization_permission(organization_id, 'delete_documents'));
 
 ALTER TABLE public.document_items ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS document_items_tenant_access ON public.document_items;
-CREATE POLICY document_items_tenant_access ON public.document_items FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id) AND (d.status = 'draft' OR public.has_organization_admin(d.organization_id))))
-WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id) AND (d.status = 'draft' OR public.has_organization_admin(d.organization_id))));
+DROP POLICY IF EXISTS document_items_read_permission ON public.document_items;
+CREATE POLICY document_items_read_permission ON public.document_items FOR SELECT TO authenticated
+USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND (public.has_organization_permission(d.organization_id, 'view_documents') OR public.has_organization_permission(d.organization_id, 'create_documents') OR public.has_organization_permission(d.organization_id, 'edit_documents') OR public.has_organization_permission(d.organization_id, 'approve_documents'))));
+DROP POLICY IF EXISTS document_items_insert_permission ON public.document_items;
+CREATE POLICY document_items_insert_permission ON public.document_items FOR INSERT TO authenticated
+WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_permission(d.organization_id, 'create_documents') AND d.status = 'draft'));
+DROP POLICY IF EXISTS document_items_update_permission ON public.document_items;
+CREATE POLICY document_items_update_permission ON public.document_items FOR UPDATE TO authenticated
+USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND (public.has_organization_permission(d.organization_id, 'edit_documents') OR public.has_organization_permission(d.organization_id, 'approve_documents'))))
+WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND (public.has_organization_permission(d.organization_id, 'edit_documents') OR public.has_organization_permission(d.organization_id, 'approve_documents'))));
+DROP POLICY IF EXISTS document_items_delete_permission ON public.document_items;
+CREATE POLICY document_items_delete_permission ON public.document_items FOR DELETE TO authenticated
+USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_permission(d.organization_id, 'edit_documents')));
 
 -- Indexes for lightning fast queries
 CREATE INDEX IF NOT EXISTS idx_documents_org_type ON public.documents(organization_id, doc_type);

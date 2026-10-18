@@ -29,6 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
     setActiveView, 
     currentOrg, 
     currentUser, 
+    authUser,
     bankAccounts,
     syncBankFeed,
     isBankSyncing,
@@ -47,41 +48,42 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
     auditLogs: true,
     marketing: true
   };
+  const canAccess = (permission: string) => !authUser || currentUser.role === 'admin' || currentUser.organizationPermissions?.[permission] === true;
 
   const menuSections = [
     {
       title: 'ภาพรวมและการเงิน',
       items: [
         { id: 'dashboard', label: 'แดชบอร์ดภาพรวม', icon: LayoutDashboard, enabled: true },
-        { id: 'banking', label: 'ธนาคาร & ตรวจสลิป', icon: CreditCard, enabled: enabled.banking, badge: 'Live Feed' }
+        { id: 'banking', label: 'ธนาคาร & ตรวจสลิป', icon: CreditCard, enabled: enabled.banking && (canAccess('view_banking') || canAccess('manage_banking')) }
       ]
     },
     {
       title: 'เอกสารขายและซื้อ',
       items: [
-        { id: 'documents', label: 'เอกสารขายทั้งหมด (Pipeline)', icon: Receipt, enabled: enabled.sales, badge: 'QT➔RE' },
-        { id: 'taxes', label: 'ค่าใช้จ่ายและภาษี (ภ.พ.30, 50 ทวิ)', icon: FileSpreadsheet, enabled: enabled.taxes }
+        { id: 'documents', label: 'เอกสารขายทั้งหมด', icon: Receipt, enabled: enabled.sales && (canAccess('view_documents') || canAccess('create_documents') || canAccess('edit_documents') || canAccess('approve_documents')) },
+        { id: 'taxes', label: 'ค่าใช้จ่ายและภาษี', icon: FileSpreadsheet, enabled: enabled.taxes && canAccess('view_taxes') }
       ]
     },
     {
       title: 'คลังสินค้าและจัดส่ง',
       items: [
-        { id: 'inventory', label: 'สินค้าและสต็อก (Barcode Hub)', icon: Package, enabled: enabled.inventory },
-        { id: 'contacts', label: 'สมุดรายชื่อ (CRM & DBD AI)', icon: Users, enabled: enabled.crm },
-        { id: 'logistics', label: 'การจัดส่ง & ใบปะหน้าพัสดุ', icon: Truck, enabled: enabled.logistics }
+        { id: 'inventory', label: 'สินค้าและสต็อก', icon: Package, enabled: enabled.inventory && (canAccess('view_products') || canAccess('manage_products')) },
+        { id: 'contacts', label: 'สมุดรายชื่อผู้ติดต่อ', icon: Users, enabled: enabled.crm && (canAccess('view_contacts') || canAccess('manage_contacts')) },
+        { id: 'logistics', label: 'การจัดส่ง', icon: Truck, enabled: enabled.logistics && (canAccess('view_logistics') || canAccess('manage_logistics')) }
       ]
     },
     {
       title: 'รายงานและการบริหาร',
       items: [
-        { id: 'reports', label: 'รายงานสรุป & ผังบัญชี (P&L)', icon: BarChart3, enabled: enabled.reports }
+        { id: 'reports', label: 'รายงานสรุป & ผังบัญชี', icon: BarChart3, enabled: enabled.reports && canAccess('view_reports') }
       ]
     },
     {
       title: 'การจัดการระบบ',
       items: [
-        { id: 'users', label: 'ผู้ใช้และการจัดการระบบ', icon: ShieldCheck, enabled: currentUser.role === 'admin' },
-        { id: 'settings', label: 'ตั้งค่าระบบ & เชื่อมต่อ API', icon: Settings, enabled: currentUser.role === 'admin' }
+        { id: 'users', label: 'สมาชิกและสิทธิ์การเข้าถึง', icon: ShieldCheck, enabled: canAccess('manage_users') },
+        { id: 'settings', label: 'ตั้งค่าระบบ & เชื่อมต่อ API', icon: Settings, enabled: canAccess('manage_settings') }
       ]
     }
   ];
@@ -136,13 +138,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
                       <Icon className={`w-4 h-4 ${isActive ? 'text-on-primary' : 'text-outline'}`} />
                       <span className="truncate">{item.label}</span>
                     </div>
-                    {item.badge && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-surface-container-high text-on-surface-variant'
-                      }`}>
-                        {item.badge}
-                      </span>
-                    )}
                   </button>
                 );
               })}

@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 
 export const InventoryView: React.FC = () => {
-  const { products, addProduct, updateProduct, adjustStock, currentOrg } = useApp();
+  const { products, addProduct, updateProduct, adjustStock, currentOrg, currentUser, authUser } = useApp();
+  const canManageProducts = !authUser || currentUser.role === 'admin' || currentUser.organizationPermissions?.manage_products === true;
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -56,7 +57,7 @@ export const InventoryView: React.FC = () => {
   // Low stock products count
   const lowStockCount = products.filter(p => p.stockQuantity <= p.reorderPoint).length;
 
-  const handleSaveProduct = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data: Partial<Product> = {
@@ -72,21 +73,25 @@ export const InventoryView: React.FC = () => {
       reorderPoint: Number(formData.get('reorderPoint'))
     };
 
-    if (editingProduct) {
-      updateProduct(editingProduct.id, data);
-    } else {
-      addProduct(data);
+    try {
+      if (editingProduct) await updateProduct(editingProduct.id, data);
+      else await addProduct(data);
+      setIsAddModalOpen(false);
+      setEditingProduct(null);
+    } catch (error) {
+      alert(`บันทึกสินค้าไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
     }
-
-    setIsAddModalOpen(false);
-    setEditingProduct(null);
   };
 
-  const handleConfirmAdjust = () => {
+  const handleConfirmAdjust = async () => {
     if (!adjustingProduct) return;
     const finalChange = adjustType === 'in' ? adjustAmount : -adjustAmount;
-    adjustStock(adjustingProduct.id, finalChange, adjustReason);
-    setAdjustingProduct(null);
+    try {
+      await adjustStock(adjustingProduct.id, finalChange, adjustReason);
+      setAdjustingProduct(null);
+    } catch (error) {
+      alert(`ปรับสต็อกไม่สำเร็จ: ${error instanceof Error ? error.message : 'กรุณาลองอีกครั้ง'}`);
+    }
   };
 
   return (
@@ -102,7 +107,7 @@ export const InventoryView: React.FC = () => {
           </p>
         </div>
 
-        <button
+        {canManageProducts && <button
           onClick={() => {
             setEditingProduct(null);
             setIsAddModalOpen(true);
@@ -111,7 +116,7 @@ export const InventoryView: React.FC = () => {
         >
           <Plus className="w-4 h-4" />
           <span>เพิ่มสินค้าใหม่</span>
-        </button>
+        </button>}
       </div>
 
       {/* KPI Cards */}
@@ -235,6 +240,8 @@ export const InventoryView: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 text-center">
+                      {!canManageProducts && <span className="text-[11px] text-outline">ดูอย่างเดียว</span>}
+                      {canManageProducts && <>
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => {
@@ -258,6 +265,7 @@ export const InventoryView: React.FC = () => {
                           <Edit className="w-4 h-4" />
                         </button>
                       </div>
+                      </>}
                     </td>
                   </tr>
                 );

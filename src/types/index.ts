@@ -17,6 +17,7 @@ export interface UserProfile {
   department?: string;
   registeredAt: string;
   lastLogin?: string;
+  organizationPermissions?: Record<string, boolean>;
 }
 
 export interface OrganizationSettings {
