@@ -20,9 +20,10 @@ import { UserManagementView } from './components/users/UserManagementView';
 import { SettingsView } from './components/settings/SettingsView';
 
 import { DocumentType } from './types';
+import { LoginPage } from './components/auth/LoginPage';
 
 const MainAppContent: React.FC = () => {
-  const { activeView } = useApp();
+  const { activeView, authUser, authLoading, currentUser } = useApp();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [quickNewDocType, setQuickNewDocType] = useState<DocumentType | null>(null);
 
@@ -52,6 +53,9 @@ const MainAppContent: React.FC = () => {
         return <DashboardView onOpenNewDocModal={(type) => setQuickNewDocType(type)} />;
     }
   };
+
+  if (authLoading) return <div className="min-h-screen flex items-center justify-center text-sm text-on-surface-variant">กำลังตรวจสอบการเข้าสู่ระบบ…</div>;
+  if (!authUser || !currentUser.isActive) return <LoginPage />;
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">

@@ -27,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
   const { 
     currentOrg, 
     currentUser, 
+    authUser,
     switchUserRole, 
     bankAccounts, 
     isBankSyncing, 
@@ -220,7 +221,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
           )}
         </div>
 
-        {/* Role Switcher Pill */}
+        {/* Role switching is only available in demo mode; authenticated roles come from the database. */}
+        {!authUser && <>
         <div className="relative">
           <button
             onClick={() => setIsRoleMenuOpen(!isRoleMenuOpen)}
@@ -263,6 +265,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
             </div>
           )}
         </div>
+        </>}
 
         {/* User Profile Info */}
         <div 

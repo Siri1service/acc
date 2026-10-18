@@ -7,10 +7,21 @@ async function organizationId(org: Organization): Promise<string> {
   const db = getSupabase();
   if (!db) throw new Error('ยังไม่ได้ตั้งค่าการเชื่อมต่อ Supabase');
   if (isUuid(org.id)) return org.id;
+  const { data: authData } = await db.auth.getUser();
+  if (!authData.user) throw new Error('กรุณาเข้าสู่ระบบก่อนสร้างองค์กร');
+  const { data: membership, error: membershipError } = await db.from('organization_members')
+    .select('organization_id, organizations!inner(tax_id)')
+    .eq('user_id', authData.user.id)
+    .eq('organizations.tax_id', org.taxId)
+    .limit(1)
+    .maybeSingle();
+  if (membershipError) throw membershipError;
+  if (membership?.organization_id) return membership.organization_id;
   const { data: existing, error: lookupError } = await db.from('organizations').select('id').eq('tax_id', org.taxId).limit(1).maybeSingle();
   if (lookupError) throw lookupError;
   if (existing?.id) return existing.id;
   const { data, error } = await db.from('organizations').insert({
+    owner_user_id: authData.user.id,
     name: org.name, entity_type: org.entityType, tax_id: org.taxId, branch: org.branch,
     address: org.address, shipping_address: org.shippingAddress, phone: org.phone,
     email: org.email, settings: org.settings

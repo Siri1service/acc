@@ -132,3 +132,39 @@ bun run build
 - **Android (Chrome)**: กดจุดสามจุด ➔ เลือก **"Install app" (ติดตั้งแอป)**
 แอปจะมีไอคอนบนหน้าจอและทำงานแบบเต็มหน้าจอ (Standalone) พร้อม Bottom Navigation Bar สำหรับมือถือโดยเฉพาะ
 
+## สมัครและเข้าใช้งาน Online
+
+**ไม่มีรหัสผ่านแอดมินกลาง** สมัครและเข้าสู่ระบบด้วยบัญชี Google; บัญชีใหม่จะได้สิทธิ์ `user` ก่อน ผู้ดูแลคนแรกต้องถูกเลื่อนสิทธิ์ในฐานข้อมูลโดยเจ้าของ Supabase Project
+
+### ตั้งค่า Supabase ครั้งแรก
+
+1. สร้าง Supabase Project แล้วคัดลอก **Project URL** กับ **Publishable key** (หรือ `anon` key รุ่นเก่า) จากหน้า Project API settings
+2. เปิดเว็บ AccData จะเห็นหน้าตั้งค่า Supabase ถ้ายังไม่มีค่าเชื่อมต่อ กรอก URL และ key ดังกล่าวได้เลย หรือใส่ใน `.env` เป็น `VITE_SUPABASE_URL` และ `VITE_SUPABASE_ANON_KEY` แล้ว restart dev server
+3. เปิด Supabase **SQL Editor** วางเนื้อหาทั้งไฟล์ `supabase/schema.sql` แล้วกด Run เพื่อสร้างตาราง, Google user profile, เลขเอกสาร และนโยบาย RLS สำหรับแยกข้อมูลองค์กร
+4. ตั้ง Google OAuth: ไปที่ **Authentication → Providers → Google** แล้วใส่ OAuth Client ID/Secret ที่สร้างจาก Google Cloud Console; ใช้ callback URL ที่ Supabase แสดงในหน้านั้น (รูปแบบ `https://<project-ref>.supabase.co/auth/v1/callback`)
+5. ใน **Authentication → URL Configuration** ใส่ URL เว็บ AccData ทั้งตอนพัฒนาและ URL production ที่ Redirect URLs เช่น `http://localhost:5173/**` และ `https://your-domain.example/**`
+6. เริ่มเว็บด้วย `bun run dev` เปิด URL ที่แสดง แล้วกด **เข้าสู่ระบบด้วย Google** การสมัครครั้งแรกจะสร้างโปรไฟล์ `user` อัตโนมัติ
+
+### กำหนดผู้ดูแลระบบ
+
+หลังจากผู้ดูแลเข้าสู่ระบบ Google อย่างน้อยหนึ่งครั้ง ให้เจ้าของ Supabase Project เปิด SQL Editor และรันคำสั่งนี้ โดยแทนอีเมลให้ตรงกับบัญชี Google ที่ใช้สมัคร:
+
+```sql
+UPDATE public.user_profiles
+SET role = 'admin'
+WHERE lower(email) = lower('admin@yourcompany.com');
+```
+
+ตรวจผลลัพธ์ว่ามี 1 แถวถูกแก้ไข แล้ว refresh หน้าเว็บ สิทธิ์ `admin` จะถูกอ่านจากโปรไฟล์ในฐานข้อมูล ไม่มีรหัสแอดมินให้กรอกหรือแชร์ ใช้ Google Workspace ของบริษัท เปิด MFA/passkey และเก็บ recovery methods ไว้กับผู้รับผิดชอบ
+
+**ห้ามใส่ `service_role` key ในเว็บหรือ `.env` ของ Vite** ใช้เฉพาะ Publishable/Anon key ซึ่งออกแบบมาสำหรับ client และพึ่ง RLS ควบคุมสิทธิ์ ตาราง tenant เปิดให้อ่าน/เขียนเฉพาะผู้ใช้ที่เป็นเจ้าขององค์กรหรือถูกเพิ่มใน `organization_members` เท่านั้น การเพิ่มสมาชิกองค์กรที่มีอยู่ทำได้โดยเจ้าของผ่าน SQL Editor:
+
+```sql
+INSERT INTO public.organization_members (organization_id, user_id, role)
+SELECT o.id, p.id, 'user'
+FROM public.organizations o
+JOIN public.user_profiles p ON lower(p.email) = lower('staff@yourcompany.com')
+WHERE o.tax_id = 'เลขประจำตัวผู้เสียภาษีองค์กร';
+```
+
+ค่า `.env` ใน checkout นี้ยังเป็น placeholder จึงต้องใส่ URL/key ของ Supabase Project จริงก่อน ระบบจะเชื่อมออนไลน์และบันทึกข้อมูลข้ามอุปกรณ์ได้

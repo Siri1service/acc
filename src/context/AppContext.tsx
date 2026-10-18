@@ -30,6 +30,8 @@ import {
   initialCampaigns
 } from '../lib/mockData';
 import { deleteDocumentFromDatabase, loadDocuments, nextNumber, saveDocument } from '../lib/documentRepository';
+import { getSupabase } from '../lib/supabase';
+import type { User as SupabaseAuthUser } from '@supabase/supabase-js';
 
 interface AppContextType {
   // Navigation & View
@@ -40,6 +42,10 @@ interface AppContextType {
 
   // User & Roles
   currentUser: UserProfile;
+  authUser: SupabaseAuthUser | null;
+  authLoading: boolean;
+  signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
   users: UserProfile[];
   switchUserRole: (role: UserRole) => void;
   switchUserById: (userId: string) => void;
@@ -187,6 +193,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isOrgSwitcherOpen, setIsOrgSwitcherOpen] = useState<boolean>(false);
   const [isBankSyncing, setIsBankSyncing] = useState<boolean>(false);
   const [lastLineNotification, setLastLineNotification] = useState<string | null>(null);
+  const [authUser, setAuthUser] = useState<SupabaseAuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authProfile, setAuthProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const client = getSupabase();
+    if (!client) { setAuthLoading(false); return; }
+    let alive = true;
+    const loadAuthUser = async (user: SupabaseAuthUser | null) => {
+      if (!alive) return;
+      setAuthUser(user);
+      if (!user) { setAuthProfile(null); setAuthLoading(false); return; }
+      const { data } = await client.from('user_profiles').select('id,email,full_name,avatar_url,phone,role,current_org_id,is_active,registered_at,last_login').eq('id', user.id).maybeSingle();
+      if (!alive) return;
+      const profile: UserProfile = {
+        id: user.id, email: user.email || '', fullName: data?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'ผู้ใช้',
+        avatarUrl: data?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture,
+        phone: data?.phone || '', role: data?.role || 'user', currentOrgId: data?.current_org_id || currentOrgId,
+        isActive: data?.is_active ?? true, registeredAt: data?.registered_at || user.created_at,
+        lastLogin: data?.last_login || undefined
+      };
+      setAuthProfile(profile);
+      setAuthLoading(false);
+    };
+    client.auth.getSession().then(({ data }) => loadAuthUser(data.session?.user || null));
+    const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
+      void loadAuthUser(session?.user || null);
+    });
+    return () => { alive = false; subscription.unsubscribe(); };
+  }, []);
+
+  const signInWithGoogle = async () => {
+    const client = getSupabase();
+    if (!client) throw new Error('กรุณาตั้งค่า Supabase URL และ Anon Key ก่อนเข้าสู่ระบบ');
+    const { error } = await client.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+    if (error) throw error;
+  };
+  const signOut = async () => {
+    const client = getSupabase();
+    if (!client) return;
+    const { error } = await client.auth.signOut();
+    if (error) throw error;
+  };
 
   // Sync to localStorage
   useEffect(() => saveStored('orgs', organizations), [organizations]);
@@ -243,7 +292,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     ...rawOrg,
     settings: mergedSettings
   };
-  const currentUser = users.find(u => u.id === currentUserId) || users[0] || initialUsers[0]!;
+  const currentUser = authProfile || users.find(u => u.id === currentUserId) || users[0] || initialUsers[0]!;
 
   useEffect(() => {
     let cancelled = false;
@@ -888,6 +937,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSearchQuery,
 
       currentUser,
+      authUser,
+      authLoading,
+      signInWithGoogle,
+      signOut,
       users,
       switchUserRole,
       switchUserById,

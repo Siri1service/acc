@@ -9,6 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 1. Organizations (Companies / Businesses)
 CREATE TABLE IF NOT EXISTS public.organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    owner_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     entity_type VARCHAR(50) NOT NULL DEFAULT 'juristic', -- 'individual' (บุคคลธรรมดา) หรือ 'juristic' (นิติบุคคล)
     tax_id VARCHAR(20),
@@ -43,6 +44,8 @@ CREATE TABLE IF NOT EXISTS public.organizations (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+ALTER TABLE public.organizations ADD COLUMN IF NOT EXISTS owner_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+
 -- 2. User Profiles
 CREATE TABLE IF NOT EXISTS public.user_profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -56,6 +59,50 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
     last_login TIMESTAMP WITH TIME ZONE,
     registered_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Create a basic application profile for each Google-authenticated user.
+-- A new account is always a regular user; elevation to admin is manual.
+CREATE OR REPLACE FUNCTION public.create_profile_for_auth_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    INSERT INTO public.user_profiles (id, email, full_name, avatar_url, role, is_active)
+    VALUES (
+      NEW.id,
+      COALESCE(NEW.email, NEW.id::TEXT || '@no-email.invalid'),
+      COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name'),
+      COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture'),
+      'user',
+      TRUE
+    )
+    ON CONFLICT (id) DO UPDATE SET
+      email = EXCLUDED.email,
+      full_name = COALESCE(EXCLUDED.full_name, public.user_profiles.full_name),
+      avatar_url = COALESCE(EXCLUDED.avatar_url, public.user_profiles.avatar_url);
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created_profile ON auth.users;
+CREATE TRIGGER on_auth_user_created_profile
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION public.create_profile_for_auth_user();
+
+-- Backfill users who signed in before this trigger was installed.
+INSERT INTO public.user_profiles (id, email, full_name, avatar_url, role, is_active)
+SELECT id, COALESCE(email, id::TEXT || '@no-email.invalid'),
+       COALESCE(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name'),
+       COALESCE(raw_user_meta_data->>'avatar_url', raw_user_meta_data->>'picture'), 'user', TRUE
+FROM auth.users
+ON CONFLICT (id) DO NOTHING;
+
+ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_profiles_read_self ON public.user_profiles;
+CREATE POLICY user_profiles_read_self ON public.user_profiles
+FOR SELECT TO authenticated USING (id = (SELECT auth.uid()));
 
 -- 3. Organization Memberships (Multi-Tenant Mapping)
 CREATE TABLE IF NOT EXISTS public.organization_members (
@@ -302,6 +349,64 @@ CREATE TABLE IF NOT EXISTS public.chart_of_accounts (
     balance NUMERIC(15, 2) DEFAULT 0.00,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Row-level tenant isolation for the REST API. Organization owners and
+-- explicitly enrolled organization members can access only that tenant.
+CREATE OR REPLACE FUNCTION public.has_organization_access(p_organization_id UUID)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.organizations o
+    WHERE o.id = p_organization_id AND o.owner_user_id = (SELECT auth.uid())
+  ) OR EXISTS (
+    SELECT 1 FROM public.organization_members m
+    WHERE m.organization_id = p_organization_id AND m.user_id = (SELECT auth.uid())
+  );
+$$;
+
+GRANT EXECUTE ON FUNCTION public.has_organization_access(UUID) TO authenticated;
+
+ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS organizations_read_member ON public.organizations;
+CREATE POLICY organizations_read_member ON public.organizations FOR SELECT TO authenticated
+USING (public.has_organization_access(id));
+DROP POLICY IF EXISTS organizations_create_owner ON public.organizations;
+CREATE POLICY organizations_create_owner ON public.organizations FOR INSERT TO authenticated
+WITH CHECK (owner_user_id = (SELECT auth.uid()));
+DROP POLICY IF EXISTS organizations_update_member ON public.organizations;
+DROP POLICY IF EXISTS organizations_update_owner ON public.organizations;
+CREATE POLICY organizations_update_owner ON public.organizations FOR UPDATE TO authenticated
+USING (owner_user_id = (SELECT auth.uid())) WITH CHECK (owner_user_id = (SELECT auth.uid()));
+
+ALTER TABLE public.organization_members ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS organization_members_read_accessible ON public.organization_members;
+CREATE POLICY organization_members_read_accessible ON public.organization_members FOR SELECT TO authenticated
+USING (public.has_organization_access(organization_id));
+DROP POLICY IF EXISTS organization_members_manage_owner ON public.organization_members;
+CREATE POLICY organization_members_manage_owner ON public.organization_members FOR ALL TO authenticated
+USING (EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = organization_id AND o.owner_user_id = (SELECT auth.uid())))
+WITH CHECK (EXISTS (SELECT 1 FROM public.organizations o WHERE o.id = organization_id AND o.owner_user_id = (SELECT auth.uid())));
+
+DO $$
+DECLARE t TEXT;
+BEGIN
+  FOREACH t IN ARRAY ARRAY['bank_accounts','contacts','products','documents','document_number_sequences','shipments','slip_verifications','line_settings','audit_logs','chart_of_accounts'] LOOP
+    EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', t);
+    EXECUTE format('DROP POLICY IF EXISTS tenant_access ON public.%I', t);
+    EXECUTE format('CREATE POLICY tenant_access ON public.%I FOR ALL TO authenticated USING (public.has_organization_access(organization_id)) WITH CHECK (public.has_organization_access(organization_id))', t);
+  END LOOP;
+END;
+$$;
+
+ALTER TABLE public.document_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS document_items_tenant_access ON public.document_items;
+CREATE POLICY document_items_tenant_access ON public.document_items FOR ALL TO authenticated
+USING (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id)))
+WITH CHECK (EXISTS (SELECT 1 FROM public.documents d WHERE d.id = document_id AND public.has_organization_access(d.organization_id)));
 
 -- Indexes for lightning fast queries
 CREATE INDEX IF NOT EXISTS idx_documents_org_type ON public.documents(organization_id, doc_type);

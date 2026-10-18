@@ -32,7 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
     bankAccounts,
     syncBankFeed,
     isBankSyncing,
-    setIsAuthModalOpen
+    signOut
   } = useApp();
 
   const enabled = currentOrg?.settings?.enabledModules || {
@@ -194,11 +194,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile }) => {
 
         {/* Login / Switch Account Button */}
         <button
-          onClick={() => setIsAuthModalOpen(true)}
+          onClick={() => void signOut()}
           className="w-full flex items-center justify-center gap-1.5 py-1.5 text-[11px] text-on-surface-variant hover:text-primary transition-colors"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>สลับบัญชี Google / ลงทะเบียน</span>
+          <span>ออกจากระบบ</span>
         </button>
       </div>
     </aside>
