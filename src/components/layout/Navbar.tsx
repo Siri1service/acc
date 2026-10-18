@@ -14,7 +14,8 @@ import {
   CreditCard,
   Package,
   Layers,
-  HelpCircle
+  HelpCircle,
+  LogOut
 } from 'lucide-react';
 import { UserRole, DocumentType } from '../../types';
 
@@ -35,7 +36,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
     searchQuery,
     setSearchQuery,
     lastLineNotification,
-    setActiveView
+    setActiveView,
+    signOut
   } = useApp();
 
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false);
@@ -285,6 +287,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu, onOpenNewDocMo
             </span>
           </div>
         </div>
+        {authUser && (
+          <button
+            type="button"
+            onClick={() => void signOut().catch(error => console.error('ออกจากระบบไม่สำเร็จ:', error))}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant/50 px-2.5 py-2 text-xs font-medium text-on-surface-variant transition-colors hover:bg-error/10 hover:text-error"
+            title="ออกจากระบบ"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">ออกจากระบบ</span>
+          </button>
+        )}
       </div>
 
       {/* LINE Notification Banner if active */}

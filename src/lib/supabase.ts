@@ -67,7 +67,14 @@ export const initSupabaseClient = (): { client: SupabaseClient | null; configure
   activeConfigured = isValid;
   if (isValid) {
     try {
-      activeSupabaseClient = createClient(config.url, config.anonKey);
+      activeSupabaseClient = createClient(config.url, config.anonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storage: localStorage
+        }
+      });
     } catch (err) {
       console.warn('Failed to initialize Supabase client:', err);
       activeSupabaseClient = null;
